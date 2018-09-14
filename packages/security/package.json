@@ -1,0 +1,88 @@
+{
+  "name": "@rxstack/security",
+  "version": "0.1.4",
+  "description": "RxStack Security Module",
+  "private": false,
+  "author": "Nikolay Gergiev <symfonist@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rxstack/rxstack.git"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "main": "dist/index",
+  "typings": "dist/index",
+  "scripts": {
+    "prepublishOnly": "npm run compile",
+    "compile": "npm run clean && tsc -p .",
+    "watch": "tsc -w -p .",
+    "clean": "rm -rf dist",
+    "lint": "tslint --project tsconfig.json --format stylish",
+    "mocha": "mocha --opts mocha.opts",
+    "coverage": "nyc npm run mocha",
+    "test": "npm run lint && npm run coverage"
+  },
+  "dependencies": {
+    "@rxstack/async-event-dispatcher": "^0.1.1",
+    "@rxstack/core": "^0.1.1",
+    "@rxstack/exceptions": "^0.1.0",
+    "@rxstack/service-registry": "^0.1.5",
+    "bcrypt": "^2.0",
+    "crypto-js": "^3.1.9-1",
+    "injection-js": "^2.1.0",
+    "jsonwebtoken": "^8.1.1",
+    "lodash": "^4.17.10",
+    "reflect-metadata": "^0.1.12",
+    "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.2",
+    "@types/lodash": "^4.14.109",
+    "@types/mocha": "^2.2.48",
+    "@types/sinon": "^5.0.2",
+    "chai": "3.5.0",
+    "istanbul": "0.4.5",
+    "mocha": "^5.2.0",
+    "nyc": "^11.0.3",
+    "should": "^13.2.3",
+    "sinon": "^6.2.0",
+    "source-map-support": "^0.4.15",
+    "std-mocks": "^1.0.1",
+    "ts-node": "^3.1.0",
+    "tslint": "^5.9.1",
+    "typescript": "^3.0"
+  },
+  "bugs": {
+    "url": "https://github.com/rxstack/rxstack/issues"
+  },
+  "homepage": "https://github.com/rxstack/rxstack",
+  "files": [
+    "dist",
+    "docs",
+    "README.md",
+    "../../LICENSE"
+  ],
+  "nyc": {
+    "include": [
+      "./src/**/*.ts"
+    ],
+    "exclude": [
+      "./test/**/*.spec.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html",
+      "lcov"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  }
+}

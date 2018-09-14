@@ -1,0 +1,15 @@
+{
+  "version": "2.0.3",
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "declaration": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "lib": ["es6"]
+  }
+}

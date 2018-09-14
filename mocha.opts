@@ -1,0 +1,8 @@
+--recursive packages/**/test/**/*.spec.ts
+--exclude **/node_modules/**
+--require ts-node/register
+--require source-map-support/register
+--require should
+--full-trace
+--bail
+
