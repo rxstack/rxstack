@@ -123,7 +123,7 @@ conn.emit('app_index', null, function (response: any) {
 
 ## <a name="npm-scripts"></a> NPM scripts
 
-- `$ npm run dev` - starts the application in development environment with `nodemon` and watches the file changes
+- `$ npm run dev` - starts the application in development environment with `nodemon` and watches for file changes
 - `$ npm run compile` - compiles the source code
 - `$ npm run watch` - watching for file changes
 - `$ npm run clean` - removes the `dist` directory
@@ -131,8 +131,8 @@ conn.emit('app_index', null, function (response: any) {
 - `$ npm run mocha` - runs tests using `mocha.opts`
 - `$ npm run coverage` - runs tests with `nyc`
 - `$ npm test` - runs lint, mocha and coverage
-- `$ npm run cli` - runs command line applications (you need to compile it first)
-- `$ npm run prod` - starts the application in production environment (you need to compile it first)
+- `$ npm run cli` - runs command line applications
+- `$ npm run prod` - starts the application in production environment
     
       
 ## <a name="controllers"></a> Controllers
