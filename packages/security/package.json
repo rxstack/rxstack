@@ -17,7 +17,6 @@
   "scripts": {
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc -p .",
-    "watch": "tsc -w -p .",
     "clean": "rm -rf dist",
     "lint": "tslint --project tsconfig.json --format stylish",
     "mocha": "mocha --opts mocha.opts",
