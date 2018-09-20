@@ -24,11 +24,11 @@ Let's create the application:
 
 ```typescript
 import {Application, ApplicationOptions} from '@rxstack/core';
-import {ExpressFileUploadModule} from '@rxstack/express-file-upload';
+import {DataFixtureModule} from '@rxstack/express-file-upload';
 
 export const EXPRESS_APP_OPTIONS: ApplicationOptions = {
   imports: [
-    ExpressFileUploadModule.configure({
+    DataFixtureModule.configure({
       enabled: true, // default is false
       hash: 'md5', // default is md5
       multiples: false, // default is false
