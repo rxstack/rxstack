@@ -1,10 +1,10 @@
-import {AbstractCommand} from '../../core/src/console';
+import {AbstractCommand} from '@rxstack/core';
 import {Injectable} from 'injection-js';
 import {FixtureManager} from './fixture.manager';
 
 @Injectable()
 export class LoadFixturesCommand extends AbstractCommand {
-  name = 'data-fixtures:load';
+  command = 'data-fixtures:load';
   description = 'Load data fixtures';
   builder = (yargs: any) => yargs.default('purge', 'false');
 

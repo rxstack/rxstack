@@ -3,6 +3,7 @@ import {Injectable} from 'injection-js';
 
 @Injectable()
 export class ReferenceRepository {
+
   private references: Map<string, any> = new Map();
 
   setReference(name: string, value: any): void {
@@ -25,5 +26,9 @@ export class ReferenceRepository {
 
   hasReference(name: string): boolean {
     return this.references.has(name);
+  }
+
+  reset(): void {
+    this.references.clear();
   }
 }

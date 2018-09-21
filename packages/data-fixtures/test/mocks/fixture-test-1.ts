@@ -15,5 +15,4 @@ export class FixtureTest1 extends AbstractFixture {
   getOrder(): number {
     return 1;
   }
-
 }
