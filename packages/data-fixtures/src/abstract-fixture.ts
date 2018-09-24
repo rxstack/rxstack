@@ -12,19 +12,23 @@ export abstract class AbstractFixture implements InjectorAwareInterface, NamedSe
   }
 
   addReference(name: string, value: any): void {
-    this.injector.get(ReferenceRepository).addReference(name, value);
+    this.getReferenceRepository().addReference(name, value);
   }
 
   setReference(name: string, value: any): void {
-    this.injector.get(ReferenceRepository).setReference(name, value);
+    this.getReferenceRepository().setReference(name, value);
   }
 
   getReference(name: string): any {
-    return this.injector.get(ReferenceRepository).getReference(name);
+    return this.getReferenceRepository().getReference(name);
   }
 
   getOrder(): number {
     return 0;
+  }
+
+  getReferenceRepository(): ReferenceRepository {
+    return this.injector.get(ReferenceRepository);
   }
 
   abstract load(): Promise<void>;

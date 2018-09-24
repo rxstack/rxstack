@@ -12,10 +12,10 @@ import {LoadFixturesCommand} from './load-fixtures.command';
     { provide: ReferenceRepository, useClass: ReferenceRepository },
     {
       provide: FixtureManager,
-      useFactory: (registry: AbstractFixture[], purger: PurgerInterface) => {
+      useFactory: (purger: PurgerInterface, registry: AbstractFixture[], ) => {
         return new FixtureManager(registry, purger);
       },
-      deps: [FIXTURE_REGISTRY, PURGER_SERVICE]
+      deps: [PURGER_SERVICE, FIXTURE_REGISTRY]
     },
     { provide: FIXTURE_REGISTRY, useClass: NoopFixture, multi: true },
     { provide: PURGER_SERVICE, useClass: NoopPurger },
