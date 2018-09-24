@@ -27,9 +27,8 @@
     "test": "npm run lint && npm run coverage"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.1.1",
-    "@rxstack/core": "^0.1.1",
-    "@rxstack/exceptions": "^0.1.2",
+    "@rxstack/core": "^0.1",
+    "@rxstack/exceptions": "^0.1",
     "@rxstack/service-registry": "^0.1",
     "injection-js": "^2.1.0",
     "reflect-metadata": "^0.1.12"
@@ -56,7 +55,7 @@
   "homepage": "https://github.com/rxstack/rxstack",
   "files": [
     "dist",
-    "README.md",
+    "README_NPM.md",
     "./../../LICENSE"
   ],
   "nyc": {
