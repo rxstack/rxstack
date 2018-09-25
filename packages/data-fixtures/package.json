@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "RxStack DataFixtures Module",
   "author": "Nikolay Gergiev <symfonist@gmail.com>",
+  "private": false,
   "license": "MIT",
   "repository": {
     "type": "git",
