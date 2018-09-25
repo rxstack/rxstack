@@ -2,8 +2,6 @@ import {AbstractCommand, Logger} from '@rxstack/core';
 import {Injectable} from 'injection-js';
 import {FixtureManager} from './fixture.manager';
 
-const chalk = require('chalk');
-
 @Injectable()
 export class LoadFixturesCommand extends AbstractCommand {
   command = 'data-fixtures:load';
