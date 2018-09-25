@@ -1,4 +1,4 @@
-import {AbstractCommand} from '@rxstack/core';
+import {AbstractCommand, Logger} from '@rxstack/core';
 import {Injectable} from 'injection-js';
 import {FixtureManager} from './fixture.manager';
 
@@ -9,6 +9,9 @@ export class LoadFixturesCommand extends AbstractCommand {
   builder = (yargs: any) => yargs.default('purge', 'false');
 
   async handler(yargs: any): Promise<void> {
-    await this.injector.get(FixtureManager).execute(yargs.purge);
+    this.injector.get(Logger).debug('Fixtures loading is started.', {source: 'data-fixtures'});
+    await this.injector.get(FixtureManager).execute(Boolean(yargs.purge));
+    this.injector.get(Logger).debug('Fixtures have been successfully loaded.', {source: 'data-fixtures'});
+    process.exit();
   }
 }

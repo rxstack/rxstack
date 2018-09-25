@@ -183,7 +183,7 @@ describe('TestcaseWithFixtures', () => {
 You can load fixtures from the command line:
 
 ```bash
-$ npm run cli data-fixtures:load --purge=true
+$ npm run cli data-fixtures:load -- --purge=true
 ```
 
 ## License
