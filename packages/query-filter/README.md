@@ -28,7 +28,7 @@ allow certain operators, sorting, apply transformations, `OR` queries and sets d
 > Important: in http requests all query values are strings. They might have to be converted to the right type.
 
 ```typescript
-import {QueryFilterSchema, QueryFilter} from '@rxstack/query-filter';
+import {QueryFilterSchema, queryFilter} from '@rxstack/query-filter';
 
 export const myQueryFilterSchema: QueryFilterSchema = {
   'properties': {
@@ -56,7 +56,7 @@ import {QueryFilterSchema, QueryFilter} from '@rxstack/query-filter';
 
 // GET /messages?id=1&product_title=any&not_listed=any
 app.get('/messages', (request: ExpressRequest, response: ExpressResponse, next: NextFunction): void => {
-   const result = QueryFilter.createQuery(myQueryFilterSchema, req.query);
+   const result = queryFilter.createQuery(myQueryFilterSchema, req.query);
 });
 
 // client side
@@ -68,14 +68,14 @@ socket.emit('messages', { 'params': {
 
 // server side
 socket.on('messages', (args: any, callback: Function) => {
-  const result = QueryFilter.createQuery(myQueryFilterSchema, args.params);
+  const result = queryFilter.createQuery(myQueryFilterSchema, args.params);
 });
 
 
 // output: { 'where': {'id': { '$eq': 1 }, 'product_title': { '$ne': 'some' }}, 'limit': 10, 'skip': 0 }
 ```
 
-The output will return [`QueryFilterResult`](src/interfaces.ts);
+The output will return [`QueryInterface`](src/interfaces.ts);
 
 
 ### Operators:
