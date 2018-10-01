@@ -10,6 +10,6 @@
     "noImplicitAny": true,
     "declaration": true,
     "suppressImplicitAnyIndexErrors": true,
-    "lib": ["es6"]
+    "lib": ["es2016"]
   }
 }
