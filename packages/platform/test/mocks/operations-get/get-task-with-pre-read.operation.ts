@@ -9,7 +9,7 @@ import {populateResult} from '../middleware/populate-result';
   name: 'app_task_get_with_pre_read',
   transports: ['SOCKET'],
   service: TaskService,
-  preRead: [
+  onPreRead: [
     populateResult({'name': 'modified by pre-read'}),
   ]
 })

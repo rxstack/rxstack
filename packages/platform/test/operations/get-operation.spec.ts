@@ -6,7 +6,7 @@ import {HttpException} from '@rxstack/exceptions';
 
 const sinon = require('sinon');
 
-describe('Platform:OperationGET:Standard', () => {
+describe('Platform:Operation:GET', () => {
   // Setup application
 
   const app = new Application(PLATFORM_APP_OPTIONS);

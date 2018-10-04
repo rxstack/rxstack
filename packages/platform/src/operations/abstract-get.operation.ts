@@ -14,8 +14,8 @@ export abstract class AbstractGetOperation<T> extends AbstractOperation {
 
   onInit(): void {
     super.onInit();
-    this.registerOperationCallables(OperationEventsEnum.PRE_READ, this.metadata.preRead);
-    this.registerOperationCallables(OperationEventsEnum.POST_READ, this.metadata.postRead);
+    this.registerOperationCallables(OperationEventsEnum.PRE_READ, this.metadata.onPreRead);
+    this.registerOperationCallables(OperationEventsEnum.POST_READ, this.metadata.onPostRead);
   }
 
   async execute(request: Request): Promise<Response> {

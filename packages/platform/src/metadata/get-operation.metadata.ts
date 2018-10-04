@@ -6,6 +6,6 @@ import {ClassTransformOptions} from 'class-transformer';
 export interface GetOperationMetadata<T> extends ApiOperationMetadata {
   service: Type<ServiceInterface<T>> | InjectionToken<ServiceInterface<T>>;
   classTransformerOptions?: ClassTransformOptions;
-  preRead?: ApiOperationCallable[];
-  postRead?: ApiOperationCallable[];
+  onPreRead?: ApiOperationCallable[];
+  onPostRead?: ApiOperationCallable[];
 }

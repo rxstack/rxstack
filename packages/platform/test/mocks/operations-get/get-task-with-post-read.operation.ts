@@ -10,7 +10,7 @@ import {populateResult} from '../middleware/populate-result';
   transports: ['HTTP'],
   http_path: '/tasks-with-post-read/:id',
   service: TaskService,
-  postRead: [
+  onPostRead: [
     populateResult({'name': 'modified by post-read'}),
   ]
 })
