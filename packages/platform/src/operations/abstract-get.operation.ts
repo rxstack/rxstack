@@ -1,5 +1,5 @@
 import {HttpMethod, Request, Response} from '@rxstack/core';
-import {ServiceInterface} from '../interfaces';
+import {ResourceInterface, ServiceInterface} from '../interfaces';
 import {AbstractOperation} from './abstract-operation';
 import {GetOperationMetadata} from '../metadata/get-operation.metadata';
 import {NotFoundException} from '@rxstack/exceptions';
@@ -8,7 +8,7 @@ import {classToPlain} from 'class-transformer';
 import {OperationTypesEnum} from '../enums/operation-types.enum';
 import {OperationEventsEnum} from '../enums/operation-events.enum';
 
-export abstract class AbstractGetOperation<T> extends AbstractOperation {
+export abstract class AbstractGetOperation<T extends ResourceInterface> extends AbstractOperation {
 
   metadata: GetOperationMetadata<T>;
 
@@ -19,14 +19,13 @@ export abstract class AbstractGetOperation<T> extends AbstractOperation {
   }
 
   async execute(request: Request): Promise<Response> {
-    const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata);
-    operationEvent.type = OperationTypesEnum.GET;
+    const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.GET);
     await this.dispatch(OperationEventsEnum.PRE_READ, operationEvent);
-    if (!operationEvent.result) {
-      operationEvent.result = await this.findOr404(request);
-    }
+    operationEvent.data = await this.findOr404(request);
     await this.dispatch(OperationEventsEnum.POST_READ, operationEvent);
-    return new Response(classToPlain(operationEvent.result, this.metadata.classTransformerOptions));
+    return new Response(
+      classToPlain(operationEvent.data, this.metadata.classTransformerOptions), operationEvent.statusCode
+    );
   }
 
   getSupportedHttpMethod(): HttpMethod {

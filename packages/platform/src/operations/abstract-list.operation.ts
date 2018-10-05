@@ -1,14 +1,15 @@
-import {queryFilter, QueryFilterSchema, QueryInterface} from '@rxstack/query-filter';
+import {queryFilter, QueryInterface} from '@rxstack/query-filter';
 import {HttpMethod, Request, Response} from '@rxstack/core';
-import {ServiceInterface} from '../interfaces';
+import {ResourceInterface, ServiceInterface} from '../interfaces';
 import {AbstractOperation} from './abstract-operation';
 import {ListOperationMetadata} from '../metadata/list-operation.metadata';
 import {OperationEventsEnum} from '../enums/operation-events.enum';
 import {ApiOperationEvent} from '../events';
 import {OperationTypesEnum} from '../enums/operation-types.enum';
 import {classToPlain} from 'class-transformer';
+import * as _ from 'lodash';
 
-export abstract class AbstractListOperation<T> extends AbstractOperation {
+export abstract class AbstractListOperation<T extends ResourceInterface> extends AbstractOperation {
   metadata: ListOperationMetadata<T>;
 
   onInit(): void {
@@ -19,25 +20,15 @@ export abstract class AbstractListOperation<T> extends AbstractOperation {
   }
 
   async execute(request: Request): Promise<Response> {
-    const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata);
-    operationEvent.type = OperationTypesEnum.LIST;
-
+    const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.LIST);
     await this.dispatch(OperationEventsEnum.PRE_READ, operationEvent);
-    if (operationEvent.result) {
-      return new Response(operationEvent.result);
-    }
-
-    const schema: QueryFilterSchema = this.metadata.queryFilterSchema || this.getDefaultQueryFilterSchema();
-    const query = queryFilter.createQuery(schema, request.params.toObject());
+    this.resolveQueryFilterSchema();
+    const query = queryFilter.createQuery(this.metadata.queryFilterSchema, request.params.toObject());
     request.attributes.set('query', query);
 
     await this.dispatch(OperationEventsEnum.QUERY, operationEvent);
-    if (operationEvent.result) {
-      return new Response(operationEvent.result);
-    }
-
     const data = classToPlain(await this.findMany(request), this.metadata.classTransformerOptions);
-    operationEvent.result = this.metadata.paginated ? {
+    operationEvent.data = this.metadata.paginated ? {
       total: await this.getCount(request),
       data: data,
       limit: query.limit,
@@ -45,7 +36,7 @@ export abstract class AbstractListOperation<T> extends AbstractOperation {
     } : data;
 
     await this.dispatch(OperationEventsEnum.POST_READ, operationEvent);
-    return new Response(operationEvent.result);
+    return new Response(operationEvent.data, operationEvent.statusCode);
   }
 
   getSupportedHttpMethod(): HttpMethod {
@@ -66,11 +57,13 @@ export abstract class AbstractListOperation<T> extends AbstractOperation {
     return this.injector.get(this.metadata.service);
   }
 
-  protected getDefaultQueryFilterSchema(): QueryFilterSchema {
-    return {
+  private resolveQueryFilterSchema(): void {
+    const schema =  this.metadata.queryFilterSchema;
+    const defaults =  {
       'properties': { },
       'allowOrOperator': false,
       'defaultLimit': 25
     };
+    this.metadata.queryFilterSchema  = schema ? _.merge(defaults, schema) : defaults;
   }
 }

@@ -11,7 +11,6 @@ import {setRequestParam} from '../middleware/set-request-param';
   transports: ['SOCKET'],
   service: TaskService,
   onPreRead: [
-    populateResult([{ 'name': 'modified by pre-read' }]),
     setRequestParam('app_task_list_with_pre_read', 'modified')
   ]
 })

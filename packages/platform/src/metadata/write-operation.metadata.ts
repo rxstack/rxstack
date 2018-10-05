@@ -1,13 +1,16 @@
 import {ApiOperationMetadata} from './api-operation.metadata';
 import {InjectionToken, Type} from 'injection-js/index';
-import {ApiOperationCallable, ServiceInterface, Validation} from '../interfaces';
+import {ApiOperationCallable, ResourceInterface, ServiceInterface} from '../interfaces';
+import {ValidatorOptions} from 'class-validator';
+import {ClassTransformOptions} from 'class-transformer';
 
-export interface WriteOperationMetadata<T> extends ApiOperationMetadata {
-  type: 'POST' | 'PATCH' | 'PUT';
+export interface WriteOperationMetadata<T extends ResourceInterface> extends ApiOperationMetadata {
   service: Type<ServiceInterface<T>> | InjectionToken<T>;
-  validation: Validation;
-  preValidate?: ApiOperationCallable[];
-  postValidate?: ApiOperationCallable[];
-  preWrite?: ApiOperationCallable[];
-  postWrite?: ApiOperationCallable[];
+  type: 'POST' | 'PUT' | 'PATCH';
+  classTransformerOptions?: ClassTransformOptions;
+  validatorOptions?: ValidatorOptions;
+  onPreSetData?: ApiOperationCallable[];
+  onPreValidate?: ApiOperationCallable[];
+  onPreWrite?: ApiOperationCallable[];
+  onPostWrite?: ApiOperationCallable[];
 }

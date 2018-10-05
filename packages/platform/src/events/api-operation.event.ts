@@ -1,17 +1,17 @@
 import {GenericEvent} from '@rxstack/async-event-dispatcher';
 import {Request} from '@rxstack/core';
-import {ApiOperationMetadata} from '../metadata/index';
 import {Injector} from 'injection-js';
+import {ApiOperationMetadata} from '../metadata';
 
 export class ApiOperationEvent extends GenericEvent {
 
-  type: string;
-
   data: any;
 
-  result: any;
+  statusCode = 200;
 
-  constructor(public request: Request, public injector: Injector, public metadata: ApiOperationMetadata) {
+  constructor(public readonly request: Request,
+              public readonly injector: Injector,
+              public metadata: ApiOperationMetadata, public readonly type: string) {
     super();
   }
 }

@@ -11,6 +11,7 @@ import {ListTaskWithPaginationOperation} from './mocks/operation-list/list-task-
 import {ListTaskWithQueryOperation} from './mocks/operation-list/list-task-with-query.operation';
 import {ListTaskOperationWithPreRead} from './mocks/operation-list/list-task.operation-with-pre-read';
 import {ListTaskWithOnQueryOperation} from './mocks/operation-list/list-task-with-on-query.operation';
+import {CreateTaskOperation} from './mocks/operation-write/create-task.operation';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   imports: [
@@ -32,6 +33,7 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
     { provide: ListTaskWithQueryOperation, useClass: ListTaskWithQueryOperation },
     { provide: ListTaskOperationWithPreRead, useClass: ListTaskOperationWithPreRead },
     { provide: ListTaskWithOnQueryOperation, useClass: ListTaskWithOnQueryOperation },
+    { provide: CreateTaskOperation, useClass: CreateTaskOperation },
   ],
   servers: environmentPlatform.servers,
   logger: environmentPlatform.logger

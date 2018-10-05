@@ -22,7 +22,7 @@ describe('Platform:Operation:LIST', () => {
     await app.stop();
   });
 
-  it('@app_task_list should execute successfully', async () => {
+  it('@app_task_list', async () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_list');
     const request = new Request('SOCKET');
     const response: Response = await def.handler(request);
@@ -33,7 +33,7 @@ describe('Platform:Operation:LIST', () => {
     response.content[0]['name'].should.be.equal('my task');
   });
 
-  it('@app_task_list_paginated should execute successfully', async () => {
+  it('@app_task_list_paginated', async () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_list_paginated');
     const request = new Request('SOCKET');
     const response: Response = await def.handler(request);
@@ -41,7 +41,7 @@ describe('Platform:Operation:LIST', () => {
     response.content['total'].should.be.equal(1);
   });
 
-  it('@app_task_list_with_query should execute successfully', async () => {
+  it('@app_task_list_with_query', async () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_list_with_query');
     const request = new Request('SOCKET');
     request.params.set('$limit', 10);
@@ -54,24 +54,21 @@ describe('Platform:Operation:LIST', () => {
     request.attributes.get('query')['skip'].should.be.equal(2);
   });
 
-  it('@app_task_list_with_pre_read should execute successfully', async () => {
+  it('@app_task_list_with_pre_read', async () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_list_with_pre_read');
     const request = new Request('SOCKET');
     request.params.set('app_task_list_with_pre_read', 'original');
     const response: Response = await def.handler(request);
     response.statusCode.should.equal(200);
     request.params.get('app_task_list_with_pre_read').should.be.equal('modified');
-    Array.isArray(response.content).should.be.equal(true);
-    response.content[0]['name'].should.be.equal('modified by pre-read');
   });
 
-  it('@app_task_list_with_on_query should execute successfully', async () => {
+  it('@app_task_list_with_on_query', async () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_list_with_on_query');
     const request = new Request('SOCKET');
     request.params.set('name', 'original');
     const response: Response = await def.handler(request);
     response.statusCode.should.equal(200);
     request.attributes.get('query')['where']['name'].should.be.equal('modified');
-    response.content[0]['name'].should.be.equal('modified by on-query');
   });
 });

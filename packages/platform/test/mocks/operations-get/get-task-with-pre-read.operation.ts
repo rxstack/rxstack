@@ -3,14 +3,14 @@ import {TaskModel} from '../task.model';
 import {Injectable} from 'injection-js';
 import {AbstractGetOperation} from '../../../src/operations/index';
 import {TaskService} from '../task.service';
-import {populateResult} from '../middleware/populate-result';
+import {setRequestParam} from '../middleware/set-request-param';
 
 @ApiOperation<GetOperationMetadata<TaskModel>>({
   name: 'app_task_get_with_pre_read',
   transports: ['SOCKET'],
   service: TaskService,
   onPreRead: [
-    populateResult({'name': 'modified by pre-read'}),
+    setRequestParam('pre_read', 'modified'),
   ]
 })
 @Injectable()
