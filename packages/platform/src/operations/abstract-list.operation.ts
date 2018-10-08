@@ -1,4 +1,4 @@
-import {queryFilter, QueryInterface} from '@rxstack/query-filter';
+import {queryFilter, QueryFilterSchema, QueryInterface} from '@rxstack/query-filter';
 import {HttpMethod, Request, Response} from '@rxstack/core';
 import {ResourceInterface, ServiceInterface} from '../interfaces';
 import {AbstractOperation} from './abstract-operation';
@@ -21,14 +21,15 @@ export abstract class AbstractListOperation<T extends ResourceInterface> extends
 
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.LIST);
+    const metadata = operationEvent.metadata as ListOperationMetadata<T>;
     await this.dispatch(OperationEventsEnum.PRE_READ, operationEvent);
-    this.resolveQueryFilterSchema();
-    const query = queryFilter.createQuery(this.metadata.queryFilterSchema, request.params.toObject());
+    this.resolveQueryFilterSchema(metadata);
+    const query = queryFilter.createQuery(metadata.queryFilterSchema, request.params.toObject());
     request.attributes.set('query', query);
 
     await this.dispatch(OperationEventsEnum.QUERY, operationEvent);
-    const data = classToPlain(await this.findMany(request), this.metadata.classTransformerOptions);
-    operationEvent.data = this.metadata.paginated ? {
+    const data = classToPlain(await this.findMany(request), metadata.classTransformerOptions);
+    operationEvent.data = metadata.paginated ? {
       total: await this.getCount(request),
       data: data,
       limit: query.limit,
@@ -57,13 +58,13 @@ export abstract class AbstractListOperation<T extends ResourceInterface> extends
     return this.injector.get(this.metadata.service);
   }
 
-  private resolveQueryFilterSchema(): void {
-    const schema =  this.metadata.queryFilterSchema;
+  private resolveQueryFilterSchema(metadata: ListOperationMetadata<T>): void {
+    const schema = metadata.queryFilterSchema;
     const defaults =  {
       'properties': { },
       'allowOrOperator': false,
       'defaultLimit': 25
     };
-    this.metadata.queryFilterSchema  = schema ? _.merge(defaults, schema) : defaults;
+    metadata.queryFilterSchema = schema ? _.merge(defaults, schema) : defaults;
   }
 }

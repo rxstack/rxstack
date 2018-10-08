@@ -16,9 +16,7 @@ export class TaskService<T extends ResourceInterface> implements ServiceInterfac
   }
 
   async save(resource: T): Promise<T> {
-    const data = serialize(resource);
-    // save it
-    return await this.find(resource.id);
+    return resource;
   }
 
   async remove(resource: T): Promise<void> {

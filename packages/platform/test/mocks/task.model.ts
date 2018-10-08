@@ -8,7 +8,7 @@ export class TaskModel implements ResourceInterface {
   _id: string;
 
   @Length(5, 255, {message: 'task.length'})
-  @IsNotEmpty({message: 'task.notEmpty'})
+  @IsNotEmpty({message: 'task.notEmpty', groups: ['post_set_data']})
   @Expose()
   name: string;
 

@@ -10,7 +10,7 @@ export interface WriteOperationMetadata<T extends ResourceInterface> extends Api
   classTransformerOptions?: ClassTransformOptions;
   validatorOptions?: ValidatorOptions;
   onPreSetData?: ApiOperationCallable[];
-  onPreValidate?: ApiOperationCallable[];
+  onPostSetData?: ApiOperationCallable[];
   onPreWrite?: ApiOperationCallable[];
   onPostWrite?: ApiOperationCallable[];
 }

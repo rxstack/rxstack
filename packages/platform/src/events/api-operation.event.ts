@@ -2,8 +2,11 @@ import {GenericEvent} from '@rxstack/async-event-dispatcher';
 import {Request} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {ApiOperationMetadata} from '../metadata';
+import * as _ from 'lodash';
 
 export class ApiOperationEvent extends GenericEvent {
+
+  readonly metadata: ApiOperationMetadata;
 
   data: any;
 
@@ -11,7 +14,8 @@ export class ApiOperationEvent extends GenericEvent {
 
   constructor(public readonly request: Request,
               public readonly injector: Injector,
-              public metadata: ApiOperationMetadata, public readonly type: string) {
+              metadata: ApiOperationMetadata, public readonly type: string) {
     super();
+    this.metadata = _.cloneDeep(metadata);
   }
 }

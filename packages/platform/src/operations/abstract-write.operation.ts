@@ -1,6 +1,6 @@
 import {ResourceInterface, ServiceInterface} from '../interfaces';
 import {AbstractOperation} from './abstract-operation';
-import {Validator} from 'class-validator';
+import {Validator, ValidatorOptions} from 'class-validator';
 import {NotFoundException, ValidationError, ValidationException} from '@rxstack/exceptions';
 import {WriteOperationMetadata} from '../metadata/write-operation.metadata';
 import {HttpMethod, Request, Response} from '@rxstack/core';
@@ -16,25 +16,27 @@ export abstract class AbstractWriteOperation<T extends ResourceInterface> extend
   onInit(): void {
     super.onInit();
     this.registerOperationCallables(OperationEventsEnum.PRE_SET_DATA, this.metadata.onPreSetData);
-    this.registerOperationCallables(OperationEventsEnum.PRE_VALIDATE, this.metadata.onPreValidate);
+    this.registerOperationCallables(OperationEventsEnum.POST_SET_DATA, this.metadata.onPostSetData);
     this.registerOperationCallables(OperationEventsEnum.PRE_WRITE, this.metadata.onPreWrite);
     this.registerOperationCallables(OperationEventsEnum.POST_WRITE, this.metadata.onPostWrite);
   }
 
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.WRITE);
-    operationEvent.statusCode = this.metadata.type === 'POST' ? 201 : 204;
-    operationEvent.data = this.metadata.type === 'POST' ? await this.createNew(request) : this.findOr404(request);
+    const metadata = operationEvent.metadata as WriteOperationMetadata<T>;
+    operationEvent.statusCode = metadata.type === 'POST' ? 201 : 204;
+    operationEvent.data = metadata.type === 'POST'
+      ? await this.createNew(request) : this.findOr404(request);
     await this.dispatch(OperationEventsEnum.PRE_SET_DATA, operationEvent);
     plainToClassFromExist(operationEvent.data, request.body);
-    this.resolveValidatorOptions();
-    await this.dispatch(OperationEventsEnum.PRE_VALIDATE, operationEvent);
-    await this.validate(operationEvent.data);
+    this.resolveValidatorOptions(metadata);
+    await this.dispatch(OperationEventsEnum.POST_SET_DATA, operationEvent);
+    await this.validate(operationEvent.data, metadata.validatorOptions);
     await this.dispatch(OperationEventsEnum.PRE_WRITE, operationEvent);
     operationEvent.data = await this.doWrite(operationEvent.data);
     await this.dispatch(OperationEventsEnum.POST_WRITE, operationEvent);
     const data = operationEvent.statusCode !== 204
-      ? classToPlain(operationEvent.data, this.metadata.classTransformerOptions) : null;
+      ? classToPlain(operationEvent.data, metadata.classTransformerOptions) : null;
     return new Response(data, operationEvent.statusCode);
   }
 
@@ -50,9 +52,9 @@ export abstract class AbstractWriteOperation<T extends ResourceInterface> extend
     return await this.getService().createNew();
   }
 
-  protected async validate(data: T): Promise<void> {
+  protected async validate(data: T, validatorOptions: ValidatorOptions): Promise<void> {
     const validator = this.injector.get(Validator);
-    const errors = await validator.validate(data, this.metadata.validatorOptions);
+    const errors = await validator.validate(data, validatorOptions);
     if (errors.length > 0) {
       throw new ValidationException(<ValidationError[]>errors);
     }
@@ -70,13 +72,13 @@ export abstract class AbstractWriteOperation<T extends ResourceInterface> extend
     return await this.getService().save(data);
   }
 
-  private resolveValidatorOptions(): void {
-    const options = this.metadata.validatorOptions;
+  private resolveValidatorOptions(metadata: WriteOperationMetadata<T>): void {
+    const options = metadata.validatorOptions;
     const defaults =  {
       validationError: { target: false },
-      whitelist: true,
+      whitelist: false,
       skipMissingProperties: false
     };
-    this.metadata.validatorOptions = options ? _.merge(defaults, options) : defaults;
+    metadata.validatorOptions = options ? _.merge(defaults, options) : defaults;
   }
 }

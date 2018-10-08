@@ -20,11 +20,12 @@ export abstract class AbstractGetOperation<T extends ResourceInterface> extends 
 
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.GET);
+    const metadata = operationEvent.metadata as GetOperationMetadata<T>;
     await this.dispatch(OperationEventsEnum.PRE_READ, operationEvent);
     operationEvent.data = await this.findOr404(request);
     await this.dispatch(OperationEventsEnum.POST_READ, operationEvent);
     return new Response(
-      classToPlain(operationEvent.data, this.metadata.classTransformerOptions), operationEvent.statusCode
+      classToPlain(operationEvent.data, metadata.classTransformerOptions), operationEvent.statusCode
     );
   }
 

@@ -3,7 +3,7 @@ export enum OperationEventsEnum {
   POST_READ = 'post_read',
   QUERY = 'query',
   PRE_SET_DATA = 'pre_set_data',
-  PRE_VALIDATE = 'pre_validate',
+  POST_SET_DATA = 'post_set_data',
   PRE_WRITE = 'pre_write',
   POST_WRITE = 'post_write'
 }
