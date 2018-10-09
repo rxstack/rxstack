@@ -5,7 +5,7 @@ import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
 
 const sinon = require('sinon');
 
-describe('Platform:Operation:LIST', () => {
+describe('Platform:Operation:List', () => {
   // Setup application
 
   const app = new Application(PLATFORM_APP_OPTIONS);

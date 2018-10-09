@@ -5,5 +5,7 @@ export enum OperationEventsEnum {
   PRE_SET_DATA = 'pre_set_data',
   POST_SET_DATA = 'post_set_data',
   PRE_WRITE = 'pre_write',
-  POST_WRITE = 'post_write'
+  POST_WRITE = 'post_write',
+  PRE_REMOVE = 'pre_remove',
+  POST_REMOVE = 'post_remove',
 }

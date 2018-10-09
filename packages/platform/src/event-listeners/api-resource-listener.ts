@@ -6,7 +6,6 @@ import {
 } from '@rxstack/core';
 import {ApiOperationMetadata} from '../metadata/api-operation.metadata';
 import {API_OPERATION_KEY} from '../interfaces';
-import {Exception} from '@rxstack/exceptions';
 import {AbstractOperation} from '../operations/abstract-operation';
 
 @Injectable()

@@ -1,7 +1,6 @@
-import {ResourceInterface, ServiceInterface} from '../interfaces';
-import {AbstractOperation} from './abstract-operation';
+import {ResourceInterface} from '../interfaces';
 import {Validator, ValidatorOptions} from 'class-validator';
-import {NotFoundException, ValidationError, ValidationException} from '@rxstack/exceptions';
+import {ValidationError, ValidationException} from '@rxstack/exceptions';
 import {WriteOperationMetadata} from '../metadata/write-operation.metadata';
 import {HttpMethod, Request, Response} from '@rxstack/core';
 import * as _ from 'lodash';
@@ -9,8 +8,9 @@ import {ApiOperationEvent} from '../events';
 import {OperationTypesEnum} from '../enums/operation-types.enum';
 import {classToPlain, plainToClassFromExist} from 'class-transformer';
 import {OperationEventsEnum} from '../enums/operation-events.enum';
+import {AbstractSingleResourceOperation} from './abstract-single-resource.operation';
 
-export abstract class AbstractWriteOperation<T extends ResourceInterface> extends AbstractOperation {
+export abstract class AbstractWriteOperation<T extends ResourceInterface> extends AbstractSingleResourceOperation<T> {
   metadata: WriteOperationMetadata<T>;
 
   onInit(): void {
@@ -44,10 +44,6 @@ export abstract class AbstractWriteOperation<T extends ResourceInterface> extend
     return this.metadata.type;
   }
 
-  protected getService(): ServiceInterface<T> {
-    return this.injector.get(this.metadata.service);
-  }
-
   protected async createNew(request: Request): Promise<T> {
     return await this.getService().createNew();
   }
@@ -58,14 +54,6 @@ export abstract class AbstractWriteOperation<T extends ResourceInterface> extend
     if (errors.length > 0) {
       throw new ValidationException(<ValidationError[]>errors);
     }
-  }
-
-  protected async findOr404(request: Request): Promise<T> {
-    const resource = await this.getService().find(request.params.get('id'));
-    if (!resource) {
-      throw new NotFoundException();
-    }
-    return resource;
   }
 
   protected async doWrite(data: T): Promise<T> {

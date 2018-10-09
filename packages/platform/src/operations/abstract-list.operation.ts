@@ -1,4 +1,4 @@
-import {queryFilter, QueryFilterSchema, QueryInterface} from '@rxstack/query-filter';
+import {queryFilter, QueryInterface} from '@rxstack/query-filter';
 import {HttpMethod, Request, Response} from '@rxstack/core';
 import {ResourceInterface, ServiceInterface} from '../interfaces';
 import {AbstractOperation} from './abstract-operation';

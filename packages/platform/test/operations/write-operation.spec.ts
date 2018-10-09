@@ -3,7 +3,7 @@ import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
 import {HttpException} from '@rxstack/exceptions';
-describe('Platform:Operation:WRITE', () => {
+describe('Platform:Operation:Write', () => {
   // Setup application
 
   const app = new Application(PLATFORM_APP_OPTIONS);

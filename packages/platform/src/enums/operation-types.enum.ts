@@ -1,5 +1,6 @@
 export enum OperationTypesEnum {
   LIST = 'list',
   GET = 'get',
-  WRITE = 'write'
+  WRITE = 'write',
+  REMOVE = 'remove',
 }

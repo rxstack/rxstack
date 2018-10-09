@@ -17,6 +17,9 @@ import {CreateTaskWithPreSetDataOperation} from './mocks/operation-write/create-
 import {CreateTaskWithPostSetDataOperation} from './mocks/operation-write/create-task-with-post-set-data.operation';
 import {CreateTaskWithPreWriteOperation} from './mocks/operation-write/create-task-with-pre-write.operation';
 import {CreateTaskWithPostWriteOperation} from './mocks/operation-write/create-task-with-post-write.operation';
+import {RemoveTaskOperation} from './mocks/operation-remove/remove-task.operation';
+import {RemoveTaskWithPreRemoveOperation} from './mocks/operation-remove/remove-task-with-pre-remove.operation';
+import {RemoveTaskWithPostRemoveOperation} from './mocks/operation-remove/remove-task-with-post-remove.operation';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   imports: [
@@ -44,6 +47,9 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
     { provide: CreateTaskWithPostSetDataOperation, useClass: CreateTaskWithPostSetDataOperation },
     { provide: CreateTaskWithPreWriteOperation, useClass: CreateTaskWithPreWriteOperation },
     { provide: CreateTaskWithPostWriteOperation, useClass: CreateTaskWithPostWriteOperation },
+    { provide: RemoveTaskOperation, useClass: RemoveTaskOperation },
+    { provide: RemoveTaskWithPreRemoveOperation, useClass: RemoveTaskWithPreRemoveOperation },
+    { provide: RemoveTaskWithPostRemoveOperation, useClass: RemoveTaskWithPostRemoveOperation },
   ],
   servers: environmentPlatform.servers,
   logger: environmentPlatform.logger

@@ -1,10 +1,7 @@
-import {Injectable, InjectionToken} from 'injection-js';
+import {Injectable} from 'injection-js';
 import {Constructable, ResourceInterface, ServiceInterface} from '../../src';
 import {QueryInterface} from '@rxstack/query-filter';
-import {plainToClass, serialize} from 'class-transformer';
-import {TaskModel} from './task.model';
-
-export const TASK_SERVICE_TOKEN = new InjectionToken<ServiceInterface<TaskModel>>('TASK_SERVICE_TOKEN');
+import {plainToClass} from 'class-transformer';
 
 @Injectable()
 export class TaskService<T extends ResourceInterface> implements ServiceInterface<T> {
@@ -27,17 +24,13 @@ export class TaskService<T extends ResourceInterface> implements ServiceInterfac
     return 1;
   }
 
-  async find(id: any, options?: any): Promise<any> {
-    switch (id) {
+  async findOne(criteria: Object): Promise<any> {
+    switch (criteria['id']) {
       case 'not_found':
         return null;
       default:
         return this.plainToClass({ '_id': 1, 'name': 'my task', 'completed': true});
     }
-  }
-
-  async findOne(criteria: Object, options?: any): Promise<any> {
-    return undefined;
   }
 
   async findMany(query?: QueryInterface, options?: any): Promise<T[]> {

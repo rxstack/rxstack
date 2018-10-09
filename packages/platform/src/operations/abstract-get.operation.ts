@@ -1,14 +1,13 @@
 import {HttpMethod, Request, Response} from '@rxstack/core';
-import {ResourceInterface, ServiceInterface} from '../interfaces';
-import {AbstractOperation} from './abstract-operation';
+import {ResourceInterface} from '../interfaces';
 import {GetOperationMetadata} from '../metadata/get-operation.metadata';
-import {NotFoundException} from '@rxstack/exceptions';
 import {ApiOperationEvent} from '../events';
 import {classToPlain} from 'class-transformer';
 import {OperationTypesEnum} from '../enums/operation-types.enum';
 import {OperationEventsEnum} from '../enums/operation-events.enum';
+import {AbstractSingleResourceOperation} from './abstract-single-resource.operation';
 
-export abstract class AbstractGetOperation<T extends ResourceInterface> extends AbstractOperation {
+export abstract class AbstractGetOperation<T extends ResourceInterface> extends AbstractSingleResourceOperation<T> {
 
   metadata: GetOperationMetadata<T>;
 
@@ -31,17 +30,5 @@ export abstract class AbstractGetOperation<T extends ResourceInterface> extends 
 
   getSupportedHttpMethod(): HttpMethod {
     return 'GET';
-  }
-
-  protected getService(): ServiceInterface<T> {
-    return this.injector.get(this.metadata.service);
-  }
-
-  protected async findOr404(request: Request): Promise<T> {
-    const resource = await this.getService().find(request.params.get('id'));
-    if (!resource) {
-      throw new NotFoundException();
-    }
-    return resource;
   }
 }

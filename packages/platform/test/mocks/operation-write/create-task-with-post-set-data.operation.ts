@@ -10,8 +10,11 @@ import {ApiOperationEvent} from '../../../src/events';
   transports: ['SOCKET'],
   type: 'POST',
   service: TaskService,
+  validatorOptions: {
+    groups: ['create']
+  },
   onPostSetData: [
-    async (event: ApiOperationEvent) => {
+    async (event: ApiOperationEvent): Promise<void> => {
       const metadata = event.metadata as WriteOperationMetadata<TaskModel>;
       metadata.validatorOptions.groups = ['post_set_data'];
     }
