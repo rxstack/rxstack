@@ -29,7 +29,9 @@ export interface ServiceInterface<T extends ResourceInterface> {
 
   count(criteria?: Object): Promise<number>;
 
-  findMany(query?: QueryInterface, options?: any): Promise<T[]>;
+  find(id: any): Promise<T>;
 
-  findOne(criteria: Object, options?: any): Promise<T>;
+  findOne(criteria: Object): Promise<T>;
+
+  findMany(query?: QueryInterface): Promise<T[]>;
 }

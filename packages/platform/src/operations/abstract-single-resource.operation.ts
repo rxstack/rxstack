@@ -13,7 +13,7 @@ export abstract class AbstractSingleResourceOperation<T extends ResourceInterfac
   }
 
   protected async findOr404(request: Request): Promise<T> {
-    const resource = await this.getService().findOne({id: request.params.get('id')});
+    const resource = await this.getService().find(request.params.get('id'));
     if (!resource) {
       throw new NotFoundException();
     }

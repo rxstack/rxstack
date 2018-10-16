@@ -24,13 +24,17 @@ export class TaskService<T extends ResourceInterface> implements ServiceInterfac
     return 1;
   }
 
-  async findOne(criteria: Object): Promise<any> {
-    switch (criteria['id']) {
+  async find(id: any): Promise<T> {
+    switch (id) {
       case 'not_found':
         return null;
       default:
         return this.plainToClass({ '_id': 1, 'name': 'my task', 'completed': true});
     }
+  }
+
+  async findOne(criteria: Object): Promise<T> {
+    return null;
   }
 
   async findMany(query?: QueryInterface, options?: any): Promise<T[]> {
