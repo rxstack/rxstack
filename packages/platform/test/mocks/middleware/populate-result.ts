@@ -1,7 +1,7 @@
-import {ApiOperationCallable, ApiOperationEvent} from '../../../src';
+import {ApiOperationCallback, ApiOperationEvent} from '../../../src';
 
-export const populateResult = (data: any): ApiOperationCallable => {
+export const populateResult = (data: any): ApiOperationCallback => {
   return async (event: ApiOperationEvent): Promise<void> => {
-    event.data = data;
+    event.setData(data);
   };
 };

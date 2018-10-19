@@ -71,4 +71,29 @@ describe('Platform:Operation:List', () => {
     response.statusCode.should.equal(200);
     request.attributes.get('query')['where']['name'].should.be.equal('modified');
   });
+
+  it('@app_task_list_with_response_on_pre_read', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_list_with_response');
+    const request = new Request('SOCKET');
+    request.params.set('with_response', 'pre_read');
+    const response: Response = await def.handler(request);
+    response.content.should.equal('pre_read');
+  });
+
+  it('@app_task_list_with_response_on_query', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_list_with_response');
+    const request = new Request('SOCKET');
+    request.params.set('with_response', 'query');
+    const response: Response = await def.handler(request);
+    response.content.should.equal('query');
+  });
+
+
+  it('@app_task_list_with_response_on_post_read', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_list_with_response');
+    const request = new Request('SOCKET');
+    request.params.set('with_response', 'post_read');
+    const response: Response = await def.handler(request);
+    response.content.should.equal('post_read');
+  });
 });

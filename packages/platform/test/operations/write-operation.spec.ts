@@ -103,4 +103,39 @@ describe('Platform:Operation:Write', () => {
     exception.statusCode.should.equal(404);
   });
 
+  it('@app_task_create_with_response_on_pre_set_data', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create_with_response');
+    const request = new Request('SOCKET');
+    request.params.set('with_response', 'pre_set_data')
+    request.body = { 'name': 'my task'};
+    const response: Response = await def.handler(request);
+    response.content.should.equal('pre_set_data');
+  });
+
+  it('@app_task_create_with_response_on_post_set_data', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create_with_response');
+    const request = new Request('SOCKET');
+    request.params.set('with_response', 'post_set_data')
+    request.body = { 'name': 'my task'};
+    const response: Response = await def.handler(request);
+    response.content.should.equal('post_set_data');
+  });
+
+  it('@app_task_create_with_response_on_pre_write', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create_with_response');
+    const request = new Request('SOCKET');
+    request.params.set('with_response', 'pre_write')
+    request.body = { 'name': 'my task'};
+    const response: Response = await def.handler(request);
+    response.content.should.equal('pre_write');
+  });
+
+  it('@app_task_create_with_response_on_post_write', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create_with_response');
+    const request = new Request('SOCKET');
+    request.params.set('with_response', 'post_write')
+    request.body = { 'name': 'my task'};
+    const response: Response = await def.handler(request);
+    response.content.should.equal('post_write');
+  });
 });

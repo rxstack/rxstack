@@ -17,7 +17,7 @@ export class MemoryService<T extends ResourceInterface> implements ServiceInterf
               protected matcher: MatcherInterface,
               protected sorter: SorterInterface) { }
 
-  async createNew(): Promise<T> {
+  async createNew(data?: any): Promise<T> {
     const obj = new this.type();
     obj.id = uuid();
     return obj;

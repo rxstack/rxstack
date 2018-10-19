@@ -13,18 +13,21 @@ export abstract class AbstractGetOperation<T extends ResourceInterface> extends 
 
   onInit(): void {
     super.onInit();
-    this.registerOperationCallables(OperationEventsEnum.PRE_READ, this.metadata.onPreRead);
-    this.registerOperationCallables(OperationEventsEnum.POST_READ, this.metadata.onPostRead);
+    this.registerOperationCallbacks(OperationEventsEnum.PRE_READ, this.metadata.onPreRead);
+    this.registerOperationCallbacks(OperationEventsEnum.POST_READ, this.metadata.onPostRead);
   }
 
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.GET);
     const metadata = operationEvent.metadata as GetOperationMetadata<T>;
     await this.dispatch(OperationEventsEnum.PRE_READ, operationEvent);
-    operationEvent.data = await this.findOr404(request);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
+    operationEvent.setData(await this.findOr404(request));
     await this.dispatch(OperationEventsEnum.POST_READ, operationEvent);
-    return new Response(
-      classToPlain(operationEvent.data, metadata.classTransformerOptions), operationEvent.statusCode
+    return operationEvent.response ? operationEvent.response : new Response(
+      classToPlain(operationEvent.getData(), metadata.classTransformerOptions), operationEvent.statusCode
     );
   }
 

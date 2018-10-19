@@ -12,7 +12,7 @@ import {ApiOperationEvent} from '../../../src/events';
   service: TaskService,
   onPreWrite: [
     async (event: ApiOperationEvent): Promise<void> => {
-      const data = event.data as TaskModel;
+      const data = event.getData<TaskModel>();
       data.name = 'post_write';
     }
   ]

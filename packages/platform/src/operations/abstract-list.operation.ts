@@ -14,30 +14,40 @@ export abstract class AbstractListOperation<T extends ResourceInterface> extends
 
   onInit(): void {
     super.onInit();
-    this.registerOperationCallables(OperationEventsEnum.PRE_READ, this.metadata.onPreRead);
-    this.registerOperationCallables(OperationEventsEnum.QUERY, this.metadata.onQuery);
-    this.registerOperationCallables(OperationEventsEnum.POST_READ, this.metadata.onPostRead);
+    this.registerOperationCallbacks(OperationEventsEnum.PRE_READ, this.metadata.onPreRead);
+    this.registerOperationCallbacks(OperationEventsEnum.QUERY, this.metadata.onQuery);
+    this.registerOperationCallbacks(OperationEventsEnum.POST_READ, this.metadata.onPostRead);
   }
 
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.LIST);
     const metadata = operationEvent.metadata as ListOperationMetadata<T>;
     await this.dispatch(OperationEventsEnum.PRE_READ, operationEvent);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
     this.resolveQueryFilterSchema(metadata);
     const query = queryFilter.createQuery(metadata.queryFilterSchema, request.params.toObject());
     request.attributes.set('query', query);
 
     await this.dispatch(OperationEventsEnum.QUERY, operationEvent);
-    const data = classToPlain(await this.findMany(request), metadata.classTransformerOptions);
-    operationEvent.data = metadata.paginated ? {
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
+    operationEvent.setData(await this.findMany(request));
+    await this.dispatch(OperationEventsEnum.POST_READ, operationEvent);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
+    const transformedData = classToPlain(operationEvent.getData(), metadata.classTransformerOptions);
+    const responseData = metadata.paginated ? {
       total: await this.getCount(request),
-      data: data,
+      data: transformedData,
       limit: query.limit,
       skip: query.skip
-    } : data;
+    } : transformedData;
 
-    await this.dispatch(OperationEventsEnum.POST_READ, operationEvent);
-    return new Response(operationEvent.data, operationEvent.statusCode);
+    return new Response(responseData, operationEvent.statusCode);
   }
 
   getSupportedHttpMethod(): HttpMethod {

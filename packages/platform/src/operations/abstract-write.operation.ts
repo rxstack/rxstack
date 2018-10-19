@@ -15,28 +15,41 @@ export abstract class AbstractWriteOperation<T extends ResourceInterface> extend
 
   onInit(): void {
     super.onInit();
-    this.registerOperationCallables(OperationEventsEnum.PRE_SET_DATA, this.metadata.onPreSetData);
-    this.registerOperationCallables(OperationEventsEnum.POST_SET_DATA, this.metadata.onPostSetData);
-    this.registerOperationCallables(OperationEventsEnum.PRE_WRITE, this.metadata.onPreWrite);
-    this.registerOperationCallables(OperationEventsEnum.POST_WRITE, this.metadata.onPostWrite);
+    this.registerOperationCallbacks(OperationEventsEnum.PRE_SET_DATA, this.metadata.onPreSetData);
+    this.registerOperationCallbacks(OperationEventsEnum.POST_SET_DATA, this.metadata.onPostSetData);
+    this.registerOperationCallbacks(OperationEventsEnum.PRE_WRITE, this.metadata.onPreWrite);
+    this.registerOperationCallbacks(OperationEventsEnum.POST_WRITE, this.metadata.onPostWrite);
   }
 
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.WRITE);
     const metadata = operationEvent.metadata as WriteOperationMetadata<T>;
     operationEvent.statusCode = metadata.type === 'POST' ? 201 : 204;
-    operationEvent.data = metadata.type === 'POST'
+    const resource = metadata.type === 'POST'
       ? await this.createNew(request) : this.findOr404(request);
+    operationEvent.setData(resource);
     await this.dispatch(OperationEventsEnum.PRE_SET_DATA, operationEvent);
-    plainToClassFromExist(operationEvent.data, request.body);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
+    plainToClassFromExist(operationEvent.getData(), request.body);
     this.resolveValidatorOptions(metadata);
     await this.dispatch(OperationEventsEnum.POST_SET_DATA, operationEvent);
-    await this.validate(operationEvent.data, metadata.validatorOptions);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
+    await this.validate(operationEvent.getData(), metadata.validatorOptions);
     await this.dispatch(OperationEventsEnum.PRE_WRITE, operationEvent);
-    operationEvent.data = await this.doWrite(operationEvent.data);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
+    operationEvent.setData(await this.doWrite(operationEvent.getData()));
     await this.dispatch(OperationEventsEnum.POST_WRITE, operationEvent);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
     const data = operationEvent.statusCode !== 204
-      ? classToPlain(operationEvent.data, metadata.classTransformerOptions) : null;
+      ? classToPlain(operationEvent.getData(), metadata.classTransformerOptions) : null;
     return new Response(data, operationEvent.statusCode);
   }
 

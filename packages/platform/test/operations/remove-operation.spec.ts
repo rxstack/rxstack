@@ -50,4 +50,20 @@ describe('Platform:Operation:Remove', () => {
     response.statusCode.should.equal(200);
     response.content['success'].should.be.equal(true);
   });
+
+  it('@app_task_remove_with_response_on_pre_remove ', async () => {
+    const def = kernel.httpDefinitions.find((def) => def.name === 'app_task_remove_with_response');
+    const request = new Request('HTTP');
+    request.params.set('with_response', 'pre_remove');
+    const response: Response = await def.handler(request);
+    response.content.should.equal('pre_remove');
+  });
+
+  it('@app_task_remove_with_response_on_post_remove ', async () => {
+    const def = kernel.httpDefinitions.find((def) => def.name === 'app_task_remove_with_response');
+    const request = new Request('HTTP');
+    request.params.set('with_response', 'post_remove');
+    const response: Response = await def.handler(request);
+    response.content.should.equal('post_remove');
+  });
 });

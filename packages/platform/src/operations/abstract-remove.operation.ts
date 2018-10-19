@@ -12,20 +12,26 @@ export abstract class AbstractRemoveOperation<T extends ResourceInterface> exten
 
   onInit(): void {
     super.onInit();
-    this.registerOperationCallables(OperationEventsEnum.PRE_REMOVE, this.metadata.onPreRemove);
-    this.registerOperationCallables(OperationEventsEnum.POST_REMOVE, this.metadata.onPostRemove);
+    this.registerOperationCallbacks(OperationEventsEnum.PRE_REMOVE, this.metadata.onPreRemove);
+    this.registerOperationCallbacks(OperationEventsEnum.POST_REMOVE, this.metadata.onPostRemove);
   }
 
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.REMOVE);
     operationEvent.statusCode = 204;
     const metadata = operationEvent.metadata as RemoveOperationMetadata<T>;
-    operationEvent.data = await this.findOr404(request);
+    operationEvent.setData(await this.findOr404(request));
     await this.dispatch(OperationEventsEnum.PRE_REMOVE, operationEvent);
-    await this.doRemove(operationEvent.data);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
+    await this.doRemove(operationEvent.getData());
     await this.dispatch(OperationEventsEnum.POST_REMOVE, operationEvent);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
     const data = operationEvent.statusCode !== 204
-      ? classToPlain(operationEvent.data, metadata.classTransformerOptions) : null;
+      ? classToPlain(operationEvent.getData(), metadata.classTransformerOptions) : null;
     return new Response(data, operationEvent.statusCode);
   }
 

@@ -3,7 +3,7 @@ import {ApiOperationEvent} from './events/api-operation.event';
 
 export const API_OPERATION_KEY = 'API_OPERATION_KEY';
 
-export type ApiOperationCallable = (event: ApiOperationEvent) => Promise<void>;
+export type ApiOperationCallback = (event: ApiOperationEvent) => Promise<void>;
 
 export interface Pagination<T> {
   total: number;

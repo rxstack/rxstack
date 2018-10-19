@@ -3,15 +3,21 @@ import {TaskModel} from '../task.model';
 import {Injectable} from 'injection-js';
 import {TaskService} from '../task.service';
 import {AbstractListOperation} from '../../../src/operations/abstract-list.operation';
-import {setRequestParam} from '../middleware/set-request-param';
+import {setResponse} from '../middleware/set-response';
 
 @ApiOperation<ListOperationMetadata<TaskModel>>({
-  name: 'app_task_list_with_pre_read',
+  name: 'app_task_list_with_response',
   transports: ['SOCKET'],
   service: TaskService,
   onPreRead: [
-    setRequestParam('app_task_list_with_pre_read', 'modified')
+    setResponse('pre_read')
+  ],
+  onQuery: [
+    setResponse('query')
+  ],
+  onPostRead: [
+    setResponse('post_read')
   ]
 })
 @Injectable()
-export class ListTaskOperationWithPreRead extends AbstractListOperation<TaskModel> { }
+export class ListTaskOperationWithResponse extends AbstractListOperation<TaskModel> { }

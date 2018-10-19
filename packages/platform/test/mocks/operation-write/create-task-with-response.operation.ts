@@ -3,19 +3,23 @@ import {TaskModel} from '../task.model';
 import {Injectable} from 'injection-js';
 import {TaskService} from '../task.service';
 import {AbstractWriteOperation} from '../../../src/operations/abstract-write.operation';
-import {ApiOperationEvent} from '../../../src/events';
+import {setResponse} from '../middleware/set-response';
 
 @ApiOperation<WriteOperationMetadata<TaskModel>>({
-  name: 'app_task_create_with_pre_write',
+  name: 'app_task_create_with_response',
   transports: ['SOCKET'],
   type: 'POST',
   service: TaskService,
+  onPreSetData: [setResponse('pre_set_data')],
+  onPostSetData: [
+    setResponse('post_set_data')
+  ],
   onPreWrite: [
-    async (event: ApiOperationEvent): Promise<void> => {
-      const data = event.getData<TaskModel>();
-      data.name = 'pre_write';
-    }
+    setResponse('pre_write')
+  ],
+  onPostWrite: [
+    setResponse('post_write')
   ]
 })
 @Injectable()
-export class CreateTaskWithPreWriteOperation extends AbstractWriteOperation<TaskModel> { }
+export class CreateTaskWithResponseOperation extends AbstractWriteOperation<TaskModel> { }

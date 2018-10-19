@@ -2,7 +2,7 @@ import {HttpMethod, InjectorAwareInterface, Request, Response} from '@rxstack/co
 import {Injector} from 'injection-js';
 import {ApiOperationMetadata} from '../metadata/api-operation.metadata';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {ApiOperationCallable} from '../interfaces';
+import {ApiOperationCallback} from '../interfaces';
 import {ApiOperationEvent} from '../events';
 
 export abstract class AbstractOperation implements InjectorAwareInterface {
@@ -25,10 +25,10 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
     await this.getDispatcher().dispatch(this.metadata.name + '.' + name, event);
   }
 
-  protected registerOperationCallables(name: string, callables?: ApiOperationCallable[]): void {
-    if (callables) {
-      callables.forEach((callable): void => {
-        this.getDispatcher().addListener(this.metadata.name + '.' + name, callable);
+  protected registerOperationCallbacks(name: string, callbacks?: ApiOperationCallback[]): void {
+    if (callbacks) {
+      callbacks.forEach((callback): void => {
+        this.getDispatcher().addListener(this.metadata.name + '.' + name, callback);
       });
     }
   }

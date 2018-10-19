@@ -20,6 +20,10 @@ import {CreateTaskWithPostWriteOperation} from './mocks/operation-write/create-t
 import {RemoveTaskOperation} from './mocks/operation-remove/remove-task.operation';
 import {RemoveTaskWithPreRemoveOperation} from './mocks/operation-remove/remove-task-with-pre-remove.operation';
 import {RemoveTaskWithPostRemoveOperation} from './mocks/operation-remove/remove-task-with-post-remove.operation';
+import {GetTaskWithResponseOperation} from './mocks/operations-get/get-task-with-response.operation';
+import {ListTaskOperationWithResponse} from './mocks/operation-list/list-task.operation-with-response';
+import {RemoveTaskWithResponseOperation} from './mocks/operation-remove/remove-task-with-response.operation';
+import {CreateTaskWithResponseOperation} from './mocks/operation-write/create-task-with-response.operation';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   imports: [
@@ -36,20 +40,24 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
     { provide: GetTaskOperation, useClass: GetTaskOperation },
     { provide: GetTaskWithPreReadOperation, useClass: GetTaskWithPreReadOperation },
     { provide: GetTaskWithPostReadOperation, useClass: GetTaskWithPostReadOperation },
+    { provide: GetTaskWithResponseOperation, useClass: GetTaskWithResponseOperation },
     { provide: ListTaskOperation, useClass: ListTaskOperation },
     { provide: ListTaskWithPaginationOperation, useClass: ListTaskWithPaginationOperation },
     { provide: ListTaskWithQueryOperation, useClass: ListTaskWithQueryOperation },
     { provide: ListTaskOperationWithPreRead, useClass: ListTaskOperationWithPreRead },
     { provide: ListTaskWithOnQueryOperation, useClass: ListTaskWithOnQueryOperation },
+    { provide: ListTaskOperationWithResponse, useClass: ListTaskOperationWithResponse },
     { provide: CreateTaskOperation, useClass: CreateTaskOperation },
     { provide: UpdateTaskOperation, useClass: UpdateTaskOperation },
     { provide: CreateTaskWithPreSetDataOperation, useClass: CreateTaskWithPreSetDataOperation },
     { provide: CreateTaskWithPostSetDataOperation, useClass: CreateTaskWithPostSetDataOperation },
     { provide: CreateTaskWithPreWriteOperation, useClass: CreateTaskWithPreWriteOperation },
     { provide: CreateTaskWithPostWriteOperation, useClass: CreateTaskWithPostWriteOperation },
+    { provide: CreateTaskWithResponseOperation, useClass: CreateTaskWithResponseOperation },
     { provide: RemoveTaskOperation, useClass: RemoveTaskOperation },
     { provide: RemoveTaskWithPreRemoveOperation, useClass: RemoveTaskWithPreRemoveOperation },
     { provide: RemoveTaskWithPostRemoveOperation, useClass: RemoveTaskWithPostRemoveOperation },
+    { provide: RemoveTaskWithResponseOperation, useClass: RemoveTaskWithResponseOperation },
   ],
   servers: environmentPlatform.servers,
   logger: environmentPlatform.logger
