@@ -1,37 +1,33 @@
-import {QueryInterface} from '@rxstack/query-filter';
+import {QueryInterface, SortInterface} from '@rxstack/query-filter';
 import {ApiOperationEvent} from './events/api-operation.event';
 
 export const API_OPERATION_KEY = 'API_OPERATION_KEY';
 
 export type ApiOperationCallback = (event: ApiOperationEvent) => Promise<void>;
 
-export interface Pagination<T> {
-  total: number;
-  limit: number;
-  skip: number;
-  data: T[];
+export interface ServiceOptions {
+  idField: string;
 }
 
-export interface Constructable<T> {
-  new(): T;
-}
+export interface DriverOptions { }
 
-export interface ResourceInterface {
-  id: any;
-}
+export interface ServiceInterface<T> {
 
-export interface ServiceInterface<T extends ResourceInterface> {
-  createNew(): Promise<T>;
+  options: ServiceOptions;
 
-  save(resource: T): Promise<T>;
+  create(data: Object, options?: DriverOptions): Promise<T>;
 
-  remove(resource: T): Promise<void>;
+  replace(id: any, data: Object, options?: DriverOptions): Promise<T>;
 
-  count(criteria?: Object): Promise<number>;
+  patch(id: any, data: Object, options?: DriverOptions): Promise<T>;
 
-  find(id: any): Promise<T>;
+  remove(id: any, options?: DriverOptions): Promise<void>;
 
-  findOne(criteria: Object): Promise<T>;
+  count(criteria?: Object, options?: DriverOptions): Promise<number>;
 
-  findMany(query?: QueryInterface): Promise<T[]>;
+  findOneById(id: any, options?: DriverOptions): Promise<T>;
+
+  findOne(criteria: Object, sort?: SortInterface, options?: DriverOptions): Promise<T>;
+
+  findMany(query: QueryInterface, options?: DriverOptions): Promise<T[]>;
 }

@@ -1,15 +1,14 @@
-import {queryFilter, QueryInterface} from '@rxstack/query-filter';
+import {queryFilter} from '@rxstack/query-filter';
 import {HttpMethod, Request, Response} from '@rxstack/core';
-import {ResourceInterface, ServiceInterface} from '../interfaces';
+import {ServiceInterface} from '../interfaces';
 import {AbstractOperation} from './abstract-operation';
 import {ListOperationMetadata} from '../metadata/list-operation.metadata';
 import {OperationEventsEnum} from '../enums/operation-events.enum';
 import {ApiOperationEvent} from '../events';
 import {OperationTypesEnum} from '../enums/operation-types.enum';
-import {classToPlain} from 'class-transformer';
 import * as _ from 'lodash';
 
-export abstract class AbstractListOperation<T extends ResourceInterface> extends AbstractOperation {
+export abstract class AbstractListOperation<T> extends AbstractOperation {
   metadata: ListOperationMetadata<T>;
 
   onInit(): void {
@@ -29,7 +28,6 @@ export abstract class AbstractListOperation<T extends ResourceInterface> extends
     this.resolveQueryFilterSchema(metadata);
     const query = queryFilter.createQuery(metadata.queryFilterSchema, request.params.toObject());
     request.attributes.set('query', query);
-
     await this.dispatch(OperationEventsEnum.QUERY, operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
@@ -39,13 +37,12 @@ export abstract class AbstractListOperation<T extends ResourceInterface> extends
     if (operationEvent.response) {
       return operationEvent.response;
     }
-    const transformedData = classToPlain(operationEvent.getData(), metadata.classTransformerOptions);
     const responseData = metadata.paginated ? {
       total: await this.getCount(request),
-      data: transformedData,
+      data: operationEvent.getData(),
       limit: query.limit,
       skip: query.skip
-    } : transformedData;
+    } : operationEvent.getData();
 
     return new Response(responseData, operationEvent.statusCode);
   }
@@ -55,13 +52,11 @@ export abstract class AbstractListOperation<T extends ResourceInterface> extends
   }
 
   protected async getCount(request: Request): Promise<number> {
-    const query = <QueryInterface>request.attributes.get('query');
-    return this.getService().count(query.where);
+    return this.getService().count(request.attributes.get('query').where);
   }
 
   protected async findMany(request: Request): Promise<T[]> {
-    const query = <QueryInterface>request.attributes.get('query');
-    return this.getService().findMany(query);
+    return this.getService().findMany(request.attributes.get('query'));
   }
 
   protected getService(): ServiceInterface<T> {

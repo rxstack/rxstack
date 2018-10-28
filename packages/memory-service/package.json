@@ -28,11 +28,11 @@
     "test": "npm run lint && npm run coverage"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.1",
     "@rxstack/core": "^0.1",
     "@rxstack/exceptions": "^0.1",
     "@rxstack/query-filter": "^0.1",
     "@rxstack/platform": "^0.1",
+    "@rxstack/data-fixtures": "^0.1",
     "injection-js": "^2.1",
     "lodash": "^4.17.11",
     "reflect-metadata": "^0.1",

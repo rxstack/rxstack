@@ -1,49 +1,49 @@
 import {Injectable} from 'injection-js';
-import {Constructable, ResourceInterface, ServiceInterface} from '../../src';
-import {QueryInterface} from '@rxstack/query-filter';
-import {plainToClass} from 'class-transformer';
+import {ServiceInterface, ServiceOptions} from '../../src';
+import {QueryInterface, SortInterface} from '@rxstack/query-filter';
+import {TaskModel} from './task.model';
 
 @Injectable()
-export class TaskService<T extends ResourceInterface> implements ServiceInterface<T> {
+export class TaskService implements ServiceInterface<TaskModel> {
 
-  constructor(protected type: Constructable<T>) { }
+  static data: TaskModel[] = [
+    { 'id': 'task-1', 'name': 'my task', 'completed': true}
+  ];
 
-  async createNew(): Promise<T> {
-    return new this.type();
+  options: ServiceOptions = { idField: 'id' };
+
+  async create(data: Object): Promise<TaskModel> {
+    return data as TaskModel;
   }
 
-  async save(resource: T): Promise<T> {
-    return resource;
+  async replace(id: any, data: Object): Promise<TaskModel> {
+    return data as TaskModel;
   }
 
-  async remove(resource: T): Promise<void> {
-    // do remove
+  async patch(id: any, data: Object): Promise<TaskModel> {
+    return data as TaskModel;
   }
+
+  async remove(id: any): Promise<void> { }
 
   async count(criteria?: Object): Promise<number> {
     return 1;
   }
 
-  async find(id: any): Promise<T> {
+  async findOneById(id: any): Promise<TaskModel> {
     switch (id) {
       case 'not_found':
         return null;
       default:
-        return this.plainToClass({ '_id': 1, 'name': 'my task', 'completed': true});
+        return TaskService.data[0];
     }
   }
 
-  async findOne(criteria: Object): Promise<T> {
-    return null;
+  async findOne(criteria: Object, sort?: SortInterface): Promise<TaskModel> {
+    return TaskService.data[0];
   }
 
-  async findMany(query?: QueryInterface, options?: any): Promise<T[]> {
-    return plainToClass(this.type, [
-      { '_id': 1, 'name': 'my task', 'completed': true}
-    ]);
-  }
-
-  protected plainToClass(data: Object): T {
-    return plainToClass(this.type, data);
+  async findMany(query: QueryInterface): Promise<TaskModel[]> {
+    return TaskService.data;
   }
 }

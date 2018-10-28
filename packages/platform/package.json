@@ -32,8 +32,6 @@
     "@rxstack/core": "^0.1",
     "@rxstack/exceptions": "^0.1",
     "@rxstack/query-filter": "^0.1",
-    "class-transformer": "^0.1.9",
-    "class-validator": "^0.9.1",
     "injection-js": "^2.1",
     "lodash": "^4.17.11",
     "reflect-metadata": "^0.1"

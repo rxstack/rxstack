@@ -1,12 +1,11 @@
 import {Injectable} from 'injection-js';
-import {ResourceInterface} from '@rxstack/platform';
 
 @Injectable()
-export class DataContainer<T extends ResourceInterface> {
+export class DataContainer {
 
-  private collections: Map<string, Map<string, T>> = new Map();
+  private collections: Map<string, Map<string, any>> = new Map();
 
-  getCollection(name: string): Map<string, T> {
+  getCollection<T>(name: string): Map<string, T> {
     if (!this.collections.has(name)) {
       this.collections.set(name, new Map());
     }

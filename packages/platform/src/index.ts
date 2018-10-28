@@ -5,4 +5,3 @@ export * from './events';
 export * from './metadata';
 export * from './operations';
 export * from './platform.module';
-export * from './exceptions';

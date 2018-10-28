@@ -1,6 +1,4 @@
-import {ResourceInterface} from '@rxstack/platform';
-
-export class Product implements ResourceInterface {
+export interface Product {
   id: string;
   name: string;
   price: number;

@@ -12,8 +12,7 @@ import {ApiOperationEvent} from '../../../src/events';
   service: TaskService,
   onPreWrite: [
     async (event: ApiOperationEvent): Promise<void> => {
-      const data = event.getData<TaskModel>();
-      data.name = 'pre_write';
+      event.request.body = {'id': 'task-create', 'name': 'pre_write', 'completed': true};
     }
   ]
 })

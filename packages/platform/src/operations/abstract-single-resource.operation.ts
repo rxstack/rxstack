@@ -1,11 +1,11 @@
 import {Request} from '@rxstack/core';
-import {ResourceInterface, ServiceInterface} from '../interfaces';
+import {ServiceInterface} from '../interfaces';
 import {AbstractOperation} from './abstract-operation';
 import {NotFoundException} from '@rxstack/exceptions';
 import {RemoveOperationMetadata} from '../metadata/remove-operation.metadata';
 import {GetOperationMetadata, WriteOperationMetadata} from '../metadata';
 
-export abstract class AbstractSingleResourceOperation<T extends ResourceInterface> extends AbstractOperation {
+export abstract class AbstractSingleResourceOperation<T> extends AbstractOperation {
   metadata: GetOperationMetadata<T> | WriteOperationMetadata<T> | RemoveOperationMetadata<T>;
 
   protected getService(): ServiceInterface<T> {
@@ -13,7 +13,7 @@ export abstract class AbstractSingleResourceOperation<T extends ResourceInterfac
   }
 
   protected async findOr404(request: Request): Promise<T> {
-    const resource = await this.getService().find(request.params.get('id'));
+    const resource = await this.getService().findOneById(request.params.get('id'));
     if (!resource) {
       throw new NotFoundException();
     }

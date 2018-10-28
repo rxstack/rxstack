@@ -1,24 +1,20 @@
 import {ApiOperation, WriteOperationMetadata} from '../../../src/metadata/index';
-import {TaskModel} from '../task.model';
 import {Injectable} from 'injection-js';
 import {TaskService} from '../task.service';
 import {AbstractWriteOperation} from '../../../src/operations/abstract-write.operation';
+import {TaskModel} from '../task.model';
 import {ApiOperationEvent} from '../../../src/events';
 
 @ApiOperation<WriteOperationMetadata<TaskModel>>({
-  name: 'app_task_create_with_post_set_data',
+  name: 'app_task_patch',
   transports: ['SOCKET'],
-  type: 'POST',
+  type: 'PATCH',
   service: TaskService,
-  validatorOptions: {
-    groups: ['create']
-  },
-  onPostSetData: [
+  onPostWrite: [
     async (event: ApiOperationEvent): Promise<void> => {
-      const metadata = event.metadata as WriteOperationMetadata<TaskModel>;
-      metadata.validatorOptions.groups = ['post_set_data'];
+      event.statusCode = 200;
     }
   ]
 })
 @Injectable()
-export class CreateTaskWithPostSetDataOperation extends AbstractWriteOperation<TaskModel> { }
+export class PatchTaskOperation extends AbstractWriteOperation<TaskModel> { }

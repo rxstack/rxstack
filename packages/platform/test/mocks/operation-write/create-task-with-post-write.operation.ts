@@ -10,7 +10,7 @@ import {ApiOperationEvent} from '../../../src/events';
   transports: ['SOCKET'],
   type: 'POST',
   service: TaskService,
-  onPreWrite: [
+  onPostWrite: [
     async (event: ApiOperationEvent): Promise<void> => {
       const data = event.getData<TaskModel>();
       data.name = 'post_write';
