@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import {Application} from '../../core';
 import {MEMORY_SERVICE_OPTIONS, PRODUCT_SERVICE} from './mocks/MEMORY_SERVICE_OPTIONS';
 import {Injector} from 'injection-js';
-import {MemoryPurger} from '../src/memory-purger';
+import {DataContainer} from '../src';
 
 describe('MemoryService:Impl', () => {
   // Setup application
@@ -27,7 +27,7 @@ describe('MemoryService:Impl', () => {
   });
 
   beforeEach(async () => {
-    await injector.get(MemoryPurger).purge();
+    await injector.get(DataContainer).purge();
   });
 
   it('#create', async () => {

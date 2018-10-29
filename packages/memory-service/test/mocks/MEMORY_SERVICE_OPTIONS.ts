@@ -5,7 +5,6 @@ import {
 } from '../../src';
 import {InjectionToken} from 'injection-js';
 import {Product} from './product';
-import {MemoryPurger} from '../../src/memory-purger';
 
 export const PRODUCT_SERVICE = new InjectionToken<MemoryService<Product>>('PRODUCT_SERVICE');
 
@@ -19,7 +18,6 @@ export const MEMORY_SERVICE_OPTIONS: ApplicationOptions = {
       },
       deps: [],
     },
-    { provide: MemoryPurger, useClass: MemoryPurger }
   ],
   logger: {
     handlers: [

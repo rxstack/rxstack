@@ -1,4 +1,4 @@
-# The Platform Module
+# The RxStack Platform Module
 
 > TBD
 
