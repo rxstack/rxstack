@@ -8,6 +8,11 @@ import {GetOperationMetadata, WriteOperationMetadata} from '../metadata';
 export abstract class AbstractSingleResourceOperation<T> extends AbstractOperation {
   metadata: GetOperationMetadata<T> | WriteOperationMetadata<T> | RemoveOperationMetadata<T>;
 
+  onInit(): void {
+    super.onInit();
+
+  }
+
   protected getService(): ServiceInterface<T> {
     return this.injector.get(this.metadata.service);
   }

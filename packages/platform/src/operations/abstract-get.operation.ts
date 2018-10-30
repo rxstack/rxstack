@@ -9,12 +9,6 @@ export abstract class AbstractGetOperation<T> extends AbstractSingleResourceOper
 
   metadata: GetOperationMetadata<T>;
 
-  onInit(): void {
-    super.onInit();
-    this.registerOperationCallbacks(OperationEventsEnum.PRE_READ, this.metadata.onPreRead);
-    this.registerOperationCallbacks(OperationEventsEnum.POST_READ, this.metadata.onPostRead);
-  }
-
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.GET);
     await this.dispatch(OperationEventsEnum.PRE_READ, operationEvent);
@@ -26,6 +20,13 @@ export abstract class AbstractGetOperation<T> extends AbstractSingleResourceOper
     return operationEvent.response ? operationEvent.response : new Response(
       operationEvent.getData(), operationEvent.statusCode
     );
+  }
+
+  getCallbacksKeys(): OperationEventsEnum[] {
+    return [
+      OperationEventsEnum.PRE_READ,
+      OperationEventsEnum.POST_READ,
+    ];
   }
 
   getSupportedHttpMethod(): HttpMethod {

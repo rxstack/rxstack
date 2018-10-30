@@ -1,9 +1,7 @@
-import {ApiOperationMetadata} from './api-operation.metadata';
-import {InjectionToken, Type} from 'injection-js/index';
-import {ApiOperationCallback, ServiceInterface} from '../interfaces';
+import {ApiOperationCallback} from '../interfaces';
+import {ServiceAwareOperationMetadata} from './service-aware-operation.metadata';
 
-export interface WriteOperationMetadata<T> extends ApiOperationMetadata {
-  service: Type<ServiceInterface<T>> | InjectionToken<ServiceInterface<T>>;
+export interface WriteOperationMetadata<T> extends ServiceAwareOperationMetadata<T> {
   type: 'POST' | 'PUT' | 'PATCH';
   onPreWrite?: ApiOperationCallback[];
   onPostWrite?: ApiOperationCallback[];

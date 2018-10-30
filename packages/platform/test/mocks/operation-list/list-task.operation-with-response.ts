@@ -9,13 +9,13 @@ import {TaskModel} from '../task.model';
   name: 'app_task_list_with_response',
   transports: ['SOCKET'],
   service: TaskService,
-  onPreRead: [
+  onPreCollectionRead: [
     setResponse('pre_read')
   ],
   onQuery: [
     setResponse('query')
   ],
-  onPostRead: [
+  onPostCollectionRead: [
     setResponse('post_read')
   ]
 })

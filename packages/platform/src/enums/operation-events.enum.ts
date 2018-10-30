@@ -1,9 +1,11 @@
 export enum OperationEventsEnum {
-  PRE_READ = 'pre_read',
-  POST_READ = 'post_read',
+  PRE_COLLECTION_READ = 'preCollectionRead',
+  POST_COLLECTION_READ = 'postCollectionRead',
+  PRE_READ = 'preRead',
+  POST_READ = 'postRead',
   QUERY = 'query',
-  PRE_WRITE = 'pre_write',
-  POST_WRITE = 'post_write',
-  PRE_REMOVE = 'pre_remove',
-  POST_REMOVE = 'post_remove',
+  PRE_WRITE = 'preWrite',
+  POST_WRITE = 'postWrite',
+  PRE_REMOVE = 'preRemove',
+  POST_REMOVE = 'postRemove',
 }

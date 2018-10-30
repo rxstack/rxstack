@@ -1,13 +1,11 @@
 import {QueryFilterSchema} from '@rxstack/query-filter';
-import {ApiOperationMetadata} from './api-operation.metadata';
-import {InjectionToken, Type} from 'injection-js/index';
-import {ApiOperationCallback, ServiceInterface} from '../interfaces';
+import {ApiOperationCallback} from '../interfaces';
+import {ServiceAwareOperationMetadata} from './service-aware-operation.metadata';
 
-export interface ListOperationMetadata<T> extends ApiOperationMetadata {
-  service: Type<ServiceInterface<T>> | InjectionToken<ServiceInterface<T>>;
+export interface ListOperationMetadata<T> extends ServiceAwareOperationMetadata<T> {
   queryFilterSchema?: QueryFilterSchema;
   paginated?: boolean;
-  onPreRead?: ApiOperationCallback[];
+  onPreCollectionRead?: ApiOperationCallback[];
   onQuery?: ApiOperationCallback[];
-  onPostRead?: ApiOperationCallback[];
+  onPostCollectionRead?: ApiOperationCallback[];
 }

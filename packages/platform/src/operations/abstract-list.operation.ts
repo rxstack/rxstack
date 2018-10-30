@@ -11,17 +11,10 @@ import * as _ from 'lodash';
 export abstract class AbstractListOperation<T> extends AbstractOperation {
   metadata: ListOperationMetadata<T>;
 
-  onInit(): void {
-    super.onInit();
-    this.registerOperationCallbacks(OperationEventsEnum.PRE_READ, this.metadata.onPreRead);
-    this.registerOperationCallbacks(OperationEventsEnum.QUERY, this.metadata.onQuery);
-    this.registerOperationCallbacks(OperationEventsEnum.POST_READ, this.metadata.onPostRead);
-  }
-
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.LIST);
     const metadata = operationEvent.metadata as ListOperationMetadata<T>;
-    await this.dispatch(OperationEventsEnum.PRE_READ, operationEvent);
+    await this.dispatch(OperationEventsEnum.PRE_COLLECTION_READ, operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }
@@ -33,7 +26,7 @@ export abstract class AbstractListOperation<T> extends AbstractOperation {
       return operationEvent.response;
     }
     operationEvent.setData(await this.findMany(request));
-    await this.dispatch(OperationEventsEnum.POST_READ, operationEvent);
+    await this.dispatch(OperationEventsEnum.POST_COLLECTION_READ, operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }
@@ -45,6 +38,14 @@ export abstract class AbstractListOperation<T> extends AbstractOperation {
     } : operationEvent.getData();
 
     return new Response(responseData, operationEvent.statusCode);
+  }
+
+  getCallbacksKeys(): OperationEventsEnum[] {
+    return [
+      OperationEventsEnum.PRE_COLLECTION_READ,
+      OperationEventsEnum.QUERY,
+      OperationEventsEnum.POST_COLLECTION_READ
+    ];
   }
 
   getSupportedHttpMethod(): HttpMethod {

@@ -9,7 +9,7 @@ import {TaskModel} from '../task.model';
   name: 'app_task_list_with_pre_read',
   transports: ['SOCKET'],
   service: TaskService,
-  onPreRead: [
+  onPreCollectionRead: [
     setRequestParam('app_task_list_with_pre_read', 'modified')
   ]
 })

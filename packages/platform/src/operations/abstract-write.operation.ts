@@ -7,12 +7,6 @@ import {AbstractSingleResourceOperation} from './abstract-single-resource.operat
 export abstract class AbstractWriteOperation<T> extends AbstractSingleResourceOperation<T> {
   metadata: WriteOperationMetadata<T>;
 
-  onInit(): void {
-    super.onInit();
-    this.registerOperationCallbacks(OperationEventsEnum.PRE_WRITE, this.metadata.onPreWrite);
-    this.registerOperationCallbacks(OperationEventsEnum.POST_WRITE, this.metadata.onPostWrite);
-  }
-
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.WRITE);
     const metadata = operationEvent.metadata as WriteOperationMetadata<T>;
@@ -36,26 +30,22 @@ export abstract class AbstractWriteOperation<T> extends AbstractSingleResourceOp
     return this.metadata.type;
   }
 
+  getCallbacksKeys(): OperationEventsEnum[] {
+    return [
+      OperationEventsEnum.PRE_WRITE,
+      OperationEventsEnum.POST_WRITE,
+    ];
+  }
+
   protected async doWrite(request: Request): Promise<T> {
+
     switch (this.metadata.type) {
       case 'POST':
-        return this.doCreate(request);
+        return this.getService().create(request.body);
       case 'PUT':
-        return this.doReplace(request);
+        return this.getService().replace(request.params.get('id'), request.body);
       case 'PATCH':
-        return this.doPatch(request);
+        return this.getService().patch(request.params.get('id'), request.body);
     }
-  }
-
-  protected async doCreate(request: Request): Promise<T> {
-    return this.getService().create(request.body);
-  }
-
-  protected async doReplace(request: Request): Promise<T> {
-    return await this.getService().replace(request.params.get('id'), request.body);
-  }
-
-  protected async doPatch(request: Request): Promise<T> {
-    return await this.getService().patch(request.params.get('id'), request.body);
   }
 }

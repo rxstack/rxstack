@@ -4,6 +4,7 @@ import {ApiOperationMetadata} from '../metadata/api-operation.metadata';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {ApiOperationCallback} from '../interfaces';
 import {ApiOperationEvent} from '../events';
+import {OperationEventsEnum} from '../enums/operation-events.enum';
 
 export abstract class AbstractOperation implements InjectorAwareInterface {
 
@@ -15,7 +16,10 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
     this.injector = injector;
   }
 
-  onInit(): void { }
+  onInit(): void {
+    this.getCallbacksKeys().forEach(key =>
+      this.registerOperationCallbacks(key, this.metadata['on' + key.charAt(0).toUpperCase() + key.slice(1)]));
+  }
 
   protected getDispatcher(): AsyncEventDispatcher {
     return this.injector.get(AsyncEventDispatcher);
@@ -36,5 +40,9 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
   abstract execute(request: Request): Promise<Response>;
 
   abstract getSupportedHttpMethod(): HttpMethod;
+
+  abstract getCallbacksKeys(): OperationEventsEnum[];
+
+
 }
 

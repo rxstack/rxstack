@@ -8,12 +8,6 @@ import {AbstractSingleResourceOperation} from './abstract-single-resource.operat
 export abstract class AbstractRemoveOperation<T> extends AbstractSingleResourceOperation<T> {
   metadata: RemoveOperationMetadata<T>;
 
-  onInit(): void {
-    super.onInit();
-    this.registerOperationCallbacks(OperationEventsEnum.PRE_REMOVE, this.metadata.onPreRemove);
-    this.registerOperationCallbacks(OperationEventsEnum.POST_REMOVE, this.metadata.onPostRemove);
-  }
-
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.REMOVE);
     operationEvent.statusCode = 204;
@@ -29,6 +23,13 @@ export abstract class AbstractRemoveOperation<T> extends AbstractSingleResourceO
     }
     const data = operationEvent.statusCode !== 204 ? operationEvent.getData() : null;
     return new Response(data, operationEvent.statusCode);
+  }
+
+  getCallbacksKeys(): OperationEventsEnum[] {
+    return [
+      OperationEventsEnum.PRE_REMOVE,
+      OperationEventsEnum.POST_REMOVE,
+    ];
   }
 
   getSupportedHttpMethod(): HttpMethod {
