@@ -25,8 +25,8 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
     return this.injector.get(AsyncEventDispatcher);
   }
 
-  protected async dispatch(name: string, event: ApiOperationEvent): Promise<void> {
-    await this.getDispatcher().dispatch(this.metadata.name + '.' + name, event);
+  protected async dispatch(event: ApiOperationEvent): Promise<void> {
+    await this.getDispatcher().dispatch(this.metadata.name + '.' + event.eventType, event);
   }
 
   protected registerOperationCallbacks(name: string, callbacks?: ApiOperationCallback[]): void {

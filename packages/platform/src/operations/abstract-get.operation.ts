@@ -11,12 +11,14 @@ export abstract class AbstractGetOperation<T> extends AbstractSingleResourceOper
 
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.GET);
-    await this.dispatch(OperationEventsEnum.PRE_READ, operationEvent);
+    operationEvent.eventType = OperationEventsEnum.PRE_READ;
+    await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }
     operationEvent.setData(await this.findOr404(request));
-    await this.dispatch(OperationEventsEnum.POST_READ, operationEvent);
+    operationEvent.eventType = OperationEventsEnum.POST_READ;
+    await this.dispatch(operationEvent);
     return operationEvent.response ? operationEvent.response : new Response(
       operationEvent.getData(), operationEvent.statusCode
     );

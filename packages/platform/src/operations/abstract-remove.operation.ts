@@ -12,12 +12,14 @@ export abstract class AbstractRemoveOperation<T> extends AbstractSingleResourceO
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.REMOVE);
     operationEvent.statusCode = 204;
     operationEvent.setData(await this.findOr404(request));
-    await this.dispatch(OperationEventsEnum.PRE_REMOVE, operationEvent);
+    operationEvent.eventType = OperationEventsEnum.PRE_REMOVE;
+    await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }
     await this.doRemove(request);
-    await this.dispatch(OperationEventsEnum.POST_REMOVE, operationEvent);
+    operationEvent.eventType = OperationEventsEnum.POST_REMOVE;
+    await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }

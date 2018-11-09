@@ -3,12 +3,15 @@ import {Request, Response} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {ApiOperationMetadata} from '../metadata';
 import * as _ from 'lodash';
+import {OperationEventsEnum} from '../enums';
 
 export class ApiOperationEvent extends GenericEvent {
 
   readonly metadata: ApiOperationMetadata;
 
   statusCode = 200;
+
+  eventType: OperationEventsEnum;
 
   private _data: any;
 

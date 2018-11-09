@@ -14,19 +14,22 @@ export abstract class AbstractListOperation<T> extends AbstractOperation {
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.LIST);
     const metadata = operationEvent.metadata as ListOperationMetadata<T>;
-    await this.dispatch(OperationEventsEnum.PRE_COLLECTION_READ, operationEvent);
+    operationEvent.eventType = OperationEventsEnum.PRE_COLLECTION_READ;
+    await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }
     this.resolveQueryFilterSchema(metadata);
     const query = queryFilter.createQuery(metadata.queryFilterSchema, request.params.toObject());
     request.attributes.set('query', query);
-    await this.dispatch(OperationEventsEnum.QUERY, operationEvent);
+    operationEvent.eventType = OperationEventsEnum.QUERY;
+    await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }
     operationEvent.setData(await this.findMany(request));
-    await this.dispatch(OperationEventsEnum.POST_COLLECTION_READ, operationEvent);
+    operationEvent.eventType = OperationEventsEnum.POST_COLLECTION_READ;
+    await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }

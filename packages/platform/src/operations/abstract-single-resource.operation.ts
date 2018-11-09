@@ -10,7 +10,6 @@ export abstract class AbstractSingleResourceOperation<T> extends AbstractOperati
 
   onInit(): void {
     super.onInit();
-
   }
 
   protected getService(): ServiceInterface<T> {
