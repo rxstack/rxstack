@@ -2,7 +2,7 @@
   "name": "@rxstack/express-file-upload",
   "version": "0.1.0",
   "description": "RxStack ExpressFileUpload Module",
-  "author": "Nikolay Gergiev <symfonist@gmail.com>",
+  "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",

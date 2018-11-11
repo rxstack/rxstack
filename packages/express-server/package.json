@@ -2,7 +2,7 @@
   "name": "@rxstack/express-server",
   "version": "0.1.0",
   "description": "RxStack ExpressServer Module",
-  "author": "Nikolay Gergiev <symfonist@gmail.com>",
+  "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",

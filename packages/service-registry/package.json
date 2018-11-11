@@ -3,7 +3,7 @@
   "version": "0.1.5",
   "description": "RxStack Service Registry Component",
   "private": false,
-  "author": "Nikolay Gergiev <symfonist@gmail.com>",
+  "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
