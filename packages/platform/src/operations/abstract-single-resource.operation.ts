@@ -17,7 +17,8 @@ export abstract class AbstractSingleResourceOperation<T> extends AbstractOperati
   }
 
   protected async findOr404(request: Request): Promise<T> {
-    const resource = await this.getService().findOneById(request.params.get('id'));
+    const resource = await this.getService()
+      .findOne({[this.getService().options.idField]: {'$eq': request.params.get('id')}});
     if (!resource) {
       throw new NotFoundException();
     }

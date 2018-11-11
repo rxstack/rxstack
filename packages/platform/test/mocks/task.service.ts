@@ -12,35 +12,40 @@ export class TaskService implements ServiceInterface<TaskModel> {
 
   options: ServiceOptions = { idField: 'id' };
 
-  async create(data: Object): Promise<TaskModel> {
+  async insertOne(data: Object): Promise<TaskModel> {
     return data as TaskModel;
   }
 
-  async replace(id: any, data: Object): Promise<TaskModel> {
+  async insertMany(data: Object[]): Promise<TaskModel[]> {
+    return data as TaskModel[];
+  }
+
+  async updateOne(id: any, data: Object): Promise<TaskModel> {
     return data as TaskModel;
   }
 
-  async patch(id: any, data: Object): Promise<TaskModel> {
-    return data as TaskModel;
+  async updateMany(criteria: Object, data: Object): Promise<number> {
+    return 0;
   }
 
-  async remove(id: any): Promise<void> { }
+  async removeOne(id: any): Promise<void> { }
+
+  async removeMany(criteria: Object): Promise<number> {
+    return 0;
+  }
 
   async count(criteria?: Object): Promise<number> {
     return 1;
   }
 
-  async findOneById(id: any): Promise<TaskModel> {
+  async findOne(criteria: Object, sort?: SortInterface): Promise<TaskModel> {
+    const id = criteria['id']['$eq'];
     switch (id) {
       case 'not_found':
         return null;
       default:
         return TaskService.data[0];
     }
-  }
-
-  async findOne(criteria: Object, sort?: SortInterface): Promise<TaskModel> {
-    return TaskService.data[0];
   }
 
   async findMany(query: QueryInterface): Promise<TaskModel[]> {

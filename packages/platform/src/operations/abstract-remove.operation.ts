@@ -39,6 +39,6 @@ export abstract class AbstractRemoveOperation<T> extends AbstractSingleResourceO
   }
 
   protected async doRemove(request: Request): Promise<void> {
-    return this.getService().remove(request.params.get('id'));
+    return this.getService().removeOne(request.params.get('id'));
   }
 }

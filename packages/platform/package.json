@@ -28,28 +28,28 @@
     "test": "npm run lint && npm run coverage"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.1",
-    "@rxstack/core": "^0.1",
-    "@rxstack/exceptions": "^0.1",
-    "@rxstack/query-filter": "^0.1",
+    "@rxstack/async-event-dispatcher": "^0.1.1",
+    "@rxstack/core": "^0.1.1",
+    "@rxstack/exceptions": "^0.1.2",
+    "@rxstack/query-filter": "^0.1.1",
     "injection-js": "^2.1",
     "lodash": "^4.17.11",
     "reflect-metadata": "^0.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.2",
-    "@types/lodash": "^4.14.116",
+    "@types/chai": "^4.1.7",
+    "@types/lodash": "^4.14.118",
     "@types/mocha": "^2.2.48",
     "chai": "3.5.0",
     "istanbul": "0.4.5",
     "mocha": "^5.2.0",
     "nyc": "^11.0.3",
     "should": "^13.2.3",
-    "sinon": "^6.3.4",
+    "sinon": "^6.3.5",
     "source-map-support": "^0.4.15",
     "ts-node": "^3.1.0",
     "tslint": "^5.9.1",
-    "typescript": "^3.0"
+    "typescript": "^3.1.6"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"

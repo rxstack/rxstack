@@ -15,17 +15,19 @@ export interface ServiceInterface<T> {
 
   options: ServiceOptions;
 
-  create(data: Object, options?: DriverOptions): Promise<T>;
+  insertOne(data: Object, options?: DriverOptions): Promise<T>;
 
-  replace(id: any, data: Object, options?: DriverOptions): Promise<T>;
+  insertMany(data: Object[], options?: DriverOptions): Promise<T[]>;
 
-  patch(id: any, data: Object, options?: DriverOptions): Promise<T>;
+  updateOne(id: any, data: Object, options?: DriverOptions): Promise<T>;
 
-  remove(id: any, options?: DriverOptions): Promise<void>;
+  updateMany(criteria: Object, data: Object, options?: DriverOptions): Promise<number>;
+
+  removeOne(id: any, options?: DriverOptions): Promise<void>;
+
+  removeMany(criteria: Object, options?: DriverOptions): Promise<number>;
 
   count(criteria?: Object, options?: DriverOptions): Promise<number>;
-
-  findOneById(id: any, options?: DriverOptions): Promise<T>;
 
   findOne(criteria: Object, sort?: SortInterface, options?: DriverOptions): Promise<T>;
 
