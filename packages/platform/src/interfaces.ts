@@ -9,27 +9,31 @@ export interface ServiceOptions {
   idField: string;
 }
 
-export interface DriverOptions { }
+export interface Options { }
+
+export interface UpdateOneOptions extends Options {
+  patch: boolean;
+}
 
 export interface ServiceInterface<T> {
 
   options: ServiceOptions;
 
-  insertOne(data: Object, options?: DriverOptions): Promise<T>;
+  insertOne(data: Object, options?: Options): Promise<T>;
 
-  insertMany(data: Object[], options?: DriverOptions): Promise<T[]>;
+  insertMany(data: Object[], options?: Options): Promise<T[]>;
 
-  updateOne(id: any, data: Object, options?: DriverOptions): Promise<T>;
+  updateOne(id: any, data: Object, options?: UpdateOneOptions): Promise<T>;
 
-  updateMany(criteria: Object, data: Object, options?: DriverOptions): Promise<number>;
+  updateMany(criteria: Object, data: Object, options?: Options): Promise<number>;
 
-  removeOne(id: any, options?: DriverOptions): Promise<void>;
+  removeOne(id: any, options?: Options): Promise<void>;
 
-  removeMany(criteria: Object, options?: DriverOptions): Promise<number>;
+  removeMany(criteria: Object, options?: Options): Promise<number>;
 
-  count(criteria?: Object, options?: DriverOptions): Promise<number>;
+  count(criteria?: Object, options?: Options): Promise<number>;
 
-  findOne(criteria: Object, sort?: SortInterface, options?: DriverOptions): Promise<T>;
+  findOne(criteria: Object, sort?: SortInterface, options?: Options): Promise<T>;
 
-  findMany(query: QueryInterface, options?: DriverOptions): Promise<T[]>;
+  findMany(query: QueryInterface, options?: Options): Promise<T[]>;
 }

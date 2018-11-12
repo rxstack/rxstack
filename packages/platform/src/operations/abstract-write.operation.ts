@@ -3,7 +3,6 @@ import {HttpMethod, Request, Response} from '@rxstack/core';
 import {ApiOperationEvent} from '../events';
 import {OperationTypesEnum, OperationEventsEnum} from '../enums';
 import {AbstractSingleResourceOperation} from './abstract-single-resource.operation';
-import * as _ from 'lodash';
 
 export abstract class AbstractWriteOperation<T> extends AbstractSingleResourceOperation<T> {
   metadata: WriteOperationMetadata<T>;
@@ -19,8 +18,7 @@ export abstract class AbstractWriteOperation<T> extends AbstractSingleResourceOp
     if (operationEvent.response) {
       return operationEvent.response;
     }
-    const mergedData = _.merge({}, operationEvent.getData(), operationEvent.request.body);
-    operationEvent.setData(await this.doWrite(operationEvent.request, mergedData));
+    operationEvent.setData(await this.doWrite(operationEvent.request));
     operationEvent.eventType = OperationEventsEnum.POST_WRITE;
     await this.dispatch(operationEvent);
     if (operationEvent.response) {
@@ -41,13 +39,14 @@ export abstract class AbstractWriteOperation<T> extends AbstractSingleResourceOp
     ];
   }
 
-  protected async doWrite(request: Request, data: T): Promise<T> {
+  protected async doWrite(request: Request): Promise<T> {
     switch (this.metadata.type) {
       case 'POST':
         return this.getService().insertOne(request.body);
       case 'PUT':
       case 'PATCH':
-        return this.getService().updateOne(request.params.get('id'), data);
+        return this.getService()
+          .updateOne(request.params.get('id'), request.body, { patch: this.metadata.type === 'PATCH' });
     }
   }
 }
