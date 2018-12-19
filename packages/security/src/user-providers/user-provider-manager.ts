@@ -17,17 +17,11 @@ export class UserProviderManager extends ServiceRegistry<UserProviderInterface> 
   }
 
   private async findUser(username: string, payload?: Object): Promise<UserInterface> {
-    return this.all().reduce(
-      async (current: Promise<UserInterface>, provider): Promise<UserInterface> => {
-        const user = await current;
-        if (user) {
-          return user;
-        }
-        try {
-          return await provider.loadUserByUsername(username, payload);
-        } catch (e) {
-          return null;
-        }
-    }, Promise.resolve(null));
+    for (let i = 0; i < this.all().length; i++) {
+      const provider = this.all()[i];
+      try {
+        return await provider.loadUserByUsername(username, payload);
+      } catch (e) { }
+    }
   }
 }
