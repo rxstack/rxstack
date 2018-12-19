@@ -39,7 +39,7 @@ export interface TokenInterface {
   hasRole(role: string): boolean;
   getUser(): UserInterface;
   setUser(user: UserInterface): void;
-  setAuthenticated(authenticated: true): void;
+  setAuthenticated(authenticated: boolean): void;
   isAuthenticated(): boolean;
   setFullyAuthenticated(fullyAuthenticated: boolean): void;
   isFullyAuthenticated(): boolean;
