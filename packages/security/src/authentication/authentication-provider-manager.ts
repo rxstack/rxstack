@@ -40,13 +40,11 @@ export class AuthenticationProviderManager extends ServiceRegistry<Authenticatio
   }
 
   private async doAuthenticate(token: TokenInterface): Promise<TokenInterface> {
-    return this.all().reduce(
-      async (current: Promise<TokenInterface>, provider): Promise<TokenInterface> => {
-        const authToken = await current;
-        if (authToken || !provider.support(token)) {
-          return authToken;
-        }
+    for (let i = 0; i < this.all().length; i++) {
+      const provider = this.all()[i];
+      if (provider.support(token)) {
         return await provider.authenticate(token);
-    }, Promise.resolve(null));
+      }
+    }
   }
 }

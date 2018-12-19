@@ -12,7 +12,6 @@ npm install @rxstack/exceptions --save
 ## Documentation
 
 * [Standard exceptions](#standard-exceptions)
-* [Special exceptions](#special-exceptions)
 * [Helpers](#helpers)
 
 ### <a name="standard-exceptions"></a>  Standard exceptions
@@ -53,21 +52,11 @@ Exceptions contain the following fields:
 - data: extra data
 - statusCode: The HTTP status code
 
-### <a name="special-exceptions"></a> Special exceptions
-If you use `https://github.com/typestack/class-validator` then you need `ValidationException`:
-
-```typescript
-import {ValidationException} from `@rxstack/exceptions`
-
-const errors: ValidationError[];
-throw new ValidationException(errors);
-```
-
 ### <a name="helpers"></a> Helpers
 To transform a native error to exception, you can use:
 
 ```typescript
-import {transformToException} from `@rxstack/exceptions`
+import {transformToException} from '@rxstack/exceptions'
 
 // returns instance of Exception
 transformToException(error);

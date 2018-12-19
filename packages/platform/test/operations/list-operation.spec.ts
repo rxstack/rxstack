@@ -1,9 +1,7 @@
 import 'reflect-metadata';
 import {Injector} from 'injection-js';
-import {Application, Kernel, Request, Response} from '../../../core/index';
+import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
-
-const sinon = require('sinon');
 
 describe('Platform:Operation:List', () => {
   // Setup application

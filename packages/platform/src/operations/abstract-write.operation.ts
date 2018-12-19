@@ -13,12 +13,14 @@ export abstract class AbstractWriteOperation<T> extends AbstractSingleResourceOp
     operationEvent.statusCode = metadata.type === 'POST' ? 201 : 204;
     const data = metadata.type === 'POST' ? null : await this.findOr404(request);
     operationEvent.setData(data);
-    await this.dispatch(OperationEventsEnum.PRE_WRITE, operationEvent);
+    operationEvent.eventType = OperationEventsEnum.PRE_WRITE;
+    await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }
     operationEvent.setData(await this.doWrite(operationEvent.request));
-    await this.dispatch(OperationEventsEnum.POST_WRITE, operationEvent);
+    operationEvent.eventType = OperationEventsEnum.POST_WRITE;
+    await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }
@@ -38,14 +40,13 @@ export abstract class AbstractWriteOperation<T> extends AbstractSingleResourceOp
   }
 
   protected async doWrite(request: Request): Promise<T> {
-
     switch (this.metadata.type) {
       case 'POST':
-        return this.getService().create(request.body);
+        return this.getService().insertOne(request.body);
       case 'PUT':
-        return this.getService().replace(request.params.get('id'), request.body);
       case 'PATCH':
-        return this.getService().patch(request.params.get('id'), request.body);
+        return this.getService()
+          .updateOne(request.params.get('id'), request.body, { patch: this.metadata.type === 'PATCH' });
     }
   }
 }

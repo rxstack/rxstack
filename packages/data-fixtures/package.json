@@ -2,7 +2,7 @@
   "name": "@rxstack/data-fixtures",
   "version": "0.1.1",
   "description": "RxStack DataFixtures Module",
-  "author": "Nikolay Gergiev <symfonist@gmail.com>",
+  "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "private": false,
   "license": "MIT",
   "repository": {

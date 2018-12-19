@@ -1,9 +1,9 @@
 {
   "name": "@rxstack/exceptions",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "RxStack Exceptions Component",
   "private": false,
-  "author": "Nikolay Gergiev <symfonist@gmail.com>",
+  "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",

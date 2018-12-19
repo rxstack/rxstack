@@ -27,9 +27,7 @@ import {
   UnavailableForLegalReasonsException,
   UnprocessableEntityException,
   UnsupportedMediaTypeException,
-  URITooLongException,
-  ValidationError,
-  ValidationException
+  URITooLongException
 } from '../src/index';
 
 describe('Exceptions', () => {
@@ -74,23 +72,6 @@ describe('Exceptions', () => {
         e.name.should.be.equal(exceptionInstance.constructor.name);
       }
     });
-  });
-
-  it('retrieves data from exception with .data', () => {
-
-    let errors: ValidationError[] = [{
-      target: null,
-      property: 'name',
-      constraints: {
-        max_length: 'too long',
-      },
-      value: 10,
-      children: undefined,
-    }];
-
-    let exception = new ValidationException(errors);
-
-    exception.data.should.be.equal(errors);
   });
 
   it('converts error to exception', () => {

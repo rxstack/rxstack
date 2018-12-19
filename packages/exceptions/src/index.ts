@@ -26,6 +26,4 @@ export * from './unavailable-for-legal-reasons.exception';
 export * from './unprocessable-entity.exception';
 export * from './unsupported-media-type.exception';
 export * from './uri-too-long.exception';
-export * from './validation-error';
-export * from './validation-exception';
 export * from './exception-to-object';
