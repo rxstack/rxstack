@@ -10,6 +10,9 @@ import {TaskModel} from '../task.model';
   transports: ['SOCKET'],
   type: 'POST',
   service: TaskService,
+  onPreRead: [
+    setResponse('pre_read')
+  ],
   onPreWrite: [
     setResponse('pre_write')
   ],

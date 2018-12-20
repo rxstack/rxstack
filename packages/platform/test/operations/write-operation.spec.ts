@@ -71,6 +71,15 @@ describe('Platform:Operation:Write', () => {
     exception.statusCode.should.equal(404);
   });
 
+  it('@app_task_create_with_response_on_pre_read', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create_with_response');
+    const request = new Request('SOCKET');
+    request.params.set('with_response', 'pre_read')
+    request.body = { 'name': 'my task'};
+    const response: Response = await def.handler(request);
+    response.content.should.equal('pre_read');
+  });
+
   it('@app_task_create_with_response_on_pre_write', async () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create_with_response');
     const request = new Request('SOCKET');

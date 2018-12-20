@@ -11,6 +11,11 @@ export abstract class AbstractWriteOperation<T> extends AbstractSingleResourceOp
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.WRITE);
     const metadata = operationEvent.metadata as WriteOperationMetadata<T>;
     operationEvent.statusCode = metadata.type === 'POST' ? 201 : 204;
+    operationEvent.eventType = OperationEventsEnum.PRE_READ;
+    await this.dispatch(operationEvent);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
     const data = metadata.type === 'POST' ? null : await this.findOr404(request);
     operationEvent.setData(data);
     operationEvent.eventType = OperationEventsEnum.PRE_WRITE;
@@ -34,6 +39,7 @@ export abstract class AbstractWriteOperation<T> extends AbstractSingleResourceOp
 
   getCallbacksKeys(): OperationEventsEnum[] {
     return [
+      OperationEventsEnum.PRE_READ,
       OperationEventsEnum.PRE_WRITE,
       OperationEventsEnum.POST_WRITE,
     ];

@@ -18,10 +18,15 @@ export abstract class AbstractSingleResourceOperation<T> extends AbstractOperati
 
   protected async findOr404(request: Request): Promise<T> {
     const resource = await this.getService()
-      .findOne({[this.getService().options.idField]: {'$eq': request.params.get('id')}});
+      .findOne(this.getDefaultCriteria(request));
     if (!resource) {
       throw new NotFoundException();
     }
     return resource;
+  }
+
+  protected getDefaultCriteria(request: Request): Object {
+    const defaultCriteria = {[this.getService().options.idField]: {'$eq': request.params.get('id')}};
+    return request.attributes.get('criteria') || defaultCriteria;
   }
 }

@@ -11,6 +11,11 @@ export abstract class AbstractRemoveOperation<T> extends AbstractSingleResourceO
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.REMOVE);
     operationEvent.statusCode = 204;
+    operationEvent.eventType = OperationEventsEnum.PRE_READ;
+    await this.dispatch(operationEvent);
+    if (operationEvent.response) {
+      return operationEvent.response;
+    }
     operationEvent.setData(await this.findOr404(request));
     operationEvent.eventType = OperationEventsEnum.PRE_REMOVE;
     await this.dispatch(operationEvent);
@@ -29,6 +34,7 @@ export abstract class AbstractRemoveOperation<T> extends AbstractSingleResourceO
 
   getCallbacksKeys(): OperationEventsEnum[] {
     return [
+      OperationEventsEnum.PRE_READ,
       OperationEventsEnum.PRE_REMOVE,
       OperationEventsEnum.POST_REMOVE,
     ];

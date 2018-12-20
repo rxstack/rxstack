@@ -10,6 +10,9 @@ import {TaskModel} from '../task.model';
   transports: ['HTTP', 'SOCKET'],
   http_path: '/tasks/:id',
   service: TaskService,
+  onPreRead: [
+    setResponse('pre_read')
+  ],
   onPreRemove: [
     setResponse('pre_remove')
   ],

@@ -6,7 +6,6 @@ import {OperationEventsEnum} from '../enums/operation-events.enum';
 import {AbstractSingleResourceOperation} from './abstract-single-resource.operation';
 
 export abstract class AbstractGetOperation<T> extends AbstractSingleResourceOperation<T> {
-
   metadata: GetOperationMetadata<T>;
 
   async execute(request: Request): Promise<Response> {

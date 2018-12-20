@@ -33,14 +33,9 @@ export abstract class AbstractListOperation<T> extends AbstractOperation {
     if (operationEvent.response) {
       return operationEvent.response;
     }
-    const responseData = metadata.paginated ? {
-      total: await this.getCount(request),
-      data: operationEvent.getData(),
-      limit: query.limit,
-      skip: query.skip
-    } : operationEvent.getData();
-
-    return new Response(responseData, operationEvent.statusCode);
+    return new Response(metadata.paginated ? {
+      total: await this.getCount(request), data: operationEvent.getData(), limit: query.limit, skip: query.skip
+    } : operationEvent.getData(), operationEvent.statusCode);
   }
 
   getCallbacksKeys(): OperationEventsEnum[] {

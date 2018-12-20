@@ -7,6 +7,7 @@ export type ApiOperationCallback = (event: ApiOperationEvent) => Promise<void>;
 
 export interface ServiceOptions {
   idField: string;
+  supportDotNotation?: boolean;
 }
 
 export interface Options { }

@@ -59,6 +59,14 @@ describe('Platform:Operation:Remove', () => {
     response.content.should.equal('pre_remove');
   });
 
+  it('@app_task_remove_with_response_on_pre_read ', async () => {
+    const def = kernel.httpDefinitions.find((def) => def.name === 'app_task_remove_with_response');
+    const request = new Request('HTTP');
+    request.params.set('with_response', 'pre_read');
+    const response: Response = await def.handler(request);
+    response.content.should.equal('pre_read');
+  });
+
   it('@app_task_remove_with_response_on_post_remove ', async () => {
     const def = kernel.httpDefinitions.find((def) => def.name === 'app_task_remove_with_response');
     const request = new Request('HTTP');
