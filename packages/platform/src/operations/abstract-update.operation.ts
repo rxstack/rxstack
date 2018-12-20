@@ -1,11 +1,11 @@
 import {HttpMethod, Request, Response} from '@rxstack/core';
-import {RemoveOperationMetadata} from '../metadata/remove-operation.metadata';
 import {ApiOperationEvent} from '../events';
-import {OperationEventsEnum} from '../enums/operation-events.enum';
+import {OperationEventsEnum} from '../enums';
 import {AbstractSingleResourceOperation} from './abstract-single-resource.operation';
+import {UpdateOperationMetadata} from '../metadata/update-operation.metadata';
 
-export abstract class AbstractRemoveOperation<T> extends AbstractSingleResourceOperation<T> {
-  metadata: RemoveOperationMetadata<T>;
+export abstract class AbstractUpdateOperation<T> extends AbstractSingleResourceOperation<T> {
+  metadata: UpdateOperationMetadata<T>;
 
   async execute(request: Request): Promise<Response> {
     const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata);
@@ -16,13 +16,13 @@ export abstract class AbstractRemoveOperation<T> extends AbstractSingleResourceO
       return operationEvent.response;
     }
     operationEvent.setData(await this.findOr404(request));
-    operationEvent.eventType = OperationEventsEnum.PRE_REMOVE;
+    operationEvent.eventType = OperationEventsEnum.PRE_UPDATE;
     await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
     }
-    await this.doRemove(operationEvent.getData(), request);
-    operationEvent.eventType = OperationEventsEnum.POST_REMOVE;
+    operationEvent.setData(await this.doUpdate(operationEvent.getData(), request));
+    operationEvent.eventType = OperationEventsEnum.POST_UPDATE;
     await this.dispatch(operationEvent);
     if (operationEvent.response) {
       return operationEvent.response;
@@ -30,19 +30,19 @@ export abstract class AbstractRemoveOperation<T> extends AbstractSingleResourceO
     return new Response(operationEvent.getData(), operationEvent.statusCode);
   }
 
+  getSupportedHttpMethod(): HttpMethod {
+    return 'PUT';
+  }
+
   getCallbacksKeys(): OperationEventsEnum[] {
     return [
       OperationEventsEnum.PRE_READ,
-      OperationEventsEnum.PRE_REMOVE,
-      OperationEventsEnum.POST_REMOVE,
+      OperationEventsEnum.PRE_UPDATE,
+      OperationEventsEnum.POST_UPDATE,
     ];
   }
 
-  getSupportedHttpMethod(): HttpMethod {
-    return 'DELETE';
-  }
-
-  protected async doRemove(resource: T, request: Request): Promise<void> {
-    return this.getService().removeOne(resource[this.getService().options.idField]);
+  protected async doUpdate(resource: T, request: Request): Promise<T> {
+    return this.getService().updateOne(resource[this.getService().options.idField], request.body);
   }
 }

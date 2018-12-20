@@ -5,14 +5,13 @@ import {AbstractOperation} from './abstract-operation';
 import {ListOperationMetadata} from '../metadata/list-operation.metadata';
 import {OperationEventsEnum} from '../enums/operation-events.enum';
 import {ApiOperationEvent} from '../events';
-import {OperationTypesEnum} from '../enums/operation-types.enum';
 import * as _ from 'lodash';
 
 export abstract class AbstractListOperation<T> extends AbstractOperation {
   metadata: ListOperationMetadata<T>;
 
   async execute(request: Request): Promise<Response> {
-    const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata, OperationTypesEnum.LIST);
+    const operationEvent = new ApiOperationEvent(request, this.injector, this.metadata);
     const metadata = operationEvent.metadata as ListOperationMetadata<T>;
     operationEvent.eventType = OperationEventsEnum.PRE_COLLECTION_READ;
     await this.dispatch(operationEvent);

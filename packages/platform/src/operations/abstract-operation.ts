@@ -42,7 +42,5 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
   abstract getSupportedHttpMethod(): HttpMethod;
 
   abstract getCallbacksKeys(): OperationEventsEnum[];
-
-
 }
 

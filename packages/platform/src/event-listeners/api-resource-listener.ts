@@ -7,6 +7,8 @@ import {
 import {ApiOperationMetadata} from '../metadata/api-operation.metadata';
 import {API_OPERATION_KEY} from '../interfaces';
 import {AbstractOperation} from '../operations/abstract-operation';
+import {KernelEvents} from '../../../core/src/kernel/kernel-events';
+import {ResponseEvent} from '../../../core/src/kernel/events/response-event';
 
 @Injectable()
 export class ApiResourceListener {
@@ -19,6 +21,13 @@ export class ApiResourceListener {
         this.register(service);
       }
     });
+  }
+
+  @Observe(KernelEvents.KERNEL_RESPONSE)
+  async onResponse(event: ResponseEvent): Promise<void> {
+    if (event.getResponse().statusCode === 204) {
+      event.getResponse().content = null;
+    }
   }
 
   register(service: AbstractOperation): void {

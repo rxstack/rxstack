@@ -12,9 +12,7 @@ export interface ServiceOptions {
 
 export interface Options { }
 
-export interface UpdateOneOptions extends Options {
-  patch: boolean;
-}
+export interface UpdateOneOptions extends Options { }
 
 export interface ServiceInterface<T> {
 

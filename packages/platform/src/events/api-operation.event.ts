@@ -19,7 +19,7 @@ export class ApiOperationEvent extends GenericEvent {
 
   constructor(public readonly request: Request,
               public readonly injector: Injector,
-              metadata: ApiOperationMetadata, public readonly type: string) {
+              metadata: ApiOperationMetadata) {
     super();
     this.metadata = _.cloneDeep(metadata);
   }

@@ -3,10 +3,10 @@ import {ServiceInterface} from '../interfaces';
 import {AbstractOperation} from './abstract-operation';
 import {NotFoundException} from '@rxstack/exceptions';
 import {RemoveOperationMetadata} from '../metadata/remove-operation.metadata';
-import {GetOperationMetadata, WriteOperationMetadata} from '../metadata';
+import {GetOperationMetadata, UpdateOperationMetadata} from '../metadata';
 
 export abstract class AbstractSingleResourceOperation<T> extends AbstractOperation {
-  metadata: GetOperationMetadata<T> | WriteOperationMetadata<T> | RemoveOperationMetadata<T>;
+  metadata: GetOperationMetadata<T> | UpdateOperationMetadata<T> | RemoveOperationMetadata<T>;
 
   onInit(): void {
     super.onInit();
