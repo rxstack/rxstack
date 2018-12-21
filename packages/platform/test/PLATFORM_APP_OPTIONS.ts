@@ -19,6 +19,7 @@ import {RemoveTaskWithResponseOperation} from './mocks/operation-remove/remove-t
 import {PatchTaskOperation} from './mocks/operations/patch-task.operation';
 import {CreateTaskOperation} from './mocks/operations/create-task.operation';
 import {UpdateTaskOperation} from './mocks/operation-update/update-task.operation';
+import {BulkRemoveTaskOperation} from './mocks/operations/bulk-remove-task.operation';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   imports: [
@@ -43,6 +44,7 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
     { provide: RemoveTaskWithPreRemoveOperation, useClass: RemoveTaskWithPreRemoveOperation },
     { provide: RemoveTaskWithPostRemoveOperation, useClass: RemoveTaskWithPostRemoveOperation },
     { provide: RemoveTaskWithResponseOperation, useClass: RemoveTaskWithResponseOperation },
+    { provide: BulkRemoveTaskOperation, useClass: BulkRemoveTaskOperation },
   ],
   servers: environmentPlatform.servers,
   logger: environmentPlatform.logger

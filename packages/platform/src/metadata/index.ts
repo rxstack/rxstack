@@ -6,3 +6,4 @@ export * from './create-operation.metadata';
 export * from './patch-operation.metadata';
 export * from './update-operation.metadata';
 export * from './remove-operation.metadata';
+export * from './bulk-remove-operation.metadata';

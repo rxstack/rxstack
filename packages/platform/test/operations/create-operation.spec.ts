@@ -20,13 +20,22 @@ describe('Platform:Operation:Create', () => {
     await app.stop();
   });
 
-  it('@app_task_create ', async () => {
+  it('@app_task_create', async () => {
     const def = kernel.httpDefinitions.find((def) => def.name === 'app_task_create');
     const request = new Request('HTTP');
     request.body = { 'name': 'my task' };
     const response: Response = await def.handler(request);
     response.statusCode.should.equal(201);
     response.content['name'].should.equal('my task');
+  });
+
+  it('@app_task_create with bulk data', async () => {
+    const def = kernel.httpDefinitions.find((def) => def.name === 'app_task_create');
+    const request = new Request('HTTP');
+    request.body = [{ 'name': 'my task' }];
+    const response: Response = await def.handler(request);
+    response.statusCode.should.equal(201);
+    Array.isArray(response.content).should.equal(true);
   });
 
   it('@app_task_create_with_response_on_pre_create', async () => {

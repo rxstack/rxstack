@@ -40,7 +40,8 @@ export abstract class AbstractCreateOperation<T> extends AbstractOperation {
     return this.injector.get(this.metadata.service);
   }
 
-  protected async doCreate(request: Request): Promise<T> {
-    return this.getService().insertOne(request.body);
+  protected async doCreate(request: Request): Promise<T|T[]> {
+    return Array.isArray(request.body) ? this.getService().insertMany(request.body)
+      : this.getService().insertOne(request.body);
   }
 }

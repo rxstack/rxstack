@@ -5,4 +5,5 @@ export * from './abstract-update.operation';
 export * from './abstract-patch.operation';
 export * from './abstract-list.operation';
 export * from './abstract-remove.operation';
+export * from './abstract-bulk-remove.operation';
 export * from './abstract-single-resource.operation';

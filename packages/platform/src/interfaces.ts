@@ -12,8 +12,6 @@ export interface ServiceOptions {
 
 export interface Options { }
 
-export interface UpdateOneOptions extends Options { }
-
 export interface ServiceInterface<T> {
 
   options: ServiceOptions;
@@ -22,7 +20,7 @@ export interface ServiceInterface<T> {
 
   insertMany(data: Object[], options?: Options): Promise<T[]>;
 
-  updateOne(id: any, data: Object, options?: UpdateOneOptions): Promise<T>;
+  updateOne(id: any, data: Object, options?: Options): Promise<T>;
 
   updateMany(criteria: Object, data: Object, options?: Options): Promise<number>;
 
