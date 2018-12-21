@@ -2,7 +2,7 @@ import {ApiOperation, CreateOperationMetadata} from '../../../src/metadata/index
 import {Injectable} from 'injection-js';
 import {TaskService} from '../task.service';
 import {TaskModel} from '../task.model';
-import {AbstractCreateOperation} from '../../../src/operations';
+import {AbstractCreateOperation} from '../../../src/operations/index';
 import {setResponse} from '../middleware/set-response';
 
 @ApiOperation<CreateOperationMetadata<TaskModel>>({

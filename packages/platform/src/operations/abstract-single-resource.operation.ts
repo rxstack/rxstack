@@ -17,8 +17,7 @@ export abstract class AbstractSingleResourceOperation<T> extends AbstractOperati
   }
 
   protected async findOr404(request: Request): Promise<T> {
-    const resource = await this.getService()
-      .findOne(this.getDefaultCriteria(request));
+    const resource = await this.getService().findOne(this.getDefaultCriteria(request));
     if (!resource) {
       throw new NotFoundException();
     }

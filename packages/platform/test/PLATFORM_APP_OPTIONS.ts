@@ -16,8 +16,8 @@ import {RemoveTaskWithPostRemoveOperation} from './mocks/operation-remove/remove
 import {GetTaskWithResponseOperation} from './mocks/operations-get/get-task-with-response.operation';
 import {ListTaskOperationWithResponse} from './mocks/operation-list/list-task.operation-with-response';
 import {RemoveTaskWithResponseOperation} from './mocks/operation-remove/remove-task-with-response.operation';
-import {PatchTaskOperation} from './mocks/operation-patch/patch-task.operation';
-import {CreateTaskOperation} from './mocks/operation-create/create-task.operation';
+import {PatchTaskOperation} from './mocks/operations/patch-task.operation';
+import {CreateTaskOperation} from './mocks/operations/create-task.operation';
 import {UpdateTaskOperation} from './mocks/operation-update/update-task.operation';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {

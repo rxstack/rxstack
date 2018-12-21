@@ -3,7 +3,7 @@ import {Injectable} from 'injection-js';
 import {AbstractPatchOperation} from '../../../src/operations/index';
 import {TaskService} from '../task.service';
 import {TaskModel} from '../task.model';
-import {ApiOperationEvent} from '../../../src/events';
+import {ApiOperationEvent} from '../../../src/events/index';
 import {setResponse} from '../middleware/set-response';
 
 @ApiOperation<PatchOperationMetadata<TaskModel>>({
