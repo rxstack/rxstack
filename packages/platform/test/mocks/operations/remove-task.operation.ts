@@ -2,15 +2,15 @@ import {Operation, ResourceOperationMetadata} from '../../../src/metadata/index'
 import {Injectable} from 'injection-js';
 import {TaskService} from '../task.service';
 import {TaskModel} from '../task.model';
-import {AbstractResourceOperation} from '../../../src/operations';
+import {AbstractResourceOperation} from '../../../src/operations/index';
 import {ResourceOperationTypesEnum} from '../../../src/enums';
 
 @Operation<ResourceOperationMetadata<TaskModel>>({
-  type: ResourceOperationTypesEnum.BULK_REMOVE,
-  name: 'app_task_bulk_remove',
+  name: 'app_task_remove',
   transports: ['HTTP', 'SOCKET'],
-  http_path: '/tasks',
-  service: TaskService
+  http_path: '/tasks/:id',
+  service: TaskService,
+  type: ResourceOperationTypesEnum.REMOVE
 })
 @Injectable()
-export class BulkRemoveTaskOperation extends AbstractResourceOperation<TaskModel> { }
+export class RemoveTaskOperation extends AbstractResourceOperation<TaskModel> { }

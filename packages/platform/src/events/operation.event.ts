@@ -1,17 +1,16 @@
 import {GenericEvent} from '@rxstack/async-event-dispatcher';
 import {Request, Response} from '@rxstack/core';
 import {Injector} from 'injection-js';
-import {ApiOperationMetadata} from '../metadata';
+import {OperationMetadata} from '../metadata';
 import * as _ from 'lodash';
-import {OperationEventsEnum} from '../enums';
 
-export class ApiOperationEvent extends GenericEvent {
+export class OperationEvent extends GenericEvent {
 
-  readonly metadata: ApiOperationMetadata;
+  readonly metadata: OperationMetadata;
 
   statusCode = 200;
 
-  eventType: OperationEventsEnum;
+  eventType: string;
 
   private _data: any;
 
@@ -19,7 +18,7 @@ export class ApiOperationEvent extends GenericEvent {
 
   constructor(public readonly request: Request,
               public readonly injector: Injector,
-              metadata: ApiOperationMetadata) {
+              metadata: OperationMetadata) {
     super();
     this.metadata = _.cloneDeep(metadata);
   }

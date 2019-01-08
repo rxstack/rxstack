@@ -31,7 +31,7 @@ export class TaskService implements ServiceInterface<TaskModel> {
   async removeOne(id: any): Promise<void> { }
 
   async removeMany(criteria: Object): Promise<number> {
-    return 0;
+    return 1;
   }
 
   async count(criteria?: Object): Promise<number> {

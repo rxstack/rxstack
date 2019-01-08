@@ -6,11 +6,15 @@ import {ResourceOperationTypesEnum} from '../../../src/enums';
 import {AbstractResourceOperation} from '../../../src/operations';
 
 @Operation<ResourceOperationMetadata<TaskModel>>({
-  type: ResourceOperationTypesEnum.PATCH,
-  name: 'app_task_patch',
+  type: ResourceOperationTypesEnum.LIST,
+  name: 'app_task_list_paginated',
   transports: ['HTTP', 'SOCKET'],
   http_path: '/tasks',
   service: TaskService,
+  extra: {
+    paginated: true,
+    limit: 10
+  }
 })
 @Injectable()
-export class PatchTaskOperation extends AbstractResourceOperation<TaskModel> { }
+export class PaginatedListTaskOperation extends AbstractResourceOperation<TaskModel> { }

@@ -1,17 +1,26 @@
-import {ApiOperation, CreateOperationMetadata} from '../../../src/metadata/index';
+import {Operation, ResourceOperationMetadata} from '../../../src/metadata/index';
 import {Injectable} from 'injection-js';
 import {TaskService} from '../task.service';
 import {TaskModel} from '../task.model';
-import {AbstractCreateOperation} from '../../../src/operations/index';
+import {AbstractResourceOperation} from '../../../src/operations/index';
+import {ResourceOperationTypesEnum} from '../../../src/enums';
 import {setResponse} from '../middleware/set-response';
 
-@ApiOperation<CreateOperationMetadata<TaskModel>>({
+@Operation<ResourceOperationMetadata<TaskModel>>({
   name: 'app_task_create',
   transports: ['HTTP', 'SOCKET'],
   http_path: '/tasks',
   service: TaskService,
-  onPreCreate: [setResponse('pre_create')],
-  onPostCreate: [setResponse('post_create')]
+  type: ResourceOperationTypesEnum.CREATE,
+  onInit: [
+    setResponse('init')
+  ],
+  onPreExecute: [
+    setResponse('pre_execute')
+  ],
+  onPostExecute: [
+    setResponse('post_execute')
+  ]
 })
 @Injectable()
-export class CreateTaskOperation extends AbstractCreateOperation<TaskModel> { }
+export class CreateTaskOperation extends AbstractResourceOperation<TaskModel> { }

@@ -1,7 +1,7 @@
 import {API_OPERATION_KEY} from '../interfaces';
-import {ApiOperationMetadata} from './api-operation.metadata';
+import {OperationMetadata} from './operation.metadata';
 
-export function ApiOperation<T extends ApiOperationMetadata>(metadata: T): ClassDecorator {
+export function Operation<T extends OperationMetadata>(metadata: T): ClassDecorator {
   return function (target: Function): void {
     Reflect.defineMetadata(API_OPERATION_KEY, metadata, target);
   };
