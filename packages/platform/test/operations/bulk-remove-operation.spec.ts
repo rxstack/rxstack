@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import {Injector} from 'injection-js';
-import {Application, Kernel, Request, Response} from '../../../core/dist/index';
+import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
 import * as _ from 'lodash';
 describe('Platform:Operation:BulkRemove', () => {

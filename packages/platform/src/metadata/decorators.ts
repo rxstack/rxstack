@@ -3,6 +3,7 @@ import {OperationMetadata} from './operation.metadata';
 
 export function Operation<T extends OperationMetadata>(metadata: T): ClassDecorator {
   return function (target: Function): void {
+    metadata.extra = metadata.extra || {};
     Reflect.defineMetadata(API_OPERATION_KEY, metadata, target);
   };
 }

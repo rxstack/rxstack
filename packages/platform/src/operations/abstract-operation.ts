@@ -7,7 +7,6 @@ import {OperationEvent} from '../events';
 import * as _ from 'lodash';
 
 export abstract class AbstractOperation implements InjectorAwareInterface {
-
   metadata: OperationMetadata;
 
   protected injector: Injector;
@@ -30,11 +29,9 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
   }
 
   protected registerOperationCallbacks(eventType: string, callbacks?: ApiOperationCallback[]): void {
-    if (callbacks) {
-      callbacks.forEach((callback): void => {
-        this.getDispatcher().addListener(this.getEventName(eventType), callback);
-      });
-    }
+    callbacks.forEach((callback): void => {
+      this.getDispatcher().addListener(this.getEventName(eventType), callback);
+    });
   }
 
   protected getEventName(eventType: string): string {

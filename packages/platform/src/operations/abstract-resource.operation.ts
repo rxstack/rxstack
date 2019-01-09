@@ -5,10 +5,15 @@ import {AbstractOperation} from './abstract-operation';
 import {ServiceInterface} from '../interfaces';
 import {ResourceOperationMetadata} from '../metadata';
 import {NotFoundException} from '@rxstack/exceptions';
-import {QueryInterface} from '@rxstack/query-filter';
+import {FilterType, QueryInterface} from '@rxstack/query-filter';
 
 export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   metadata: ResourceOperationMetadata<T>;
+
+  onInit(): void {
+    super.onInit();
+    this.setHttpMethod();
+  }
 
   async execute(request: Request): Promise<Response> {
     const event = new OperationEvent(request, this.injector, this.metadata);
@@ -107,11 +112,39 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
       case ResourceOperationTypesEnum.GET:
       case ResourceOperationTypesEnum.UPDATE:
       case ResourceOperationTypesEnum.REMOVE:
-        request.attributes.set('criteria', {[this.getService().options.idField]: {'$eq': request.params.get('id')}});
+        this.setCriteria(request, '$eq', 'id');
         break;
       case ResourceOperationTypesEnum.PATCH:
       case ResourceOperationTypesEnum.BULK_REMOVE:
-        request.attributes.set('criteria', {[this.getService().options.idField]: {'$in': request.params.get('ids')}});
+        this.setCriteria(request, '$in', 'ids');
+        break;
+    }
+  }
+
+  private setCriteria(request: Request, filterType: FilterType, param: string): void {
+    request.attributes.set('criteria', {
+      [this.getService().options.idField]: {[filterType]: request.params.get(param)}
+    });
+  }
+
+  private setHttpMethod(): void {
+    switch (this.metadata.type) {
+      case ResourceOperationTypesEnum.LIST:
+      case ResourceOperationTypesEnum.GET:
+        this.metadata.httpMethod = 'GET';
+        break;
+      case ResourceOperationTypesEnum.CREATE:
+        this.metadata.httpMethod = 'POST';
+        break;
+      case ResourceOperationTypesEnum.UPDATE:
+        this.metadata.httpMethod = 'PUT';
+        break;
+      case ResourceOperationTypesEnum.PATCH:
+        this.metadata.httpMethod = 'PATCH';
+        break;
+      case ResourceOperationTypesEnum.REMOVE:
+      case ResourceOperationTypesEnum.BULK_REMOVE:
+        this.metadata.httpMethod = 'DELETE';
         break;
     }
   }

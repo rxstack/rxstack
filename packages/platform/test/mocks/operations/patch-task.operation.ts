@@ -8,8 +8,7 @@ import {AbstractResourceOperation} from '../../../src/operations';
 @Operation<ResourceOperationMetadata<TaskModel>>({
   type: ResourceOperationTypesEnum.PATCH,
   name: 'app_task_patch',
-  transports: ['HTTP', 'SOCKET'],
-  http_path: '/tasks',
+  transports: ['SOCKET'],
   service: TaskService,
 })
 @Injectable()

@@ -21,8 +21,8 @@ describe('Platform:Operation:Patch', () => {
   });
 
   it('@app_task_patch ', async () => {
-    const def = kernel.httpDefinitions.find((def) => def.name === 'app_task_patch');
-    const request = new Request('HTTP');
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_patch');
+    const request = new Request('SOCKET');
     request.params.set('ids', [1]);
     request.body = { 'name': 'patched' };
     const response: Response = await def.handler(request);

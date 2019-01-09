@@ -8,7 +8,7 @@ import {ResourceOperationTypesEnum} from '../../../src/enums';
 @Operation<ResourceOperationMetadata<TaskModel>>({
   name: 'app_task_get',
   transports: ['HTTP', 'SOCKET'],
-  http_path: '/tasks/:id',
+  httpPath: '/tasks/:id',
   service: TaskService,
   type: ResourceOperationTypesEnum.GET
 })

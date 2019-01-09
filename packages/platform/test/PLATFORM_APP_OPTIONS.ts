@@ -10,6 +10,7 @@ import {UpdateTaskOperation} from './mocks/operations/update-task.operation';
 import {RemoveTaskOperation} from './mocks/operations/remove-task.operation';
 import {ListTaskOperation} from './mocks/operations/list-task.operation';
 import {PaginatedListTaskOperation} from './mocks/operations/paginated-list-task.operation';
+import {CustomTaskOperation} from './mocks/operations/custom-task.operation';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   imports: [
@@ -25,6 +26,7 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
     { provide: PaginatedListTaskOperation, useClass: PaginatedListTaskOperation },
     { provide: PatchTaskOperation, useClass: PatchTaskOperation },
     { provide: BulkRemoveTaskOperation, useClass: BulkRemoveTaskOperation },
+    { provide: CustomTaskOperation, useClass: CustomTaskOperation },
   ],
   servers: environmentPlatform.servers,
   logger: environmentPlatform.logger

@@ -9,7 +9,7 @@ import {setResponse} from '../middleware/set-response';
 @Operation<ResourceOperationMetadata<TaskModel>>({
   name: 'app_task_create',
   transports: ['HTTP', 'SOCKET'],
-  http_path: '/tasks',
+  httpPath: '/tasks',
   service: TaskService,
   type: ResourceOperationTypesEnum.CREATE,
   onInit: [

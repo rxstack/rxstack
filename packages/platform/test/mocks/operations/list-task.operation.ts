@@ -9,7 +9,7 @@ import {AbstractResourceOperation} from '../../../src/operations';
   type: ResourceOperationTypesEnum.LIST,
   name: 'app_task_list',
   transports: ['HTTP', 'SOCKET'],
-  http_path: '/tasks',
+  httpPath: '/tasks',
   service: TaskService,
 })
 @Injectable()

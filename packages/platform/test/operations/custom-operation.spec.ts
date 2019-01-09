@@ -2,9 +2,8 @@ import 'reflect-metadata';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
-import * as _ from 'lodash';
 
-describe('Platform:Operation:Update', () => {
+describe('Platform:Operation:Custom', () => {
   // Setup application
 
   const app = new Application(PLATFORM_APP_OPTIONS);
@@ -21,13 +20,11 @@ describe('Platform:Operation:Update', () => {
     await app.stop();
   });
 
-  it('@app_task_update ', async () => {
-    const def = kernel.httpDefinitions.find((def) => def.name === 'app_task_update');
-    const request = new Request('HTTP');
-    request.params.set('id', 1);
-    request.body = { id: 1, 'name': 'my task', completed: false };
+  it('@app_task_custom ', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_custom');
+    const request = new Request('SOCKET');
     const response: Response = await def.handler(request);
     response.statusCode.should.equal(200);
-    _.isEqual(request.body, response.content).should.be.equal(true);
+    response.content.should.equal('\n    Hello world\n  ');
   });
 });

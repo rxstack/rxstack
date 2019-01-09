@@ -2,12 +2,12 @@ import {Injectable} from 'injection-js';
 import {Observe} from '@rxstack/async-event-dispatcher';
 import {
   ApplicationEvents, BootstrapEvent, HttpMetadata, httpMetadataStorage, WebSocketMetadata,
-  webSocketMetadataStorage, HttpMethod, ResponseEvent, KernelEvents
+  webSocketMetadataStorage, ResponseEvent, KernelEvents
 } from '@rxstack/core';
 import {OperationMetadata} from '../metadata/operation.metadata';
 import {API_OPERATION_KEY} from '../interfaces';
 import {AbstractOperation} from '../operations/abstract-operation';
-import {ResourceOperationTypesEnum} from '../enums';
+import {Exception} from '@rxstack/exceptions';
 
 @Injectable()
 export class ApiResourceListener {
@@ -35,27 +35,25 @@ export class ApiResourceListener {
 
   register(service: AbstractOperation): void {
     const metadata: OperationMetadata = Reflect.getMetadata(API_OPERATION_KEY, service.constructor);
-    metadata.extra = metadata.extra || {};
     service.metadata = metadata;
+    service.onInit();
     if (metadata.transports.includes('HTTP')) {
       httpMetadataStorage.add(this.createHttpMetadata(service));
     }
-
     if (metadata.transports.includes('SOCKET')) {
       webSocketMetadataStorage.add(this.createWebSocketMetadata(service));
     }
-
-    service.onInit();
   }
 
   private createHttpMetadata(operation: AbstractOperation): HttpMetadata {
+    this.validateHttpMetadata(operation.metadata);
     const routeMetadata = new HttpMetadata();
     routeMetadata.transport = 'HTTP';
     routeMetadata.target = operation.constructor;
-    routeMetadata.path = operation.metadata.http_path;
+    routeMetadata.path = operation.metadata.httpPath;
     routeMetadata.name = operation.metadata.name;
     routeMetadata.propertyKey = 'execute';
-    routeMetadata.httpMethod = this.getHttpMethod(operation.metadata);
+    routeMetadata.httpMethod = operation.metadata.httpMethod;
     return routeMetadata;
   }
 
@@ -68,22 +66,9 @@ export class ApiResourceListener {
     return metadata;
   }
 
-  private getHttpMethod(metadata: OperationMetadata): HttpMethod {
-    switch (metadata['type']) {
-      case ResourceOperationTypesEnum.LIST:
-      case ResourceOperationTypesEnum.GET:
-        return 'GET';
-      case ResourceOperationTypesEnum.CREATE:
-        return 'POST';
-      case ResourceOperationTypesEnum.UPDATE:
-        return 'PUT';
-      case ResourceOperationTypesEnum.PATCH:
-        return 'PATCH';
-      case ResourceOperationTypesEnum.REMOVE:
-      case ResourceOperationTypesEnum.BULK_REMOVE:
-        return 'DELETE';
-      default:
-        return 'GET';
+  private validateHttpMetadata(metadata: OperationMetadata): void {
+    if (!(metadata.httpMethod && metadata.httpPath)) {
+      throw new Exception(`HttpMethod or HttpPath is not set in operation: ${metadata.name}`);
     }
   }
 }
