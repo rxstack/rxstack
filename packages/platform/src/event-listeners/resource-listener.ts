@@ -5,12 +5,12 @@ import {
   webSocketMetadataStorage, ResponseEvent, KernelEvents
 } from '@rxstack/core';
 import {OperationMetadata} from '../metadata/operation.metadata';
-import {API_OPERATION_KEY} from '../interfaces';
+import {PLATFORM_OPERATION_KEY} from '../interfaces';
 import {AbstractOperation} from '../operations/abstract-operation';
 import {Exception} from '@rxstack/exceptions';
 
 @Injectable()
-export class ApiResourceListener {
+export class ResourceListener {
 
   @Observe(ApplicationEvents.BOOTSTRAP)
   async onBootstrap(event: BootstrapEvent): Promise<void> {
@@ -34,7 +34,7 @@ export class ApiResourceListener {
   }
 
   register(service: AbstractOperation): void {
-    const metadata: OperationMetadata = Reflect.getMetadata(API_OPERATION_KEY, service.constructor);
+    const metadata: OperationMetadata = Reflect.getMetadata(PLATFORM_OPERATION_KEY, service.constructor);
     service.metadata = metadata;
     service.onInit();
     if (metadata.transports.includes('HTTP')) {

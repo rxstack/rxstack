@@ -1,7 +1,7 @@
 import {OperationMetadata} from '../../src/metadata';
-import {ApiOperationCallback} from '../../src';
+import {OperationCallback} from '../../src';
 
 export interface CustomOperationMetadata extends OperationMetadata {
-  onCustom?: ApiOperationCallback[];
+  onCustom?: OperationCallback[];
   template: string;
 }

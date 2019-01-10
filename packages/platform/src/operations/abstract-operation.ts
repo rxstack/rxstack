@@ -2,7 +2,7 @@ import {InjectorAwareInterface, Request, Response} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {OperationMetadata} from '../metadata/operation.metadata';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {ApiOperationCallback} from '../interfaces';
+import {OperationCallback} from '../interfaces';
 import {OperationEvent} from '../events';
 import * as _ from 'lodash';
 
@@ -28,7 +28,7 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
     await this.getDispatcher().dispatch(this.getEventName(event.eventType), event);
   }
 
-  protected registerOperationCallbacks(eventType: string, callbacks?: ApiOperationCallback[]): void {
+  protected registerOperationCallbacks(eventType: string, callbacks?: OperationCallback[]): void {
     callbacks.forEach((callback): void => {
       this.getDispatcher().addListener(this.getEventName(eventType), callback);
     });

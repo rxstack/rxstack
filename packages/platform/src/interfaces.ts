@@ -1,9 +1,9 @@
 import {QueryInterface, SortInterface} from '@rxstack/query-filter';
 import {OperationEvent} from './events/operation.event';
 
-export const API_OPERATION_KEY = 'API_OPERATION_KEY';
+export const PLATFORM_OPERATION_KEY = 'PLATFORM_OPERATION_KEY';
 
-export type ApiOperationCallback = (event: OperationEvent) => Promise<void>;
+export type OperationCallback = (event: OperationEvent) => Promise<void>;
 
 export interface ServiceOptions {
   idField: string;

@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/platform",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "RxStack Platform Module",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",

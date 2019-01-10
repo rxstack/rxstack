@@ -1,9 +1,9 @@
 import {Module} from '@rxstack/core';
-import {ApiResourceListener} from './event-listeners';
+import {ResourceListener} from './event-listeners';
 
 @Module({
   providers: [
-    { provide: ApiResourceListener, useClass: ApiResourceListener },
+    { provide: ResourceListener, useClass: ResourceListener },
   ]
 })
 export class PlatformModule { }
