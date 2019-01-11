@@ -1,6 +1,6 @@
 import {Request, Response} from '@rxstack/core';
 import {OperationEvent} from '../events';
-import {OperationEventsEnum, ResourceOperationTypesEnum} from '../enums';
+import {ResourceOperationTypesEnum} from '../enums';
 import {AbstractOperation} from './abstract-operation';
 import {ServiceInterface} from '../interfaces';
 import {ResourceOperationMetadata} from '../metadata';
@@ -16,30 +16,13 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   }
 
   async execute(request: Request): Promise<Response> {
-    const event = new OperationEvent(request, this.injector, this.metadata);
-    this.initializeDefaults(event);
-    event.eventType = OperationEventsEnum.INIT;
-    await this.dispatch(event);
-    if (event.response) {
-      return event.response;
-    }
-    const resourceAwareOperations =
+    this.initializeDefaults(request);
+    const singleResourceOperations =
       [ResourceOperationTypesEnum.GET, ResourceOperationTypesEnum.UPDATE, ResourceOperationTypesEnum.REMOVE];
-    if (resourceAwareOperations.includes(this.metadata.type)) {
-      await this.findOneOr404(event);
+    if (singleResourceOperations.includes(this.metadata.type)) {
+      request.attributes.set('data', await this.findOneOr404(request));
     }
-    event.eventType = OperationEventsEnum.PRE_EXECUTE;
-    await this.dispatch(event);
-    if (event.response) {
-      return event.response;
-    }
-    await this.doExecute(event);
-    event.eventType = OperationEventsEnum.POST_EXECUTE;
-    await this.dispatch(event);
-    if (event.response) {
-      return event.response;
-    }
-    return new Response(event.getData() , event.statusCode);
+    return await super.execute(request);
   }
 
   protected getService(): ServiceInterface<T> {
@@ -50,12 +33,12 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
     await this[this.metadata.type](event);
   }
 
-  protected async findOneOr404(event: OperationEvent): Promise<void> {
-    const resource = await this.getService().findOne(event.request.attributes.get('criteria'));
+  protected async findOneOr404(request: Request): Promise<T> {
+    const resource = await this.getService().findOne(this.getCriteria(request, '$eq', 'id'));
     if (!resource) {
       throw new NotFoundException();
     }
-    event.setData(resource);
+    return resource;
   }
 
   private async create(event: OperationEvent): Promise<void> {
@@ -69,21 +52,23 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   private async get(event: OperationEvent): Promise<void> { }
 
   private async update(event: OperationEvent): Promise<void> {
-    event.setData(
-      await this.getService().updateOne(event.getData()[this.getService().options.idField], event.request.body)
-    );
+    await this.getService().updateOne(event.getData()[this.getService().options.idField], event.request.body);
+    event.statusCode = 204;
   }
 
   private async patch(event: OperationEvent): Promise<void> {
     event.setData(await this.getService().updateMany(event.request.attributes.get('criteria'), event.request.body));
+    event.statusCode = 204;
   }
 
   private async remove(event: OperationEvent): Promise<void> {
     await this.getService().removeOne(event.getData()[this.getService().options.idField]);
+    event.statusCode = 204;
   }
 
   private async bulkRemove(event: OperationEvent): Promise<void> {
     event.setData(await this.getService().removeMany(event.request.attributes.get('criteria')));
+    event.statusCode = 204;
   }
 
   private async list(event: OperationEvent): Promise<void> {
@@ -99,8 +84,7 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
     });
   }
 
-  private initializeDefaults(event: OperationEvent): void {
-    const request = event.request;
+  private initializeDefaults(request: Request): void {
     switch (this.metadata.type) {
       case ResourceOperationTypesEnum.LIST:
           request.attributes.set('query', {
@@ -109,22 +93,11 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
             'skip': 0
           });
         break;
-      case ResourceOperationTypesEnum.GET:
-      case ResourceOperationTypesEnum.UPDATE:
-      case ResourceOperationTypesEnum.REMOVE:
-        this.setCriteria(request, '$eq', 'id');
-        break;
       case ResourceOperationTypesEnum.PATCH:
       case ResourceOperationTypesEnum.BULK_REMOVE:
-        this.setCriteria(request, '$in', 'ids');
+        request.attributes.set('criteria', this.getCriteria(request, '$in', 'ids'));
         break;
     }
-  }
-
-  private setCriteria(request: Request, filterType: FilterType, param: string): void {
-    request.attributes.set('criteria', {
-      [this.getService().options.idField]: {[filterType]: request.params.get(param)}
-    });
   }
 
   private setHttpMethod(): void {
@@ -147,5 +120,11 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
         this.metadata.httpMethod = 'DELETE';
         break;
     }
+  }
+
+  private getCriteria(request: Request, filterType: FilterType, param: string): Object {
+    return {
+      [this.getService().options.idField]: {[filterType]: request.params.get(param)}
+    };
   }
 }

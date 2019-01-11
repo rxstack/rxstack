@@ -29,7 +29,6 @@ describe('Platform:Operation:Get', () => {
     const response: Response = await def.handler(request);
     response.statusCode.should.equal(200);
     response.content['name'].should.equal('my task');
-    _.isEqual(request.attributes.get('criteria'), { id: { '$eq': 'app_task_get' } }).should.be.equal(true);
   });
 
   it('@app_task_get should throw 404', async () => {

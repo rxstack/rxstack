@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
-import * as _ from 'lodash';
 
 describe('Platform:Operation:Update', () => {
   // Setup application
@@ -27,7 +26,6 @@ describe('Platform:Operation:Update', () => {
     request.params.set('id', 1);
     request.body = { id: 1, 'name': 'my task', completed: false };
     const response: Response = await def.handler(request);
-    response.statusCode.should.equal(200);
-    _.isEqual(request.body, response.content).should.be.equal(true);
+    response.statusCode.should.equal(204);
   });
 });

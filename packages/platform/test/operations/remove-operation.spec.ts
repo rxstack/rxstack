@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
-import * as _ from 'lodash';
 
 describe('Platform:Operation:Remove', () => {
   // Setup application
@@ -26,7 +25,6 @@ describe('Platform:Operation:Remove', () => {
     const request = new Request('HTTP');
     request.params.set('id', 'app_task_remove');
     const response: Response = await def.handler(request);
-    response.statusCode.should.equal(200);
-    _.isObject(response.content).should.be.equal(true);
+    response.statusCode.should.equal(204);
   });
 });

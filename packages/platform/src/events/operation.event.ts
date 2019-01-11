@@ -3,6 +3,7 @@ import {Request, Response} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {OperationMetadata} from '../metadata';
 import * as _ from 'lodash';
+import {OperationEventsEnum} from '../enums';
 
 export class OperationEvent extends GenericEvent {
 
@@ -10,7 +11,7 @@ export class OperationEvent extends GenericEvent {
 
   statusCode = 200;
 
-  eventType: string;
+  eventType: OperationEventsEnum;
 
   private _data: any;
 

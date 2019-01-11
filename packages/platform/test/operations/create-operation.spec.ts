@@ -38,15 +38,6 @@ describe('Platform:Operation:Create', () => {
     Array.isArray(response.content).should.equal(true);
   });
 
-  it('@app_task_create_with_response_on_init', async () => {
-    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create');
-    const request = new Request('SOCKET');
-    request.params.set('with_response', 'init')
-    request.body = { 'name': 'my task'};
-    const response: Response = await def.handler(request);
-    response.content.should.equal('init');
-  });
-
   it('@app_task_create_with_response_on_pre_execute', async () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create');
     const request = new Request('SOCKET');

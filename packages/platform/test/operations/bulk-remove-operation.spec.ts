@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
-import * as _ from 'lodash';
+
 describe('Platform:Operation:BulkRemove', () => {
   // Setup application
 
@@ -25,7 +25,6 @@ describe('Platform:Operation:BulkRemove', () => {
     const request = new Request('HTTP');
     request.params.set('ids', [1]);
     const response: Response = await def.handler(request);
-    response.statusCode.should.equal(200);
-    response.content.should.be.equal(1);
+    response.statusCode.should.equal(204);
   });
 });

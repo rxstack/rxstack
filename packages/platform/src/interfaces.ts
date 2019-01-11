@@ -20,7 +20,7 @@ export interface ServiceInterface<T> {
 
   insertMany(data: Object[], options?: Options): Promise<T[]>;
 
-  updateOne(id: any, data: Object, options?: Options): Promise<T>;
+  updateOne(id: any, data: Object, options?: Options): Promise<void>;
 
   updateMany(criteria: Object, data: Object, options?: Options): Promise<number>;
 

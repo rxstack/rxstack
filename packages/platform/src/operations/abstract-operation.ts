@@ -5,6 +5,7 @@ import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {OperationCallback} from '../interfaces';
 import {OperationEvent} from '../events';
 import * as _ from 'lodash';
+import {OperationEventsEnum} from '../enums';
 
 export abstract class AbstractOperation implements InjectorAwareInterface {
   metadata: OperationMetadata;
@@ -18,6 +19,24 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
   onInit(): void {
     const callbackKeys = Object.keys(this.metadata).filter((key: string) => key.match('^on'));
     callbackKeys.forEach(key => this.registerOperationCallbacks(key.slice(2), this.metadata[key]));
+  }
+
+  async execute(request: Request): Promise<Response> {
+    const event = new OperationEvent(request, this.injector, this.metadata);
+    event.setData(request.attributes.get('data'));
+    request.attributes.set('data', undefined);
+    event.eventType = OperationEventsEnum.PRE_EXECUTE;
+    await this.dispatch(event);
+    if (event.response) {
+      return event.response;
+    }
+    await this.doExecute(event);
+    event.eventType = OperationEventsEnum.POST_EXECUTE;
+    await this.dispatch(event);
+    if (event.response) {
+      return event.response;
+    }
+    return new Response(event.getData() , event.statusCode);
   }
 
   protected getDispatcher(): AsyncEventDispatcher {
@@ -38,6 +57,6 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
     return this.metadata.name + '.' + _.snakeCase(eventType);
   }
 
-  abstract execute(request: Request): Promise<Response>;
+  protected abstract doExecute(event: OperationEvent): Promise<void>;
 }
 

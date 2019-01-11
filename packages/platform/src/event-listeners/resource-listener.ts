@@ -31,6 +31,9 @@ export class ResourceListener {
       event.getResponse().headers.set('x-limit', pagination['limit']);
       event.getResponse().headers.set('x-skip', pagination['skip']);
     }
+    if (event.getResponse().statusCode === 204) {
+      event.getResponse().content = null;
+    }
   }
 
   register(service: AbstractOperation): void {

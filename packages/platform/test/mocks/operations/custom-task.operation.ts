@@ -1,8 +1,8 @@
 import {Operation} from '../../../src/metadata/index';
 import {Injectable} from 'injection-js';
 import {AbstractOperation} from '../../../src/operations/index';
-import {Request, Response} from '@rxstack/core';
 import {CustomOperationMetadata} from '../custom-operation.metadata';
+import {OperationEvent} from '../../../src/events';
 
 @Operation<CustomOperationMetadata>({
   name: 'app_task_custom',
@@ -15,7 +15,7 @@ import {CustomOperationMetadata} from '../custom-operation.metadata';
 export class CustomTaskOperation extends AbstractOperation {
   metadata: CustomOperationMetadata;
 
-  async execute(request: Request): Promise<Response> {
-    return new Response(this.metadata.template);
+  protected async doExecute(event: OperationEvent): Promise<void> {
+    event.setData(this.metadata.template);
   }
 }

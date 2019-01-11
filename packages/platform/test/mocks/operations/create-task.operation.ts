@@ -12,9 +12,6 @@ import {setResponse} from '../middleware/set-response';
   httpPath: '/tasks',
   service: TaskService,
   type: ResourceOperationTypesEnum.CREATE,
-  onInit: [
-    setResponse('init')
-  ],
   onPreExecute: [
     setResponse('pre_execute')
   ],
