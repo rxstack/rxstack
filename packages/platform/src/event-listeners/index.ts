@@ -1,1 +1,1 @@
-export * from './api-resource-listener';
+export * from './resource-listener';

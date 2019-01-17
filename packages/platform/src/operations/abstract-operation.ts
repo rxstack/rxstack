@@ -1,14 +1,14 @@
-import {HttpMethod, InjectorAwareInterface, Request, Response} from '@rxstack/core';
+import {InjectorAwareInterface, Request, Response} from '@rxstack/core';
 import {Injector} from 'injection-js';
-import {ApiOperationMetadata} from '../metadata/api-operation.metadata';
+import {OperationMetadata} from '../metadata/operation.metadata';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import {ApiOperationCallback} from '../interfaces';
-import {ApiOperationEvent} from '../events';
-import {OperationEventsEnum} from '../enums/operation-events.enum';
+import {OperationCallback} from '../interfaces';
+import {OperationEvent} from '../events';
+import * as _ from 'lodash';
+import {OperationEventsEnum} from '../enums';
 
 export abstract class AbstractOperation implements InjectorAwareInterface {
-
-  metadata: ApiOperationMetadata;
+  metadata: OperationMetadata;
 
   protected injector: Injector;
 
@@ -17,32 +17,46 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
   }
 
   onInit(): void {
-    this.getCallbacksKeys().forEach(key =>
-      this.registerOperationCallbacks(key, this.metadata['on' + key.charAt(0).toUpperCase() + key.slice(1)]));
+    const callbackKeys = Object.keys(this.metadata).filter((key: string) => key.match('^on'));
+    callbackKeys.forEach(key => this.registerOperationCallbacks(key.slice(2), this.metadata[key]));
+  }
+
+  async execute(request: Request): Promise<Response> {
+    const event = new OperationEvent(request, this.injector, this.metadata);
+    event.setData(request.attributes.get('data'));
+    request.attributes.set('data', undefined);
+    event.eventType = OperationEventsEnum.PRE_EXECUTE;
+    await this.dispatch(event);
+    if (event.response) {
+      return event.response;
+    }
+    await this.doExecute(event);
+    event.eventType = OperationEventsEnum.POST_EXECUTE;
+    await this.dispatch(event);
+    if (event.response) {
+      return event.response;
+    }
+    return new Response(event.getData() , event.statusCode);
   }
 
   protected getDispatcher(): AsyncEventDispatcher {
     return this.injector.get(AsyncEventDispatcher);
   }
 
-  protected async dispatch(event: ApiOperationEvent): Promise<void> {
-    await this.getDispatcher().dispatch(this.metadata.name + '.' + event.eventType, event);
+  protected async dispatch(event: OperationEvent): Promise<void> {
+    await this.getDispatcher().dispatch(this.getEventName(event.eventType), event);
   }
 
-  protected registerOperationCallbacks(name: string, callbacks?: ApiOperationCallback[]): void {
-    if (callbacks) {
-      callbacks.forEach((callback): void => {
-        this.getDispatcher().addListener(this.metadata.name + '.' + name, callback);
-      });
-    }
+  protected registerOperationCallbacks(eventType: string, callbacks: OperationCallback[]): void {
+    callbacks.forEach((callback): void => {
+      this.getDispatcher().addListener(this.getEventName(eventType), callback);
+    });
   }
 
-  abstract execute(request: Request): Promise<Response>;
+  protected getEventName(eventType: string): string {
+    return this.metadata.name + '.' + _.snakeCase(eventType);
+  }
 
-  abstract getSupportedHttpMethod(): HttpMethod;
-
-  abstract getCallbacksKeys(): OperationEventsEnum[];
-
-
+  protected abstract doExecute(event: OperationEvent): Promise<void>;
 }
 

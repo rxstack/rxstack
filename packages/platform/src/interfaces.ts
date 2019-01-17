@@ -1,19 +1,16 @@
 import {QueryInterface, SortInterface} from '@rxstack/query-filter';
-import {ApiOperationEvent} from './events/api-operation.event';
+import {OperationEvent} from './events/operation.event';
 
-export const API_OPERATION_KEY = 'API_OPERATION_KEY';
+export const PLATFORM_OPERATION_KEY = 'PLATFORM_OPERATION_KEY';
 
-export type ApiOperationCallback = (event: ApiOperationEvent) => Promise<void>;
+export type OperationCallback = (event: OperationEvent) => Promise<void>;
 
 export interface ServiceOptions {
   idField: string;
+  supportDotNotation?: boolean;
 }
 
 export interface Options { }
-
-export interface UpdateOneOptions extends Options {
-  patch: boolean;
-}
 
 export interface ServiceInterface<T> {
 
@@ -23,7 +20,7 @@ export interface ServiceInterface<T> {
 
   insertMany(data: Object[], options?: Options): Promise<T[]>;
 
-  updateOne(id: any, data: Object, options?: UpdateOneOptions): Promise<T>;
+  updateOne(id: any, data: Object, options?: Options): Promise<void>;
 
   updateMany(criteria: Object, data: Object, options?: Options): Promise<number>;
 

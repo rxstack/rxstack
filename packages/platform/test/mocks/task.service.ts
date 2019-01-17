@@ -20,18 +20,16 @@ export class TaskService implements ServiceInterface<TaskModel> {
     return data as TaskModel[];
   }
 
-  async updateOne(id: any, data: Object): Promise<TaskModel> {
-    return data as TaskModel;
-  }
+  async updateOne(id: any, data: Object): Promise<void> { }
 
   async updateMany(criteria: Object, data: Object): Promise<number> {
-    return 0;
+    return 1;
   }
 
   async removeOne(id: any): Promise<void> { }
 
   async removeMany(criteria: Object): Promise<number> {
-    return 0;
+    return 1;
   }
 
   async count(criteria?: Object): Promise<number> {

@@ -3,7 +3,7 @@ import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
 
-describe('Platform:Operation:Remove', () => {
+describe('Platform:Operation:Custom', () => {
   // Setup application
 
   const app = new Application(PLATFORM_APP_OPTIONS);
@@ -20,11 +20,11 @@ describe('Platform:Operation:Remove', () => {
     await app.stop();
   });
 
-  it('@app_task_remove ', async () => {
-    const def = kernel.httpDefinitions.find((def) => def.name === 'app_task_remove');
-    const request = new Request('HTTP');
-    request.params.set('id', 'app_task_remove');
+  it('@app_task_custom ', async () => {
+    const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_custom');
+    const request = new Request('SOCKET');
     const response: Response = await def.handler(request);
-    response.statusCode.should.equal(204);
+    response.statusCode.should.equal(200);
+    response.content.should.equal('\n    Hello world\n  ');
   });
 });
