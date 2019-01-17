@@ -11,6 +11,7 @@ import {RemoveTaskOperation} from './mocks/operations/remove-task.operation';
 import {ListTaskOperation} from './mocks/operations/list-task.operation';
 import {PaginatedListTaskOperation} from './mocks/operations/paginated-list-task.operation';
 import {CustomTaskOperation} from './mocks/operations/custom-task.operation';
+import {BulkCreateTaskOperation} from './mocks/operations/bulk-create-task.operation';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   imports: [
@@ -19,6 +20,7 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   providers: [
     { provide: TaskService, useClass: TaskService },
     { provide: CreateTaskOperation, useClass: CreateTaskOperation },
+    { provide: BulkCreateTaskOperation, useClass: BulkCreateTaskOperation },
     { provide: GetTaskOperation, useClass: GetTaskOperation },
     { provide: UpdateTaskOperation, useClass: UpdateTaskOperation },
     { provide: RemoveTaskOperation, useClass: RemoveTaskOperation },

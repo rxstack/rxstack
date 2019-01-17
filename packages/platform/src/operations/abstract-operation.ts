@@ -47,7 +47,7 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
     await this.getDispatcher().dispatch(this.getEventName(event.eventType), event);
   }
 
-  protected registerOperationCallbacks(eventType: string, callbacks?: OperationCallback[]): void {
+  protected registerOperationCallbacks(eventType: string, callbacks: OperationCallback[]): void {
     callbacks.forEach((callback): void => {
       this.getDispatcher().addListener(this.getEventName(eventType), callback);
     });

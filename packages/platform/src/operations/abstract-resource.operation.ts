@@ -42,9 +42,7 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   }
 
   private async create(event: OperationEvent): Promise<void> {
-    const data = event.request.body;
-    const result = Array.isArray(data) ? await this.getService().insertMany(data)
-      : await this.getService().insertOne(data);
+    const result = await this.getService().insertOne(event.request.body);
     event.setData(result);
     event.statusCode = 201;
   }
@@ -64,6 +62,11 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   private async remove(event: OperationEvent): Promise<void> {
     await this.getService().removeOne(event.getData()[this.getService().options.idField]);
     event.statusCode = 204;
+  }
+
+  private async bulkCreate(event: OperationEvent): Promise<void> {
+    event.setData(await this.getService().insertMany(event.request.body));
+    event.statusCode = 201;
   }
 
   private async bulkRemove(event: OperationEvent): Promise<void> {
@@ -107,6 +110,7 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
         this.metadata.httpMethod = 'GET';
         break;
       case ResourceOperationTypesEnum.CREATE:
+      case ResourceOperationTypesEnum.BULK_CREATE:
         this.metadata.httpMethod = 'POST';
         break;
       case ResourceOperationTypesEnum.UPDATE:

@@ -5,5 +5,6 @@ export enum ResourceOperationTypesEnum {
   UPDATE = 'update',
   PATCH = 'patch',
   REMOVE = 'remove',
+  BULK_CREATE = 'bulkCreate',
   BULK_REMOVE = 'bulkRemove',
 }
