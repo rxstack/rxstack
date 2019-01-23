@@ -36,7 +36,15 @@ export class TaskService implements ServiceInterface<TaskModel> {
     return 1;
   }
 
-  async findOne(criteria: Object, sort?: SortInterface): Promise<TaskModel> {
+  async find(id: any): Promise<TaskModel> {
+    switch (id) {
+      case 'not_found':
+        return null;
+      default:
+        return TaskService.data[0];
+    }
+  }
+  async findOne(criteria: Object): Promise<TaskModel> {
     const id = criteria['id']['$eq'];
     switch (id) {
       case 'not_found':

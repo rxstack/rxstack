@@ -34,7 +34,7 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   }
 
   protected async findOneOr404(request: Request): Promise<T> {
-    const resource = await this.getService().findOne(this.getCriteria(request, '$eq', 'id'));
+    const resource = await this.getService().find(request.params.get('id'));
     if (!resource) {
       throw new NotFoundException();
     }
@@ -98,7 +98,7 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
         break;
       case ResourceOperationTypesEnum.PATCH:
       case ResourceOperationTypesEnum.BULK_REMOVE:
-        request.attributes.set('criteria', this.getCriteria(request, '$in', 'ids'));
+        request.attributes.set('criteria', {[this.getService().options.idField]: {'$in': request.params.get('ids')}});
         break;
     }
   }
@@ -124,11 +124,5 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
         this.metadata.httpMethod = 'DELETE';
         break;
     }
-  }
-
-  private getCriteria(request: Request, filterType: FilterType, param: string): Object {
-    return {
-      [this.getService().options.idField]: {[filterType]: request.params.get(param)}
-    };
   }
 }
