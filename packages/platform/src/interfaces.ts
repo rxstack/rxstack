@@ -1,4 +1,4 @@
-import {QueryInterface, SortInterface} from '@rxstack/query-filter';
+import {QueryInterface} from '@rxstack/query-filter';
 import {OperationEvent} from './events/operation.event';
 
 export const PLATFORM_OPERATION_KEY = 'PLATFORM_OPERATION_KEY';
@@ -10,27 +10,27 @@ export interface ServiceOptions {
   supportDotNotation?: boolean;
 }
 
-export interface Options { }
-
 export interface ServiceInterface<T> {
 
   options: ServiceOptions;
 
-  insertOne(data: Object, options?: Options): Promise<T>;
+  insertOne(data: Object): Promise<T>;
 
-  insertMany(data: Object[], options?: Options): Promise<T[]>;
+  insertMany(data: Object[]): Promise<T[]>;
 
-  updateOne(id: any, data: Object, options?: Options): Promise<void>;
+  updateOne(id: any, data: Object): Promise<void>;
 
-  updateMany(criteria: Object, data: Object, options?: Options): Promise<number>;
+  updateMany(criteria: Object, data: Object): Promise<number>;
 
-  removeOne(id: any, options?: Options): Promise<void>;
+  removeOne(id: any): Promise<void>;
 
-  removeMany(criteria: Object, options?: Options): Promise<number>;
+  removeMany(criteria: Object): Promise<number>;
 
-  count(criteria?: Object, options?: Options): Promise<number>;
+  count(criteria?: Object): Promise<number>;
 
-  findOne(criteria: Object, sort?: SortInterface, options?: Options): Promise<T>;
+  find(id: any): Promise<T>;
 
-  findMany(query: QueryInterface, options?: Options): Promise<T[]>;
+  findOne(criteria: Object): Promise<T>;
+
+  findMany(query: QueryInterface): Promise<T[]>;
 }
