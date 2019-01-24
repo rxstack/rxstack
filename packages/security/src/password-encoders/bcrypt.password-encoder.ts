@@ -8,7 +8,7 @@ export class BcryptPasswordEncoder implements PasswordEncoderInterface {
   static readonly ENCODER_NAME = 'bcrypt';
 
   async encodePassword(raw: string): Promise<string> {
-    return bcrypt.hash(raw, 10);
+    return await bcrypt.hash(raw, 10);
   }
 
   async isPasswordValid(encoded: string, raw: string): Promise<boolean> {
