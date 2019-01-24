@@ -15,11 +15,11 @@ export class FixtureManager extends ServiceRegistry<AbstractFixture> {
     if (purge) {
       await this.purger.purge();
     }
-    return this.getOrderedFixtures().reduce(
-      async (current: Promise<AbstractFixture>, fixture: AbstractFixture): Promise<void> => {
-        this.logger.debug(`Loading fixture "${fixture.getName()}"`, {source: 'data-fixtures'});
-        await fixture.load();
-      }, Promise.resolve(null));
+    const fixtures = this.getOrderedFixtures();
+    for (let i = 0; i < fixtures.length; i++) {
+      this.logger.debug(`Loading fixture "${fixtures[i].getName()}"`, {source: 'data-fixtures'});
+      await fixtures[i].load();
+    }
   }
 
   getOrderedFixtures(): AbstractFixture[] {

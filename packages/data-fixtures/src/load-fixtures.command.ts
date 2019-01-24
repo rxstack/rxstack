@@ -10,7 +10,8 @@ export class LoadFixturesCommand extends AbstractCommand {
 
   async handler(yargs: any): Promise<void> {
     this.injector.get(Logger).debug('Fixtures loading is started.', {source: 'data-fixtures'});
-    await this.injector.get(FixtureManager).execute(Boolean(yargs.purge));
+    const manager = this.injector.get(FixtureManager);
+    await manager.execute(Boolean(yargs.purge));
     this.injector.get(Logger).debug('Fixtures have been successfully loaded.', {source: 'data-fixtures'});
   }
 }
