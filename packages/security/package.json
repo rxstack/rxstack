@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/security",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "RxStack Security Module",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
@@ -28,17 +28,17 @@
     "@rxstack/core": "^0.1.1",
     "@rxstack/exceptions": "^0.1.0",
     "@rxstack/service-registry": "^0.1.5",
-    "bcrypt": "^2.0",
+    "bcrypt": "^3.0.3",
     "crypto-js": "^3.1.9-1",
     "injection-js": "^2.1.0",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.10",
-    "reflect-metadata": "^0.1.12",
+    "reflect-metadata": "^0.1.13",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/lodash": "^4.14.119",
+    "@types/lodash": "^4.14.120",
     "@types/mocha": "^2.2.48",
     "@types/sinon": "^5.0.7",
     "chai": "3.5.0",
@@ -50,8 +50,8 @@
     "source-map-support": "^0.4.15",
     "std-mocks": "^1.0.1",
     "ts-node": "^3.1.0",
-    "tslint": "^5.12.0",
-    "typescript": "^3.2.2"
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
