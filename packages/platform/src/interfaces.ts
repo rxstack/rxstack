@@ -7,7 +7,7 @@ export type OperationCallback = (event: OperationEvent) => Promise<void>;
 
 export interface ServiceOptions {
   idField: string;
-  supportDotNotation?: boolean;
+  defaultLimit: number;
 }
 
 export interface ServiceInterface<T> {
@@ -32,5 +32,5 @@ export interface ServiceInterface<T> {
 
   findOne(criteria: Object): Promise<T>;
 
-  findMany(query: QueryInterface): Promise<T[]>;
+  findMany(query?: QueryInterface): Promise<T[]>;
 }

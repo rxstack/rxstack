@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/platform",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "RxStack Platform Module",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
@@ -27,14 +27,17 @@
     "coverage": "nyc npm run mocha",
     "test": "npm run lint && npm run coverage"
   },
+  "peerDependencies": {
+    "@rxstack/async-event-dispatcher": "^0.1",
+    "@rxstack/core": "^0.1",
+    "@rxstack/exceptions": "^0.1",
+    "@rxstack/security": "^0.1",
+    "@rxstack/query-filter": "^0.1"
+  },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.1.*",
-    "@rxstack/core": "^0.1.*",
-    "@rxstack/exceptions": "^0.1.*",
-    "@rxstack/query-filter": "^0.1.*",
     "injection-js": "^2.1",
-    "lodash": "^4.17.11",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",

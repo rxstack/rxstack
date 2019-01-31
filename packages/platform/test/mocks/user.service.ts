@@ -2,9 +2,10 @@ import {Injectable} from 'injection-js';
 import {ServiceInterface, ServiceOptions} from '../../src';
 import {QueryInterface} from '@rxstack/query-filter';
 import {TaskModel} from './task.model';
+import {User} from '@rxstack/security';
 
 @Injectable()
-export class TaskService implements ServiceInterface<TaskModel> {
+export class UserService implements ServiceInterface<User> {
 
   static data: TaskModel[] = [
     { 'id': 'task-1', 'name': 'my task', 'completed': true}
@@ -12,12 +13,12 @@ export class TaskService implements ServiceInterface<TaskModel> {
 
   options: ServiceOptions = { idField: 'id', defaultLimit: 25 };
 
-  async insertOne(data: Object): Promise<TaskModel> {
-    return data as TaskModel;
+  async insertOne(data: Object): Promise<User> {
+    return data as User;
   }
 
-  async insertMany(data: Object[]): Promise<TaskModel[]> {
-    return data as TaskModel[];
+  async insertMany(data: Object[]): Promise<User[]> {
+    return data as User[];
   }
 
   async updateOne(id: any, data: Object): Promise<void> { }
@@ -36,25 +37,21 @@ export class TaskService implements ServiceInterface<TaskModel> {
     return 1;
   }
 
-  async find(id: any): Promise<TaskModel> {
-    switch (id) {
-      case 'not_found':
-        return null;
-      default:
-        return TaskService.data[0];
-    }
+  async find(id: any): Promise<User> {
+    return null;
   }
-  async findOne(criteria: Object): Promise<TaskModel> {
-    const id = criteria['id']['$eq'];
+
+  async findOne(criteria: Object): Promise<User> {
+    const id = criteria['username']['$eq'];
     switch (id) {
       case 'not_found':
         return null;
       default:
-        return TaskService.data[0];
+        return new User('admin');
     }
   }
 
-  async findMany(query?: QueryInterface): Promise<TaskModel[]> {
-    return TaskService.data;
+  async findMany(query?: QueryInterface): Promise<User[]> {
+    return [];
   }
 }

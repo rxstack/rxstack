@@ -1,5 +1,5 @@
 import {ApplicationOptions} from '@rxstack/core';
-import {PlatformModule} from '../src';
+import {PlatformModule, UserProvider} from '../src';
 import {environmentPlatform} from './environment.platform';
 import {TaskService} from './mocks/task.service';
 import {PatchTaskOperation} from './mocks/operations/patch-task.operation';
@@ -12,6 +12,8 @@ import {ListTaskOperation} from './mocks/operations/list-task.operation';
 import {PaginatedListTaskOperation} from './mocks/operations/paginated-list-task.operation';
 import {CustomTaskOperation} from './mocks/operations/custom-task.operation';
 import {BulkCreateTaskOperation} from './mocks/operations/bulk-create-task.operation';
+import {UserService} from './mocks/user.service';
+import {User} from '@rxstack/security';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   imports: [
@@ -19,6 +21,7 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   ],
   providers: [
     { provide: TaskService, useClass: TaskService },
+    { provide: UserService, useClass: UserService },
     { provide: CreateTaskOperation, useClass: CreateTaskOperation },
     { provide: BulkCreateTaskOperation, useClass: BulkCreateTaskOperation },
     { provide: GetTaskOperation, useClass: GetTaskOperation },
@@ -29,6 +32,13 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
     { provide: PatchTaskOperation, useClass: PatchTaskOperation },
     { provide: BulkRemoveTaskOperation, useClass: BulkRemoveTaskOperation },
     { provide: CustomTaskOperation, useClass: CustomTaskOperation },
+    {
+      provide: UserProvider,
+      useFactory: (userService: UserService) => {
+        return new UserProvider<User>(userService);
+      },
+      deps: [UserService]
+    }
   ],
   servers: environmentPlatform.servers,
   logger: environmentPlatform.logger
