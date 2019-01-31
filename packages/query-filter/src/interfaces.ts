@@ -14,8 +14,9 @@ export interface QueryInterface {
 export interface QueryFilterSchema {
   properties: {
     [propertyName: string]: {
-      property_path: string,
       operators: FilterType[],
+      property_path?: string,
+      replace_operators?: [FilterType, any][],
       meta?: any,
       transformers?: TransformCallable[],
       sort?: boolean
