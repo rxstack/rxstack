@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {ServiceInterface, ServiceOptions} from '../../src';
-import {QueryInterface, SortInterface} from '@rxstack/query-filter';
+import {QueryInterface} from '@rxstack/query-filter';
 import {TaskModel} from './task.model';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class TaskService implements ServiceInterface<TaskModel> {
     { 'id': 'task-1', 'name': 'my task', 'completed': true}
   ];
 
-  options: ServiceOptions = { idField: 'id' };
+  options: ServiceOptions = { idField: 'id', defaultLimit: 25 };
 
   async insertOne(data: Object): Promise<TaskModel> {
     return data as TaskModel;
@@ -54,7 +54,7 @@ export class TaskService implements ServiceInterface<TaskModel> {
     }
   }
 
-  async findMany(query: QueryInterface): Promise<TaskModel[]> {
+  async findMany(query?: QueryInterface): Promise<TaskModel[]> {
     return TaskService.data;
   }
 }
