@@ -20,6 +20,10 @@ export const sampleQueryFilterSchema: QueryFilterSchema = {
       'property_path': 'id',
       'operators': ['$eq', '$lt'],
     },
+    'param_without_property_path': {
+      'operators': ['$eq'],
+      'sort': true
+    },
     'not_used': {
       'property_path': 'not_used',
       'operators': [],
@@ -34,6 +38,18 @@ export const sampleQueryFilterSchemaWithOrDisabled: QueryFilterSchema = {
     'query_name': {
       'property_path': 'db_name',
       'operators': ['$lt', '$lte', '$gt', '$gte', '$ne', '$eq'],
+      'sort': true
+    },
+  },
+  'allowOrOperator': false,
+  'defaultLimit': 10
+};
+
+export const sampleQueryFilterSchemaWithCustomOperator: QueryFilterSchema = {
+  'properties': {
+    'query_name': {
+      'operators': ['$eq', '$ne'],
+      'replace_operators': [['$eq', '$custom1'], ['$ne', '$custom2']],
       'sort': true
     },
   },

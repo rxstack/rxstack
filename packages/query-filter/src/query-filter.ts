@@ -50,7 +50,8 @@ class QueryFilter {
       if (filterSchema.sort) {
         const parsed = parseInt(value, 10);
         if (parsed === 1 || parsed === -1) {
-          result[filterSchema.property_path] = parsed;
+          const path = filterSchema.property_path || key;
+          result[path] = parsed;
         }
       }
     });
@@ -72,12 +73,23 @@ class QueryFilter {
               return transformer(value);
             }, transformed);
           }
-          query[filterSchema.property_path] = {[item]: transformed};
+          const path = filterSchema.property_path || key;
+          query[path] = {[this.getOperator(item, filterSchema.replace_operators)]: transformed};
         })
       ;
     });
 
     return query;
+  }
+
+  protected getOperator(filterType: FilterType, operators?: [FilterType, any][]): any {
+    let operator: any = filterType;
+    if (operators) {
+      operators.forEach((op) => {
+        if (op[0] === operator) return operator = op[1];
+      });
+    }
+    return operator;
   }
 
   protected normalize(rawQuery: Object): Object {
