@@ -28,10 +28,10 @@
     - [Update](#operations-update)
     - [Patch](#operations-patch)
     - [Remove](#operations-remove)
-    - [BulkRemove](#operations-bulk-create)
-    - [BulkCreate](#operations-bulk-remove)
+    - [BulkRemove](#operations-bulk-remove)
+    - [BulkCreate](#operations-bulk-create)
 - [Hooks](#hooks)
-- [Overwrite Operation](#overwrite-operation)
+- [Overwrite Operations](#overwrite-operations)
 - [Custom Operations](#custom-operations)
     - [Metadata](#custom-operations-metadata)
     - [Implementation](#custom-operations-implementation)
@@ -39,8 +39,9 @@
     - [Operations](#testing-operations)
     - [Hooks](#testing-hooks)
 - [Add-ons](#add-ons)
-    - [User Provider](#add-ons-user-provider)
-    - [Refresh Token Manager](#add-ons-refresh-token-manager)
+    - [Security](#add-ons-security)
+        - [User Provider](#add-ons-security-user-provider)
+        - [Refresh Token Manager](#add-ons-security-refresh-token-manager)
 
 ## <a name="installation"></a>  Installation
 
@@ -219,14 +220,14 @@ const entries = await service.findMany(criteria);
 ```
 
 
-### <a name="service-querying"></a> Querying
+### <a name="services-querying"></a> Querying
 Querying is done via [`@rxstack/query-filter`](https://github.com/rxstack/rxstack/tree/master/packages/query-filter) component.
 
 - `findMany` accepts [QueryInterface](https://github.com/rxstack/rxstack/blob/master/packages/query-filter/src/interfaces.ts).
 - `findOne`, `updateMany`, `removeMany` and `count` accept criteria object with `@rxstack/query-filter` operators.
 - `find` query by entity identifier
 
-### <a name="service-adapters"></a> Adapters
+### <a name="services-adapters"></a> Adapters
 Official adapters:
 
 - [memory-service](https://github.com/rxstack/memory-service)
@@ -797,7 +798,7 @@ export interface SendMailOperationMetadata extends OperationMetadata {
 > If you want to register other observers then you need to add a property 
 in metadata starting with `^on`. For example: `onPreSend` or `onPostSend`. They will be automatically registered with the event dispatcher.
 
-#### <a name="custom-operations"></a> Implementation 
+#### <a name="custom-operations-implementation"></a> Implementation 
 Each operation must extend `AbstractOperation`. Async method `doExecute` is called every time an operation is executed. 
 
 Workflow: `preExecute` -> `doExecute` -> `postExecute`
@@ -855,7 +856,7 @@ As you see you can create any type of configurable operation with ease.
 ### <a name="testing"></a> Testing
 Automated tests are very important part of application development. 
 
-####  <a name="testing-operation"> Operation Testing
+####  <a name="testing-operations"> Operation Testing
 We are going to use integration tests. You just need to get the `definition` from the `kernel`.
 
 > There is not need of running server.
@@ -898,7 +899,7 @@ describe('Platform:Operation:Create', () => {
 
 ```
 
-#### <a name="testing-hook"> Hook Testing 
+#### <a name="testing-hooks"> Hook Testing 
 We are going to use unit testing with `sinon`.
 
 ```typescript
