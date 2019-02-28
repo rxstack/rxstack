@@ -8,4 +8,8 @@ export interface ResourceOperationMetadata<T> extends OperationMetadata {
   service: Type<ServiceInterface<T>> | InjectionToken<ServiceInterface<T>>;
   onPreExecute?: OperationCallback[];
   onPostExecute?: OperationCallback[];
+  pagination?: {
+    enabled: boolean;
+    limit?: number;
+  };
 }

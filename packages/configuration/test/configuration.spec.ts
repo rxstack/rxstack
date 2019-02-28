@@ -30,4 +30,8 @@ describe('Configuration', () => {
   it('should normalize path variable', () => {
     environment.app.dir.should.equal(configuration.getRootPath() + '/my-dir');
   });
+
+  it('should set empty array options', () => {
+    environment.app.opts2.length.should.equal(0);
+  });
 });

@@ -1,13 +1,14 @@
 import 'reflect-metadata';
 import {Injector} from 'injection-js';
 import {REFRESH_TOKEN_MANAGER} from '../src/security.module';
-import {RefreshTokenInterface, RefreshTokenManagerInterface} from '../src/interfaces';
+import {RefreshTokenInterface} from '../src/interfaces';
 import {Token} from '../src/models/token';
 import {User} from '../src/models/user';
-import {RefreshToken} from '../src/models/refresh-token';
 import {UnauthorizedException} from '@rxstack/exceptions';
 import {Application} from '@rxstack/core';
 import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
+import * as _ from 'lodash';
+import {AbstractRefreshTokenManager} from '../src/services';
 
 
 describe('Security:RefreshToken', () => {
@@ -16,12 +17,12 @@ describe('Security:RefreshToken', () => {
   let injector: Injector = null;
   let authToken: Token;
   let refreshToken: RefreshTokenInterface;
-  let manager: RefreshTokenManagerInterface;
+  let manager: AbstractRefreshTokenManager;
 
   before(async() =>  {
     await app.start();
     injector = app.getInjector();
-    manager = injector.get<RefreshTokenManagerInterface>(REFRESH_TOKEN_MANAGER);
+    manager = injector.get(REFRESH_TOKEN_MANAGER);
     authToken = new Token('token');
     authToken.setUser(new User('admin', 'admin', ['ADMIN']));
   });
@@ -31,26 +32,14 @@ describe('Security:RefreshToken', () => {
   });
 
   it('should create a token', async () => {
-    refreshToken = await manager.create(authToken);
-    refreshToken.should.be.instanceOf(RefreshToken);
-    (typeof refreshToken.toString()).should.be.equal('string');
-    let cnt = await manager.count();
-    cnt.should.be.equal(1);
-  });
-
-  it('should count tokens', async () => {
-    let cnt = await manager.count();
-    cnt.should.be.equal(1);
-  });
-
-  it('should check if a token exists', async () => {
-    const check = await manager.has(refreshToken.toString());
-    check.should.be.true;
+    refreshToken = await manager.createFromAuthToken(authToken);
+    (typeof refreshToken).should.be.equal('object');
+    _.has(refreshToken, 'identifier').should.be.equal(true);
   });
 
   it('should retrieve a token', async () => {
-    const token = await manager.get(refreshToken.toString());
-    token.should.be.instanceOf(RefreshToken);
+    const token = await manager.get(refreshToken.identifier);
+    (typeof token).should.be.equal('object');
   });
 
   it('should refresh a token', async () => {
@@ -60,11 +49,11 @@ describe('Security:RefreshToken', () => {
 
   it('should disable a token', async () => {
     await manager.disable(refreshToken);
-    let cnt = await manager.count();
-    cnt.should.be.equal(0);
+    const token = await manager.get(refreshToken.identifier);
+    token.expiresAt.should.be.equal(0);
   });
 
-  it('should throw an exception if token is not vaid', async () => {
+  it('should throw an exception if token is not valid', async () => {
     let exception;
     try {
       await manager.refresh(refreshToken);
@@ -75,9 +64,9 @@ describe('Security:RefreshToken', () => {
   });
 
   it('should remove all tokens', async () => {
-    await manager.create(authToken);
+    await manager.createFromAuthToken(authToken);
     await manager.clear();
-    let cnt = await manager.count();
-    cnt.should.be.equal(0);
+    const token = await manager.get(refreshToken.identifier);
+    (!!token).should.be.equal(false);
   });
 });

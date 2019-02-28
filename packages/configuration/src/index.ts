@@ -7,7 +7,9 @@ class Configuration {
     const baseFile: Object = require(dir + path.sep + filename);
     try {
       const envFile: Object = require(dir + path.sep + filename + '.' + this.getEnvironment());
-      _.merge(baseFile, envFile);
+      _.mergeWith(baseFile, envFile, (a: any, b: any) =>  {
+        if (_.isArray(a) && _.isArray(b) && b.length === 0) return b;
+      });
     } catch (e) {
       // do nothing
     }

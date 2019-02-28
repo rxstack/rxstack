@@ -1,7 +1,7 @@
 import {UserNotFoundException, UserProviderInterface} from '@rxstack/security';
 import {UserInterface} from '@rxstack/core';
 import {Injectable} from 'injection-js';
-import {ServiceInterface} from './interfaces';
+import {ServiceInterface} from '../interfaces';
 
 @Injectable()
 export class UserProvider<T extends UserInterface> implements UserProviderInterface {

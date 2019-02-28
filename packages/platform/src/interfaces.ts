@@ -5,6 +5,12 @@ export const PLATFORM_OPERATION_KEY = 'PLATFORM_OPERATION_KEY';
 
 export type OperationCallback = (event: OperationEvent) => Promise<void>;
 
+export interface Pagination {
+  count: number;
+  limit: number;
+  skip: number;
+}
+
 export interface ServiceOptions {
   idField: string;
   defaultLimit: number;

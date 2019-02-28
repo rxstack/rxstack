@@ -5,6 +5,9 @@
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=9"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/rxstack/channels.git"

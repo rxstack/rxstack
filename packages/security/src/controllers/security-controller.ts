@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {AuthenticationProviderManager} from '../authentication/authentication-provider-manager';
-import {RefreshTokenInterface, RefreshTokenManagerInterface, TokenManagerInterface} from '../interfaces';
+import {RefreshTokenInterface, TokenManagerInterface} from '../interfaces';
 import {Request, Response} from '@rxstack/core';
 import {UsernameAndPasswordToken} from '../models/username-and-password.token';
 import {NotFoundException, UnauthorizedException} from '@rxstack/exceptions';
@@ -11,12 +11,13 @@ import {AuthenticationEvents} from '../authentication-events';
 import {AuthenticationRequestEvent} from '../events/authentication-request-event';
 import {EventEmitter} from 'events';
 import {SecurityConfiguration} from '../security-configuration';
+import {AbstractRefreshTokenManager} from '../services';
 
 @Injectable()
 export class SecurityController {
   constructor(protected authManager: AuthenticationProviderManager,
               protected tokenManager: TokenManagerInterface,
-              protected refreshTokenManager: RefreshTokenManagerInterface,
+              protected refreshTokenManager: AbstractRefreshTokenManager,
               protected dispatcher: AsyncEventDispatcher,
               protected configuration: SecurityConfiguration) { }
 
@@ -25,8 +26,8 @@ export class SecurityController {
     request.token = await this.authManager.authenticate(token);
     await this.dispatcher.dispatch(AuthenticationEvents.LOGIN_SUCCESS, new AuthenticationRequestEvent(request));
     const rawToken = await this.tokenManager.encode(request.token.getPayload());
-    const refreshToken = await this.refreshTokenManager.create(request.token);
-    return new Response({'token': rawToken, 'refreshToken': refreshToken.toString()});
+    const refreshToken = await this.refreshTokenManager.createFromAuthToken(request.token);
+    return new Response({'token': rawToken, 'refreshToken': refreshToken});
   }
 
   async logoutAction(request: Request): Promise<Response> {
@@ -40,7 +41,7 @@ export class SecurityController {
     const refreshToken = await this.findRefreshTokenOr404(request.params.get('refreshToken'));
     const token = await this.refreshTokenManager.refresh(refreshToken);
     await this.dispatcher.dispatch(AuthenticationEvents.REFRESH_TOKEN_SUCCESS, new AuthenticationRequestEvent(request));
-    return new Response({'token': token, 'refreshToken': refreshToken.toString()});
+    return new Response({'token': token, 'refreshToken': refreshToken});
   }
 
   async authenticateAction(request: Request): Promise<Response> {
@@ -64,8 +65,8 @@ export class SecurityController {
     return new Response(null, 204);
   }
 
-  private async findRefreshTokenOr404(token: string): Promise<RefreshTokenInterface> {
-    const refreshToken = await this.refreshTokenManager.get(token);
+  private async findRefreshTokenOr404(identifier: string): Promise<RefreshTokenInterface> {
+    const refreshToken = await this.refreshTokenManager.get(identifier);
     if (!refreshToken) {
       throw new NotFoundException();
     }

@@ -27,22 +27,10 @@ export interface TokenManagerInterface {
 }
 
 export interface RefreshTokenInterface {
-  token: string;
+  identifier: string;
   username: string;
   payload: Object;
-  isValid(): boolean;
-  invalidate(): void;
-  toString(): string;
-}
-
-export interface RefreshTokenManagerInterface {
-  count(): Promise<number>;
-  create(authToken: TokenInterface): Promise<RefreshTokenInterface>;
-  has(refreshToken: string): Promise<boolean>;
-  get(refreshToken: string): Promise<RefreshTokenInterface>;
-  disable(refreshToken: RefreshTokenInterface): Promise<void>;
-  refresh(refreshToken: RefreshTokenInterface): Promise<string>;
-  clear(): Promise<void>;
+  expiresAt: number;
 }
 
 export interface TokenExtractorInterface extends NamedServiceInterface {

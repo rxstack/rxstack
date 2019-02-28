@@ -10,7 +10,7 @@
     "url": "git://github.com/rxstack/rxstack.git"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=9"
   },
   "keywords": [
     "RxStack",
