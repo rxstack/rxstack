@@ -944,13 +944,13 @@ describe('My Hook', () => {
 ### <a name="add-ons"> Add-ons
 Add-ons are the bridge between platform services and third-party modules.
 
-#### <a name="addons-security"> Security add-ons
+#### <a name="add-ons-security"> Security add-ons
 Security services help you build security layer of your application.
 
 > You need to install [`SecurityModule`](https://github.com/rxstack/rxstack/tree/master/packages/security#setup) in order to 
 use these add-ons
 
-##### <a name="addons-security-user-provider">  User Provider
+##### <a name="add-ons-security-user-provider">  User Provider
 `UserProvider` is implementation of [`@rxstack/security`](https://github.com/rxstack/rxstack/tree/master/packages/security#user-providers)
 `UserProviderInterface`
 
@@ -1005,7 +1005,7 @@ export const APP_OPTIONS: ApplicationOptions = {
 
 That's all.
 
-##### <a name="addons-security-refresh-token-manager">  Refresh Token Manager
+##### <a name="add-ons-security-refresh-token-manager">  Refresh Token Manager
 `RefreshTokenManager` is implementation of [`@rxstack/security`](https://github.com/rxstack/rxstack/tree/master/packages/security#refresh-token-manager)
 `RefreshTokenInterface`
 
