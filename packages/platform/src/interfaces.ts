@@ -11,6 +11,12 @@ export interface Pagination {
   skip: number;
 }
 
+export interface ValidationData {
+  path: string;
+  value: any;
+  message: string;
+}
+
 export interface ServiceOptions {
   idField: string;
   defaultLimit: number;

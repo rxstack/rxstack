@@ -75,9 +75,8 @@ describe('Exceptions', () => {
   });
 
   it('converts error to exception', () => {
-
     let exception = transformToException(new Error('generic'));
-    exception.name.should.be.equal('Exception');
+    exception.name.should.be.equal('Error');
     let sameException = transformToException(exception);
     sameException.should.be.equal(exception);
   });
