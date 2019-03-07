@@ -11,7 +11,7 @@ export interface Pagination {
   skip: number;
 }
 
-export interface ValidationData {
+export interface ValidationError {
   path: string;
   value: any;
   message: string;
@@ -26,23 +26,23 @@ export interface ServiceInterface<T> {
 
   options: ServiceOptions;
 
-  insertOne(data: Object): Promise<T>;
+  insertOne(data: Object, options?: any): Promise<T>;
 
-  insertMany(data: Object[]): Promise<T[]>;
+  insertMany(data: Object[], options?: any): Promise<T[]>;
 
-  updateOne(id: any, data: Object): Promise<void>;
+  updateOne(id: any, data: Object, options?: any): Promise<void>;
 
-  updateMany(criteria: Object, data: Object): Promise<number>;
+  updateMany(criteria: Object, data: Object, options?: any): Promise<number>;
 
-  removeOne(id: any): Promise<void>;
+  removeOne(id: any, options?: any): Promise<void>;
 
-  removeMany(criteria: Object): Promise<number>;
+  removeMany(criteria: Object, options?: any): Promise<number>;
 
-  count(criteria?: Object): Promise<number>;
+  count(criteria?: Object, options?: any): Promise<number>;
 
-  find(id: any): Promise<T>;
+  find(id: any, options?: any): Promise<T>;
 
-  findOne(criteria: Object): Promise<T>;
+  findOne(criteria: Object, options?: any): Promise<T>;
 
-  findMany(query?: QueryInterface): Promise<T[]>;
+  findMany(query?: QueryInterface, options?: any): Promise<T[]>;
 }

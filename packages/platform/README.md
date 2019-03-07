@@ -117,6 +117,8 @@ The base options are:
 ### <a name="services-methods"></a> Methods
 Service methods are pre-defined [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) operations.
 
+> Each service method has optional parameter `options` which might be passed to the native driver.
+
 #### <a name="services-methods-insertOne"></a> insertOne
 Creates a new entry. The method should return a Promise with the newly created entry.
 
