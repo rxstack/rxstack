@@ -16,7 +16,7 @@ export class GenericEvent {
    *
    * @returns {boolean}
    */
-  public isPropagationStopped(): boolean {
+  isPropagationStopped(): boolean {
     return this.propagationStopped;
   }
 
@@ -27,7 +27,7 @@ export class GenericEvent {
    * further event listener will be triggered once any trigger calls
    * stopPropagation().
    */
-  public stopPropagation(): void {
+  stopPropagation(): void {
     this.propagationStopped = true;
   }
 }
