@@ -46,11 +46,12 @@ The following exception types, all of which are instances of base `Exception` cl
 
 Exceptions contain the following fields:
 
-- name: The error name
-- message: The error message
-- stack: The error stack
-- data: extra data
-- statusCode: The HTTP status code
+- `name`: The error name
+- `message`: The error message
+- `stack`: The error stack
+- `data`: extra data
+- `statusCode`: The HTTP status code
+- `orginalError`: Original error 
 
 ### <a name="helpers"></a> Helpers
 To transform a native error to exception, you can use:
@@ -59,7 +60,16 @@ To transform a native error to exception, you can use:
 import {transformToException} from '@rxstack/exceptions'
 
 // returns instance of Exception
-transformToException(error);
+transformToException(new Error('ops'));
+```
+
+To transform an `Exception` to plain object:
+
+```typescript
+import {exceptionToObject, Exception} from '@rxstack/exceptions'
+
+// returns instance of Exception
+exceptionToObject(new Exception('Ops'));
 ```
 
 ## License

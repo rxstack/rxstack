@@ -10,8 +10,6 @@ export class Exception implements Error {
   constructor(public message: string) {
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, Exception);
-    } else {
-      this.stack = (new Error()).stack;
     }
     this.name = this.constructor.name;
   }
