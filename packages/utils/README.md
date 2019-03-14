@@ -1,6 +1,6 @@
 # The RxStack Utils
 
-> The Utils component is collection of helper functions.
+> The Utils component is a collection of helpers.
 
 ## Installation
 
