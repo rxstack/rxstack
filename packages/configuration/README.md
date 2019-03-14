@@ -21,7 +21,7 @@ First you need to create `environment.ts` in the `/src/environments` folder.
 Let’s say we want to load different file in production environment 
 then we need to create a new file `/src/environments/environment.production.ts`.
 The production environment will inherit all configurations from `environment.ts`. 
-Under the hood it uses lodash `_.merge()` to overwrite configurations.
+Under the hood it uses lodash `_.mergeWith` to overwrite configurations.
 
 * [Example](#example)
 * [Variable types](#variable-types)

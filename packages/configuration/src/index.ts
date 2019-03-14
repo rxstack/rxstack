@@ -22,7 +22,7 @@ class Configuration {
   }
 
   getEnvironment(): string {
-    let env: string = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
+    const env: string = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
     return env.toLowerCase();
   }
 
