@@ -55,7 +55,7 @@ export class ExpressServer extends AbstractServer {
     const request = new Request('HTTP');
     request.path = routeDefinition.path;
     request.headers.fromObject(req.headers);
-    request.params.fromObject(Object.assign(_.isPlainObject(req.body) ? req.body : {}, req.query, req.params));
+    request.params.fromObject(Object.assign(req.query, req.params));
     request.files.fromObject(req['files'] || {});
     request.body = req.body;
 

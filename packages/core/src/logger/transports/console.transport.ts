@@ -6,7 +6,7 @@ const winston = require('winston');
 @Injectable()
 export class ConsoleTransport implements LoggerTransportInterface {
 
-  static transportName = 'console';
+  static readonly transportName = 'console';
   
   createInstance(options: Object): any {
     return new winston.transports.Console(options);

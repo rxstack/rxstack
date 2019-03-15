@@ -3,6 +3,7 @@ import {Injectable} from 'injection-js';
 
 @Injectable()
 export class FixtureTest2 extends AbstractFixture {
+
   async load(): Promise<void> {
     this.setReference(this.getName(), 'value-2');
   }

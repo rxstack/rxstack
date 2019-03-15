@@ -15,19 +15,21 @@ export class ServerManager {
   }
 
   async start(): Promise<void> {
-    Array.from(this.servers.values()).reduce(async (current: Promise<void>, server: AbstractServer): Promise<void> => {
-      current.then(async () => {
-        const definitions = server.getTransport() === 'HTTP'
-          ? this.kernel.httpDefinitions : this.kernel.webSocketDefinitions;
-        await server.start(definitions);
-      });
-    }, Promise.resolve(null));
+    const servers = Array.from(this.servers.values());
+    for (let i = 0; i < servers.length; i++) {
+      const server = servers[i];
+      const definitions = server.getTransport() === 'HTTP'
+        ? this.kernel.httpDefinitions : this.kernel.webSocketDefinitions;
+      await server.start(definitions);
+    }
   }
 
   async stop(): Promise<void> {
-    const promises: Promise<void>[] = [];
-    Array.from(this.servers.values()).forEach((server) => promises.push(server.stopEngine()));
-    await Promise.all(promises);
+    const servers = Array.from(this.servers.values());
+    for (let i = 0; i < servers.length; i++) {
+      const server = servers[i];
+      await server.stopEngine();
+    }
   }
 
   getByName(name: string): AbstractServer {

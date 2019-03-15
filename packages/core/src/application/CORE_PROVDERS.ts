@@ -26,7 +26,6 @@ const LOGGER_PROVIDERS = function (options: ApplicationOptions): Provider[] {
   ];
 };
 
-
 const SERVER_PROVIDERS = function (options: ApplicationOptions): Provider[] {
   return [
     { provide: SERVER_REGISTRY, useClass: NoopHttpServer, multi: true },

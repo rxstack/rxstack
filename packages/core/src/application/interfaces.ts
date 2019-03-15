@@ -6,7 +6,7 @@ export type ProviderDefinition = Provider | Promise<Provider>;
 
 export type ModuleType = ModuleInterface | ModuleWithProviders;
 
-export interface ModuleInterface {}
+export interface ModuleInterface { }
 
 export interface ModuleMetadata {
   providers?: ProviderDefinition[];

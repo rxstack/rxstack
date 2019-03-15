@@ -43,7 +43,8 @@ Servers should dispatch some specific events during bootstrap, client connect an
 
 ##### <a name="server-configure-event"></a>  Configuration event
 The `server.configure` event is used to configure the server before it is started.
-Purpose: registering native middlewares, setting specific server configurations and etc. 
+
+> **Purpose:** registering native middlewares, set specific server configurations and etc. 
 
 Let's create the listener:
 
@@ -93,7 +94,8 @@ export class SocketServerListener {
 
 ##### <a name="event-server-disconnected"></a>  Disconnection event
 The `server.disconnected` event is dispatched when client is disconnected from the server. It is available only in socket servers.
-Purpose: it is very useful with [`@rxstack-channels`](../../channels/README.md)
+
+> **Purpose:** it is very useful with [`@rxstack-channels`](../../channels/README.md)
 
 ```typescript
 import {Injectable} from 'injection-js';

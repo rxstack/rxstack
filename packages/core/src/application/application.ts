@@ -18,7 +18,7 @@ import {CommandManager} from '../console';
 
 export class Application {
   private providers: ProviderDefinition[];
-  private injector?: Injector;
+  private injector: Injector;
   private options: ApplicationOptions;
   constructor(options: ApplicationOptions) {
     this.options = new ApplicationOptions(options);
@@ -54,7 +54,7 @@ export class Application {
   }
 
   private async doBootstrap(): Promise<Injector> {
-    return Promise.all(this.providers).then(async (providers) => {
+    return await Promise.all(this.providers).then(async (providers) => {
       const resolvedProviders = ReflectiveInjector.resolve(CORE_PROVIDERS(this.options).concat(providers));
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
       const dispatcher = injector.get(AsyncEventDispatcher);

@@ -12,7 +12,7 @@ the [AsyncEventDispatcher](../../async-event-dispatcher/README.md).
 * [Events](#events)
 * [Request Event](#kernel-request)
 * [Response Event](#kernel-response)
-* [Response Exception](#kernel-exception)
+* [Exception Event](#kernel-exception)
 * [Http/Websocket definitions](#definitions)
 
 ### <a name="decorators"></a>  Decorators
@@ -87,6 +87,14 @@ A Request object holds information about the client request. This information ca
  - `content`: any type of data, defaults to `null`
  - `statusCode`: number, defaults to `200`
  
+Simple response:
+ ```typescript
+   @Http('GET', '/get-something', 'app_get_something')
+   async getAction(request: Request): Promise<Response> {
+     return new Response('something', 200);
+   }
+```
+
 Streaming file:
  
 ```typescript
@@ -149,7 +157,7 @@ export class MyListener {
 ##### <a name="kernel-exception"></a> The `kernel.exception` event: 
 The event is used to handle exceptions and create an appropriate Response to return for the exception.
 
-If an exception is thrown at any point inside the `Kernel`, another event - `kernel.exception` is thrown. 
+If an exception is thrown at any point inside the `Kernel`, another event - `kernel.exception` is dispatched. 
 the `kernel.exception` event is dispatched so that your system can somehow respond to the exception.
 Each listener to this event is passed an `ExceptionEvent` object, which you can use to access the original exception via 
 the getException() method. A typical listener on this event will check for a certain type of exception 

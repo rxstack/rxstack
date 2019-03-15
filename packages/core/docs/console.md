@@ -9,8 +9,8 @@ Under the hood it uses [`yargs`](https://github.com/yargs/yargs).
 
 * [Creating a command](#create-command)
 * [Starting console application](#start-application)
-* [Running a command](#create-command)
-* [Decorating output](#run-command)
+* [List available commands](#list-commands)
+* [Running a command](#run-command)
 
 ### <a name="create-command"></a>  Creating a command
 All commands extend `AbstractCommand` class. Let's create one:
@@ -18,16 +18,23 @@ All commands extend `AbstractCommand` class. Let's create one:
 ```typescript
 
 import {Injectable} from 'injection-js';
-import {AbstractCommand} from '@rxstack/framework';
+import {AbstractCommand} from '@rxstack/core';
 
 @Injectable()
 export class MyCustomCommand extends AbstractCommand {
   command = 'my-custom-command'; // unique command name
   describe = 'My custom command description.'; // command description
+  builder = (yargs: any) => {
+    yargs.option('f', {
+      describe: 'Describe the option here',
+      default: false,
+      type: 'boolean',
+      alias: 'force',
+    });
+  }
 
   async handler(argv: any): Promise<void> {
-    // use argv to get arguments
-    
+    const force: boolean = argv.force;
     const myService = this.injector.get(MyService);
     // do something
     process.exit();
@@ -67,11 +74,19 @@ const app = new Application(APP_OPTIONS);
 await app.start();
 ```
 
-### <a name="run-command"></a>  Running a command
+### <a name="list-commands"></a>  List available commands
 
 We first need to build the source. Let's assume that source is built in `/dist`.
 To execute our custom command you need to run: 
+
 ```bash
-$ node ./src/cli.js my-custom-command
+$ node ./dist/cli.js -h
+```
+
+### <a name="run-command"></a>  Running a command
+To execute our custom command you need to run: 
+
+```bash
+$ node ./dist/cli.js my-custom-command -f true
 ```
 

@@ -22,12 +22,8 @@ export class Kernel implements InjectorAwareInterface {
   }
 
   initialize(): void {
-    httpMetadataStorage.all().forEach((metadata: HttpMetadata) => {
-      this.registerDefinition(metadata);
-    });
-    webSocketMetadataStorage.all().forEach((metadata: WebSocketMetadata) => {
-      this.registerDefinition(metadata);
-    });
+    httpMetadataStorage.all().forEach((metadata: HttpMetadata) => this.registerDefinition(metadata));
+    webSocketMetadataStorage.all().forEach((metadata: WebSocketMetadata) => this.registerDefinition(metadata));
   }
 
   reset(): void {
@@ -80,7 +76,6 @@ export class Kernel implements InjectorAwareInterface {
     try {
       const requestEvent = new RequestEvent(request);
       await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_REQUEST, requestEvent);
-      request = requestEvent.getRequest();
 
       if (requestEvent.hasResponse()) {
         return await this.handleResponse(requestEvent.getResponse(), request);
@@ -93,6 +88,16 @@ export class Kernel implements InjectorAwareInterface {
     }
   }
 
+  private async handleResponse(response: Response, request: Request): Promise<Response> {
+    try {
+      const responseEvent = new ResponseEvent(request, response);
+      await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_RESPONSE, responseEvent);
+      return responseEvent.getResponse();
+    } catch (e) {
+      throw transformToException(e);
+    }
+  }
+
   private async handleException(exception: Exception, request: Request): Promise<Response> {
     try {
       const exceptionEvent = new ExceptionEvent(exception, request);
@@ -101,16 +106,6 @@ export class Kernel implements InjectorAwareInterface {
         return await this.handleResponse(exceptionEvent.getResponse(), request);
       }
       throw exceptionEvent.getException();
-    } catch (e) {
-      throw transformToException(e);
-    }
-  }
-
-  private async handleResponse(response: Response, request: Request): Promise<Response> {
-    try {
-      const responseEvent = new ResponseEvent(request, response);
-      await this.injector.get(AsyncEventDispatcher).dispatch(KernelEvents.KERNEL_RESPONSE, responseEvent);
-      return responseEvent.getResponse();
     } catch (e) {
       throw transformToException(e);
     }

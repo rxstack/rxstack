@@ -12,10 +12,10 @@
 ### <a name="configurations"></a>  Configurations
 `Application` can be configured by passing constructor arguments:
 
-- imports: other modules to be imported in the application. 
-- providers: provider definitions
-- servers: an array of server names (server modules should be registered)
-- logger: logger configurations
+- `imports`: other modules to be imported in the application. 
+- `providers`: provider definitions
+- `servers`: an array of server names (server modules should be registered)
+- `logger`: logger configurations
 
 ```typescript
 import {ApplicationOptions} from '@rxstack/core'
