@@ -112,7 +112,7 @@ app.get('/my-custom-express-middleware', expressMiddleware(this.injector));
 
 > You need to register the listener in the application providers
 
-You get get any of the registered services from `injector`.
+You can get any of the registered services from `injector`.
 
 
 
