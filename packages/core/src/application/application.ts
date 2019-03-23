@@ -15,6 +15,7 @@ import {ServerManager} from '../server';
 import {CORE_PROVIDERS} from './CORE_PROVDERS';
 import {ApplicationOptions} from './application-options';
 import {CommandManager} from '../console';
+import {Logger} from '../logger';
 
 export class Application {
   private providers: ProviderDefinition[];
@@ -35,6 +36,7 @@ export class Application {
       const manager = this.injector.get(ServerManager);
       await manager.start();
     }
+    this.handleUncaughtExceptions();
     return this;
   }
 
@@ -101,5 +103,15 @@ export class Application {
         );
       });
     }
+  }
+
+  private handleUncaughtExceptions() {
+    const logger = this.injector.get(Logger);
+    process.on('uncaughtException', (err: any) => {
+      logger.error('uncaughtException', err);
+    });
+    process.on('unhandledRejection', function (reason: any, promise: Promise<any>) {
+      logger.error('Unhandled rejection', {reason, promise});
+    });
   }
 }

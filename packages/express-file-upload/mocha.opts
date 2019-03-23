@@ -3,5 +3,6 @@
 --require should
 --full-trace
 --bail
+--exit
 test/**/*.spec.ts
 

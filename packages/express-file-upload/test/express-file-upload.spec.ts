@@ -32,13 +32,9 @@ describe('ExpressFileUpload', () => {
       json: true
     };
 
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        response['body']['name'].should.be.equal('image.jpg');
-        response['statusCode'].should.be.equal(200);
-      })
-      .catch((err: any) => true.should.be.false)
-    ;
+    const response: IncomingMessage = await rp(options);
+    response['body']['name'].should.be.equal('image.jpg');
+    response['statusCode'].should.be.equal(200);
   });
 
   it('should skip express middleware', async () => {
@@ -49,12 +45,8 @@ describe('ExpressFileUpload', () => {
       json: true
     };
 
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        response['body'].should.be.equal('dummy');
-        response['statusCode'].should.be.equal(200);
-      })
-      .catch((err: any) => true.should.be.false)
-    ;
+    const response: IncomingMessage = await rp(options);
+    response['body'].should.be.equal('dummy');
+    response['statusCode'].should.be.equal(200);
   });
 });
