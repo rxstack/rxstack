@@ -1,5 +1,5 @@
-export const environmentWithInvalidAlgorithm = {
-  servers: ['none'],
+export const environmentWithInvalidAlgorithm: any = {
+  servers: [],
   user_providers: {
     in_memory: {
       users: [

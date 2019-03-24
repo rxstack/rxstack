@@ -41,9 +41,7 @@ export class SecurityModule {
       providers: [
         {
           provide: SecurityConfiguration,
-          useFactory: () => {
-            return new SecurityConfiguration(configuration);
-          },
+          useFactory: () => new SecurityConfiguration(configuration),
           deps: []
         },
         ...this.addCommonProviders(),

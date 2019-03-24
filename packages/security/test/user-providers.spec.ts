@@ -33,11 +33,13 @@ describe('Security:UserProvider', () => {
   });
 
   it('should not load the admin', async () => {
+    let exception: UserNotFoundException;
     try {
       await injector.get(UserProviderManager).loadUserByUsername('none');
     } catch (e) {
-      e.should.be.instanceOf(UserNotFoundException);
+      exception = e;
     }
+    exception.should.be.instanceOf(UserNotFoundException);
   });
 
   it('should load user from payload', async () => {
@@ -57,14 +59,16 @@ describe('Security:UserProvider', () => {
     const provider = new PayloadUserProvider(
       (data: UserInterface) => null
     );
+    let exception: UserNotFoundException;
     try {
       await provider.loadUserByUsername('joe', {
         'username': 'joe',
         'roles': ['USER']
       });
     } catch (e) {
-      e.should.be.instanceOf(UserNotFoundException);
+      exception = e;
     }
+    exception.should.be.instanceOf(UserNotFoundException);
   });
 
 });

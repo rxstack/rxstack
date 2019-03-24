@@ -7,6 +7,9 @@ but also allows you to implement your own authentication strategies.
 
 ```
 npm install @rxstack/security --save
+
+// peerDependencies
+npm install @rxstack/async-event-dispatcher@^0.2 @rxstack/core@^0.2 @rxstack/exceptions@^0.2 @rxstack/service-registry@^0.2 
 ```
 
 ## Documentation
@@ -106,17 +109,17 @@ For more information, please check [jsonwebtoken](https://www.npmjs.com/package/
 
 Token Extractors are responsible to extract the token from `Request` object. There are two build-in extractors:
 
-##### <a name="token-extractors-header"></a> `HeaderTokenExtractor` - extracts the token from header. 
+##### <a name="token-extractors-header"></a> `HeaderTokenExtractor`
 
-It accepts the following configurations:
+Extracts the token from header, accepts the following configurations:
 
 - `enabled` - whether is enabled or not
 - `prefix` - token prefix, defaults to `Bearer`
 - `name` - header name, default to `authorization`
     
-##### <a name="token-extractors-query"></a>  `QueryParameterTokenExtractor` extracts the token from query string parameter.
+##### <a name="token-extractors-query"></a>  `QueryParameterTokenExtractor` 
 
-It accepts the following configurations:
+Extracts the token from query string parameter, accepts the following configurations:
 
 - `enabled` - whether is enabled or not
 - `name`  parameter name, default to `bearer`
@@ -243,9 +246,7 @@ export class MyCustomUserProvider implements UserProviderInterface {
   async loadUserByUsername(username: string, payload?: any): Promise<UserInterface> {
     // load user from anywhere
     const user = await this.db.findOneByUsername(username);
-    if (!user) {
-      throw new UserNotFoundException(username);
-    }
+    if (!user) throw new UserNotFoundException(username);
     return user;
   }
   
@@ -288,11 +289,11 @@ When getting the encoder by user then `BcryptPasswordEncoder` is used by default
 To change that you need to implement `EncoderAwareInterface` in the user class:
 
 ```typescript
-import {EncoderAwareInterface, User} from '@rxstack/security';
+import {EncoderAwareInterface, User, PlainTextPasswordEncoder} from '@rxstack/security';
 
 export class UserWithEncoder extends User implements EncoderAwareInterface {
   getEncoderName(): string {
-    return 'plain-text';
+    return PlainTextPasswordEncoder.ENCODER_NAME;
   }
 }
 ```
@@ -374,7 +375,7 @@ const token: TokenInterface = '...';
 await injector.get(AuthenticationProviderManager).authenticate(token);
 ```
 
-You get a registered authentication provider by name:
+You can get a registered authentication provider by name:
 
 ```typescript
 const tokenAuthenticationProvider = injector.get(AuthenticationProviderManager)
@@ -618,10 +619,13 @@ changing password or payments. In that case you can force the user to re-authent
 
 
 ### <a name="local-authentication"></a> Local Authentication
+
 If enabled it allows users to authenticate via `HTTP` or `WebSocket` using `username` and `password`.
 Under the hood it uses [`SecurityController`](./src/controllers/security-controller.ts) which has the following actions:
 
-##### <a name="login-action"></a> `SecurityController.loginAction` allows users to generate a token via `HTTP` or `WebSocket` using `username` and `password`.
+##### <a name="login-action"></a> `SecurityController.loginAction` 
+
+Allows user to generate a token via `HTTP` or `WebSocket` using `username` and `password`.
 
 Using `CURL`
 
@@ -643,9 +647,16 @@ On success with status code 200:
 
 ```javascript
 { 
-  "token": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9......", // used to authenticate
-  "refreshToken": "dc62acc7460cdba807c3649c8fd6081e" // used to refresh the token
+  token: 'generated-token',
+  refreshToken:
+   { 
+     identifier: 'c16fefba1911e414762bb66372bc4bbc',
+     username: 'admin',
+     payload: { username: 'admin', roles: [ 'ROLE_ADMIN' ] },
+     expiresAt: 1553505705047 
+   } 
 }
+
 ```
 
 > An `AuthenticationEvents.LOGIN_SUCCESS` will be dispatched.
@@ -653,7 +664,9 @@ On success with status code 200:
 On failure status code 401
 
 
-##### <a name="refresh-token-action"></a> `SecurityController.refreshTokenAction` allows users to refresh the token via `HTTP`.
+##### <a name="refresh-token-action"></a> `SecurityController.refreshTokenAction` 
+
+Allows user to refresh the token via `HTTP`.
 
 Using `CURL`
 
@@ -661,13 +674,15 @@ Using `CURL`
 curl -X POST http://localhost:3000/security/refresh-token -d refreshToken=dc62acc7460cdba807c3649c8fd6081e
 ```
 
-On success will return the refreshed token.
+On success will return the same response as [`loginAction`](#login-action).
 
 > An `AuthenticationEvents.REFRESH_TOKEN_SUCCESS` will be dispatched.
 
 On failure status code 401 (token is expired) or 404 (token not found)
 
-##### <a name="logout-action"></a> `SecurityController.logoutAction` allows users to invalidate the refresh token
+##### <a name="logout-action"></a> `SecurityController.logoutAction` 
+
+Allows user to invalidate the refresh token
 
 Using `CURL`
 
@@ -675,11 +690,13 @@ Using `CURL`
 curl -X POST http://localhost:3000/security/logout -d refreshToken=dc62acc7460cdba807c3649c8fd6081e
 ```
 
-Always returns status code 204
+If `refreshToken` is found then it is disabled and status code 204 is returned, otherwise status code 404
 
 > An `AuthenticationEvents.LOGOUT_SUCCESS` will be dispatched.
 
-##### <a name="authenticate-action"></a> `SecurityController.authenticateAction` allows users to authenticate via `WebSocket`.
+##### <a name="authenticate-action"></a> `SecurityController.authenticateAction` 
+
+Allows users to authenticate via `WebSocket`.
 
 Once user is connected to the socket server he can authenticate:
 
@@ -693,7 +710,9 @@ defaultNs.emit('security_authenticate', {'params': {'bearer': 'eyJhbGciOiJIUzUxM
 
 > An `AuthenticationEvents.SOCKET_AUTHENTICATION_SUCCESS` will be dispatched.
 
-##### <a name="unauthenticate-action"></a> `SecurityController.unauthenticateAction` allows users to unauthenticate via `WebSocket`. It will destroy token in the `Request` object.
+##### <a name="unauthenticate-action"></a> `SecurityController.unauthenticateAction` 
+
+Allows user to unauthenticate via `WebSocket`. It will destroy token in the `Request` object.
 
 ```typescript
 const io = require('socket.io-client');
@@ -745,7 +764,7 @@ export class AuthListener {
 }
 ```
 
-Make sure you register the listener in the application providers.
+> Make sure you register the listener in the application providers.
 
 ### <a name="token-manager"></a> Token Manager
 
@@ -757,7 +776,7 @@ There are two async methods:
 - `encode(rawToken)`- encodes the raw token
 - `decode(encodedToken)` - decodes the encoded token
 
-If you want to replace JWT with any other token based authentication the you can create your own token manager 
+If you want to replace JWT with any other token based authentication then you should create your own token manager 
 and replace the current one.
 
 ```typescript
@@ -797,38 +816,22 @@ By default `InMemoryRefreshTokenManager` is enabled but it has some drawbacks be
 of the application instance. You can easily replace it with your own which implement [redis](https://redis.io/) for example.
 
 ```typescript
-import {RefreshTokenManagerInterface, RefreshTokenInterface} from '@rxstack/security';
+import {AbstractRefreshTokenManager, RefreshTokenInterface} from '@rxstack/security';
 import {Injectable} from 'injection-js';
 
 @Injectable()
-export class MyRefreshTokenManager implements RefreshTokenManagerInterface {
+export class MyRefreshTokenManager extends AbstractRefreshTokenManager {
 
-  async count(): Promise<number> {
-    return // number of all tokens;
+  async persist(refreshToken: RefreshTokenInterface): Promise<RefreshTokenInterface> {
+    // persist token in the storage
   }
 
-  async has(refreshToken: string): Promise<boolean> {
-    return // if token exists;
-  }
-
-  async get(refreshToken: string): Promise<RefreshTokenInterface> {
-    return // retrieve the token;
-  }
-
-  async create(authToken: TokenInterface): Promise<RefreshTokenInterface> {
-    return // create the token;
-  }
-
-  async disable(refreshToken: RefreshTokenInterface): Promise<void> {
-    // invalidates the token
-  }
-
-  async refresh(refreshToken: RefreshTokenInterface): Promise<string> {
-    return // refreshes the token and returns it
+  async get(identifier: string): Promise<RefreshTokenInterface> {
+    // retrieve the token from the storage
   }
 
   async clear(): Promise<void> {
-    // clear all tokens
+    // removes all persisted tokens
   }
 }
 ```

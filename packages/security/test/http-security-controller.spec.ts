@@ -32,7 +32,7 @@ describe('Security:HttpController', () => {
     response.content.token.should.be.equal('generated-token');
     (typeof response.content.refreshToken).should.be.equal('object');
     refreshToken = response.content.refreshToken;
-    request.token.isFullyAuthenticated().should.be.true;
+    request.token.isFullyAuthenticated().should.be.equal(true);
   });
 
   it('should not login', async () => {
@@ -41,7 +41,7 @@ describe('Security:HttpController', () => {
     const request = new Request('HTTP');
     request.params.set('username', 'not-valid');
     request.params.set('password', 'not-valid');
-    let exception;
+    let exception: UserNotFoundException;
     try {
       await def.handler(request);
     } catch (e) {
@@ -55,7 +55,6 @@ describe('Security:HttpController', () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_refresh_token');
     const request = new Request('HTTP');
-    request.connection = new EventEmitter();
     request.params.set('refreshToken', refreshToken.identifier);
     let response: Response = await def.handler(request);
     response.content.token.should.be.equal('generated-token');
@@ -65,9 +64,8 @@ describe('Security:HttpController', () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_refresh_token');
     const request = new Request('HTTP');
-    request.connection = new EventEmitter();
     request.params.set('refreshToken', 'invalid');
-    let exception;
+    let exception: NotFoundException;
     try {
       await def.handler(request);
     } catch (e) {
@@ -81,7 +79,7 @@ describe('Security:HttpController', () => {
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_logout');
     const request = new Request('HTTP');
     request.params.set('refreshToken', refreshToken.identifier);
-    let response: Response = await def.handler(request);
+    const response: Response = await def.handler(request);
     response.statusCode.should.be.equal(204);
     const refreshTokenObj = await injector.get(REFRESH_TOKEN_MANAGER).get(refreshToken.identifier);
     refreshTokenObj.expiresAt.should.equal(0);

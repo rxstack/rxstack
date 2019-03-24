@@ -8,7 +8,7 @@ import {jwt_app_options} from './mocks/jwt-app-options';
 describe('TokenManagerWithRsa', () => {
   // Setup application
   const app = new Application(jwt_app_options(environmentWithoutRsa));
-  let injector: Injector = null;
+  let injector: Injector;
 
   before(async() =>  {
     await app.start();
@@ -23,9 +23,9 @@ describe('TokenManagerWithRsa', () => {
     const manager = injector.get(TOKEN_MANAGER);
     const encoded = await manager.encode({'key': 'value'});
     const decoded = await manager.decode(encoded);
-    decoded.hasOwnProperty('key').should.be.true;
-    decoded.hasOwnProperty('iss').should.be.true;
-    decoded.hasOwnProperty('iat').should.be.true;
-    decoded.hasOwnProperty('exp').should.be.true;
+    decoded.hasOwnProperty('key').should.be.equal(true);
+    decoded.hasOwnProperty('iss').should.be.equal(true);
+    decoded.hasOwnProperty('iat').should.be.equal(true);
+    decoded.hasOwnProperty('exp').should.be.equal(true);
   });
 });

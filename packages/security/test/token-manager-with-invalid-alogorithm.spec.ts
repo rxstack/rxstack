@@ -9,7 +9,7 @@ import {jwt_app_options} from './mocks/jwt-app-options';
 describe('TokenManagerWithInvalidAlgorithm', () => {
   // Setup application
   const app = new Application(jwt_app_options(environmentWithInvalidAlgorithm));
-  let injector: Injector = null;
+  let injector: Injector;
 
   before(async() =>  {
     await app.start();
@@ -22,7 +22,7 @@ describe('TokenManagerWithInvalidAlgorithm', () => {
 
   it('should encode', async () => {
     const manager = injector.get(TOKEN_MANAGER);
-    let exception: any;
+    let exception: JWTEncodeFailureException;
     try {
       await manager.encode({});
     } catch (e) {

@@ -1,5 +1,5 @@
-export const environmentSecurity = {
-  servers: ['none'],
+export const environmentSecurity: any = {
+  servers: [],
   user_providers: {
     in_memory: {
       users: [

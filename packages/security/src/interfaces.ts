@@ -1,7 +1,7 @@
 import {Request, TokenInterface, UserInterface} from '@rxstack/core';
 import {NamedServiceInterface} from '@rxstack/service-registry';
 
-export type UserFactoryFunc<T extends UserInterface> = (data: UserInterface) => T;
+export type UserFactoryFunc<T extends UserInterface> = (data: any) => T;
 
 export interface AuthenticationProviderInterface extends NamedServiceInterface {
   authenticate(token: TokenInterface): Promise<TokenInterface>;

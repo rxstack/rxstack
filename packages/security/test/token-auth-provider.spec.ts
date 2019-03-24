@@ -26,15 +26,15 @@ describe('Security:TokenAuthenticationProvider', () => {
     const token = new Token('generated-token');
     const provider = injector.get(AuthenticationProviderManager).get('token');
     const authToken = await provider.authenticate(token);
-    authToken.isAuthenticated().should.be.true;
+    authToken.isAuthenticated().should.be.equal(true);
     authToken.getUser().should.be.instanceOf(User);
-    authToken.hasRole('ROLE_ADMIN').should.be.true;
+    authToken.hasRole('ROLE_ADMIN').should.be.equal(true);
   });
 
   it('should throw an exception if user identity field is not found', async () => {
     const token = new Token('no-username');
     const provider = injector.get(AuthenticationProviderManager).get('token');
-    let exception: any;
+    let exception: BadCredentialsException;
     try {
       await provider.authenticate(token);
     } catch (e) {
@@ -46,7 +46,7 @@ describe('Security:TokenAuthenticationProvider', () => {
   it('should throw an exception if token is invalid', async () => {
     const token = new Token('invalid');
     const provider = injector.get(AuthenticationProviderManager).get('token');
-    let exception: any;
+    let exception: BadCredentialsException;
     try {
       await provider.authenticate(token);
     } catch (e) {

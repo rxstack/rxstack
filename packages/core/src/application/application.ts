@@ -36,7 +36,10 @@ export class Application {
       const manager = this.injector.get(ServerManager);
       await manager.start();
     }
-    this.handleUncaughtExceptions();
+    const logger = this.injector.get(Logger);
+    this.handleUncaughtExceptions(logger);
+    this.handleUnhandledRejection(logger);
+    this.handleWarnings(logger);
     return this;
   }
 
@@ -105,13 +108,30 @@ export class Application {
     }
   }
 
-  private handleUncaughtExceptions() {
-    const logger = this.injector.get(Logger);
+  private handleUncaughtExceptions(logger: Logger) {
+    if (process.listeners('uncaughtException').length > 0) {
+      return;
+    }
     process.on('uncaughtException', (err: any) => {
-      logger.error('uncaughtException', err);
+      logger.error('UncaughtException', err);
     });
+  }
+
+  private handleUnhandledRejection(logger: Logger) {
+    if (process.listeners('unhandledRejection').length > 0) {
+      return;
+    }
     process.on('unhandledRejection', function (reason: any, promise: Promise<any>) {
-      logger.error('Unhandled rejection', {reason, promise});
+      logger.error('UnhandledRejection', {reason, promise});
+    });
+  }
+
+  private handleWarnings(logger: Logger) {
+    if (process.listeners('warning').length > 0) {
+      return;
+    }
+    process.on('warning', function (e: any) {
+      logger.warning('Warning', {warning: e});
     });
   }
 }

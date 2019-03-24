@@ -9,11 +9,8 @@ export class UserProviderManager extends ServiceRegistry<UserProviderInterface> 
 
   async loadUserByUsername(username: string, payload?: any): Promise<UserInterface> {
     const user = await this.findUser(username, payload);
-    if (!user) {
-      throw new UserNotFoundException(username);
-    } else {
-      return user;
-    }
+    if (!user) throw new UserNotFoundException(username);
+    return user;
   }
 
   private async findUser(username: string, payload?: Object): Promise<UserInterface> {

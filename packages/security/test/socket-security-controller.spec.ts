@@ -41,7 +41,7 @@ describe('Security:SocketController', () => {
     const request = new Request('SOCKET');
     request.connection = connection;
     request.params.set('bearer', 'invalid');
-    let exception;
+    let exception: UnauthorizedException;
     try {
       await def.handler(request);
     } catch (e) {
@@ -51,9 +51,9 @@ describe('Security:SocketController', () => {
   });
 
   it('should wait for the token timeout', (done) => {
-    (typeof connection['tokenTimeout'] === 'object').should.be.true;
+    (typeof connection['tokenTimeout'] === 'object').should.be.equal(true);
     setTimeout(() => {
-      connection['token']['fullyAuthenticated'].should.be.false;
+      connection['token']['fullyAuthenticated'].should.be.equal(false);
       done();
     }, 1000);
   });

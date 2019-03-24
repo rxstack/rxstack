@@ -10,6 +10,7 @@ import {TestAuthenticationProviderException} from './mocks/test.authentication-p
 import {AuthListener} from './mocks/auth.listener';
 import {Application} from '@rxstack/core';
 import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
+import {Exception} from '@rxstack/exceptions';
 
 describe('Security:AuthenticationProviderManager', () => {
   // Setup application
@@ -34,10 +35,10 @@ describe('Security:AuthenticationProviderManager', () => {
     const token = new UsernameAndPasswordToken('admin', 'admin');
     const manager = injector.get(AuthenticationProviderManager);
     const authToken = await manager.authenticate(token);
-    authToken.isAuthenticated().should.be.true;
+    authToken.isAuthenticated().should.be.equal(true);
     authToken.getUser().should.be.instanceOf(User);
-    authToken.hasRole('ROLE_ADMIN').should.be.true;
-    injector.get(AuthListener).successCalled.should.be.true;
+    authToken.hasRole('ROLE_ADMIN').should.be.equal(true);
+    injector.get(AuthListener).successCalled.should.be.equal(true);
   });
 
   it('should throw an exception if user password is invalid', async () => {
@@ -50,13 +51,13 @@ describe('Security:AuthenticationProviderManager', () => {
       exception = e;
     }
     exception.should.be.instanceOf(BadCredentialsException);
-    injector.get(AuthListener).failureCalled.should.be.true;
+    injector.get(AuthListener).failureCalled.should.be.equal(true);
   });
 
   it('should throw an exception if provider is not found', async () => {
     const token = new TestToken('test');
     const manager = injector.get(AuthenticationProviderManager);
-    let exception;
+    let exception: ProviderNotFoundException;
     try {
       await manager.authenticate(token);
     } catch (e) {
@@ -68,7 +69,7 @@ describe('Security:AuthenticationProviderManager', () => {
   it('should throw an exception if provider exception is not caught', async () => {
     const token = new TestSupportedToken();
     const manager = injector.get(AuthenticationProviderManager);
-    let exception;
+    let exception: Exception;
     try {
       await manager.authenticate(token);
     } catch (e) {

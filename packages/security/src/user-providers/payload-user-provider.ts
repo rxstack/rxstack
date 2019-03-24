@@ -10,11 +10,9 @@ export class PayloadUserProvider<T extends UserInterface> implements UserProvide
 
   constructor(private factory: UserFactoryFunc<T>) { }
 
-  async loadUserByUsername(username: string, payload?: any): Promise<UserInterface> {
+  async loadUserByUsername(username: string, payload?: any): Promise<T> {
     const user = this.factory(payload);
-    if (!user) {
-      throw new UserNotFoundException(username);
-    }
+    if (!user) throw new UserNotFoundException(username);
     return user;
   }
 
