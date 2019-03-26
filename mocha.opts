@@ -5,4 +5,4 @@
 --require should
 --full-trace
 --bail
-
+--exit
