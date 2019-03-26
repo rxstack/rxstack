@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/platform",
-  "version": "0.1.10",
+  "version": "0.2.0",
   "description": "RxStack Platform Module",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
@@ -14,8 +14,7 @@
   },
   "keywords": [
     "rxstack",
-    "platform",
-    "query-filter"
+    "rad platform"
   ],
   "main": "dist/index",
   "typings": "dist/index",
@@ -29,11 +28,11 @@
     "test": "npm run lint && npm run coverage"
   },
   "peerDependencies": {
-    "@rxstack/async-event-dispatcher": "^0.1",
-    "@rxstack/core": "^0.1",
-    "@rxstack/exceptions": "^0.1",
-    "@rxstack/security": "^0.1",
-    "@rxstack/query-filter": "^0.1"
+    "@rxstack/async-event-dispatcher": "^0.2",
+    "@rxstack/core": "^0.2",
+    "@rxstack/exceptions": "^0.2",
+    "@rxstack/security": "^0.2",
+    "@rxstack/query-filter": "^0.2"
   },
   "dependencies": {
     "injection-js": "^2.1",
@@ -42,9 +41,9 @@
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/lodash": "^4.14.121",
+    "@types/lodash": "^4.14.123",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^11.10.4",
+    "@types/node": "^11.11.7",
     "chai": "3.5.0",
     "mocha": "^5.2.0",
     "nyc": "^13.3.0",
@@ -52,8 +51,8 @@
     "sinon": "^6.3.5",
     "source-map-support": "^0.4.15",
     "ts-node": "^3.1.0",
-    "tslint": "^5.13.0",
-    "typescript": "^3.3.3333"
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.4000"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
@@ -67,9 +66,6 @@
   "nyc": {
     "extension": [
       ".ts"
-    ],
-    "require": [
-      "ts-node/register"
     ],
     "reporter": [
       "text-summary",

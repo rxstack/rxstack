@@ -47,7 +47,9 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
     event.statusCode = 201;
   }
 
-  private async get(event: OperationEvent): Promise<void> { }
+  private async get(event: OperationEvent): Promise<void> {
+    event.statusCode = 200;
+  }
 
   private async update(event: OperationEvent): Promise<void> {
     await this.getService().updateOne(event.getData()[this.getService().options.idField], event.request.body);

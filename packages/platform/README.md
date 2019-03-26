@@ -64,7 +64,7 @@ npm install @rxstack/platform --save
 > you need also to install peer dependencies:
 
 ```
-npm install @rxstack/async-event-dispatcher@^0.1 @rxstack/core@^0.1 @rxstack/exceptions@^0.1 @rxstack/query-filter@^0.1 @rxstack/security@^0.1
+npm install @rxstack/async-event-dispatcher@^0.2 @rxstack/core@^0.2 @rxstack/exceptions@^0.2 @rxstack/query-filter@^0.2 @rxstack/security@^0.2
 ```
 
 Now register the module in the `APP_OPTIONS`
@@ -172,7 +172,7 @@ The method should return a Promise with number of deleted entries.
 const criteria = {
   id: { '$in': ['id-1', 'id-2'] }
 };
-const affectedEntries = await service.count(criteria);
+const affectedEntries = await service.removeMany(criteria);
 ```
 
 #### <a name="services-methods-count"></a> count
@@ -238,7 +238,7 @@ Official adapters:
 
 For the sake of simplicity in the example below we're going to use `@rxstack/memory-service`.
 
-> You need to [install and configure the service](https://github.com/rxstack/memory-service#installation).
+> You need to [install and configure the module](https://github.com/rxstack/memory-service#installation).
 
 Let's create `TaskService`:
 
@@ -364,7 +364,7 @@ Pagination data is located in `request.attributes.get('pagination')`. To overwri
 })
 ```
 
-On `kernel.response` event headers is set in the `Response`:
+On `kernel.response` event headers are set in the `Response`:
 
 - `x-total`
 - `x-limit`
@@ -692,7 +692,7 @@ curl -X DELETE \
 ```
 
 ### <a name="hooks"></a> Hooks
-Hooks are async middleware functions that can be registered in operations. You can use then to validate, authorize and etc...
+Hooks are async middleware functions that can be registered in operations. You can use them to validate, authorize and etc...
 At the end they are converted to [`observers`](https://github.com/rxstack/rxstack/tree/master/packages/async-event-dispatcher).
 Function accepts a single parameter `event` which is instance of [`OperationEvent`](https://github.com/rxstack/rxstack/blob/master/packages/platform/src/events/operation.event.ts)
 and returns `Promise<void>`.
@@ -704,7 +704,7 @@ and contains the following properties and methods.
 - `injector`: dependency injector
 - `metadata`: operation readonly metadata
 - `statusCode`: sets status code of the `Response` object
-- `eventType`: `preExecute` or `postExecute`.
+- `eventType`: `preExecute`, `postExecute` or user-defined type.
 - `setData`: with this method you can set data before passed to `Response` object.
 - `getData`: retrieve the data set by the operation methods
 - `response`: if you set the response then it will immediately [stop propagation](https://github.com/rxstack/rxstack/tree/master/packages/async-event-dispatcher#stopping-event-flow/propagation)
@@ -738,8 +738,36 @@ export class TaskObserver {
     // do something
   }
 }
-````
-Do not forget to register it in the application providers.
+```
+
+> Do not forget to register it in the application providers.
+
+You can execute a collection of hooks as a single hook, and then you can use it in multiple operations:
+
+```typescript
+import {
+  associateWithCurrentUser,
+  restrictToRole, setNow,
+} from '@rxstack/platform-callbacks';
+
+export const taskPreExecuteCallback = (): OperationCallback => {
+  return async (event: OperationEvent): Promise<void> => { 
+    // first
+    await restrictToRole('ROLE_ADMIN')(event);
+    // second
+    await associateWithCurrentUser({
+      idField: 'username',
+      targetField: 'createdBy'
+    })(event);
+    // third
+    await setNow('createdAt')(event);
+};
+  
+// in operation metadata
+onPreExecute: [
+  taskPreExecuteCallback()
+]
+```
  
 > For more information how to create configurable hooks [check these example](https://github.com/rxstack/platform-callbacks/tree/master/src)
 
@@ -851,9 +879,9 @@ and now the implementation:
 export class SendMailOperationImpl extends SendMailOperation { }
 ```
 
-Do not forget to register in in the application providers
+> Do not forget to register it in the application providers
 
-As you see you can create any type of configurable operation with ease.
+As you see you can create any type of configurable operations with ease.
 
 ### <a name="testing"></a> Testing
 Automated tests are very important part of application development. 
@@ -861,7 +889,7 @@ Automated tests are very important part of application development.
 ####  <a name="testing-operations"> Operation Testing
 We are going to use integration tests. You just need to get the `definition` from the `kernel`.
 
-> There is not need of running server.
+> There is no need of running server.
 
 ```typescript
 import 'reflect-metadata';
@@ -1009,7 +1037,7 @@ That's all.
 
 ##### <a name="add-ons-security-refresh-token-manager">  Refresh Token Manager
 `RefreshTokenManager` is implementation of [`@rxstack/security`](https://github.com/rxstack/rxstack/tree/master/packages/security#refresh-token-manager)
-`RefreshTokenInterface`
+`AbstractRefreshTokenManager`
 
 At first place you need to create `RefreshTokenService` and `RefreshTokenModel`, [learn more about services](#services)
 
@@ -1023,20 +1051,21 @@ export const APP_OPTIONS: ApplicationOptions = {
     // ...
   ],
   providers: [
-      {
-        provide: REFRESH_TOKEN_SERVICE,
-        useFactory: () => new MemoryService({
-          idField: 'identifier', defaultLimit: 25, collection: 'refreshTokens'
-        }),
-        deps: [],
+    {
+      provide: REFRESH_TOKEN_SERVICE,
+      useFactory: () => new MemoryService({
+        idField: 'identifier', defaultLimit: 25, collection: 'refreshTokens'
+      }),
+      deps: [],
+    },
+    {
+      provide: REFRESH_TOKEN_MANAGER,
+      useFactory: (refreshTokenService: ServiceInterface<RefreshTokenInterface>, tokenManager: TokenManagerInterface) => {
+        return new RefreshTokenManager<RefreshTokenInterface>(refreshTokenService, tokenManager, 100);
       },
-      {
-        provide: REFRESH_TOKEN_MANAGER,
-        useFactory: (refreshTokenService: ServiceInterface<RefreshTokenInterface>, tokenManager: TokenManagerInterface) => {
-          return new RefreshTokenManager<RefreshTokenInterface>(refreshTokenService, tokenManager, 100);
-        },
-        deps: [REFRESH_TOKEN_SERVICE, TOKEN_MANAGER]
-      }
+      deps: [REFRESH_TOKEN_SERVICE, TOKEN_MANAGER]
+    }
+  ]
 };
 ```
 From now on refresh token will be handled by `REFRESH_TOKEN_SERVICE`.

@@ -1,7 +1,7 @@
 import {QueryInterface} from '@rxstack/query-filter';
 import {OperationEvent} from './events/operation.event';
 
-export const PLATFORM_OPERATION_KEY = 'PLATFORM_OPERATION_KEY';
+export const PLATFORM_OPERATION_KEY = 'RXSTACK_PLATFORM_OPERATION_KEY';
 
 export type OperationCallback = (event: OperationEvent) => Promise<void>;
 
