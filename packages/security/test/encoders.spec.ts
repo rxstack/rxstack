@@ -44,7 +44,7 @@ describe('Security:Encoder', () => {
     user.encoderName = 'unknown';
 
     const fn = () => {
-      let encoder = injector.get(EncoderFactory).getEncoder(user);
+      injector.get(EncoderFactory).getEncoder(user);
     };
     fn.should.throw(new RegExp('does not exist'));
   });
@@ -54,9 +54,9 @@ describe('Security:Encoder', () => {
       const encoder = new PlainTextPasswordEncoder();
       const encoded = await encoder.encodePassword('pass');
       const result1 = await encoder.isPasswordValid(encoded, 'pass');
-      result1.should.be.true;
+      result1.should.be.equal(true);
       const result2 = await encoder.isPasswordValid(encoded, 'pass1');
-      result2.should.be.false;
+      result2.should.be.equal(false);
     });
   });
 
@@ -65,9 +65,9 @@ describe('Security:Encoder', () => {
       const encoder = new BcryptPasswordEncoder();
       const encoded = await encoder.encodePassword('pass');
       const result1 = await encoder.isPasswordValid(encoded, 'pass');
-      result1.should.be.true;
+      result1.should.be.equal(true);
       const result2 = await encoder.isPasswordValid(encoded, 'pass1');
-      result2.should.be.false;
+      result2.should.be.equal(false);
     });
   });
 });

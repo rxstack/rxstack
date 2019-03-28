@@ -11,8 +11,8 @@ import {AbstractResourceOperation} from '../../../src/operations';
   transports: ['HTTP', 'SOCKET'],
   httpPath: '/tasks',
   service: TaskService,
-  extra: {
-    paginated: true,
+  pagination: {
+    enabled: true,
     limit: 10
   }
 })

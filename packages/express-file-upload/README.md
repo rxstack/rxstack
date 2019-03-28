@@ -7,6 +7,9 @@ Under the hood it uses [`formidable`](https://github.com/felixge/node-formidable
 
 ```
 npm install @rxstack/express-file-upload --save
+
+// peerDependencies
+npm install @rxstack/async-event-dispatcher@^0.2 @rxstack/core@^0.2 @rxstack/exceptions@^0.2 @rxstack/express-server@^0.2 
 ```
 
 ## Documentation
@@ -24,17 +27,17 @@ Let's create the application:
 
 ```typescript
 import {Application, ApplicationOptions} from '@rxstack/core';
-import {DataFixtureModule} from '@rxstack/express-file-upload';
+import {ExpressFileUploadModule} from '@rxstack/express-file-upload';
 
-export const EXPRESS_APP_OPTIONS: ApplicationOptions = {
+export const APP_OPTIONS: ApplicationOptions = {
   imports: [
-    DataFixtureModule.configure({
+    // ...
+    ExpressFileUploadModule.configure({
       enabled: true, // default is false
       hash: 'md5', // default is md5
       multiples: false, // default is false
       directory: './uploads' // default is os.tmpdir()
     }),
-    // important: import ExpressServerModule
   ],
   servers: ['express'], 
   providers: [
@@ -45,7 +48,7 @@ export const EXPRESS_APP_OPTIONS: ApplicationOptions = {
   }
 };
 
-new Application(EXPRESS_APP_OPTIONS).start();
+new Application(APP_OPTIONS).start();
 ```
 
 ### <a name="module-options"></a>  Module options

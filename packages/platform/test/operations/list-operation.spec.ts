@@ -26,9 +26,6 @@ describe('Platform:Operation:List', () => {
     const response: Response = await def.handler(request);
     response.statusCode.should.equal(200);
     Array.isArray(response.content).should.be.equal(true);
-    response.headers.get('x-total').should.be.equal(1);
-    response.headers.get('x-limit').should.be.equal(25);
-    response.headers.get('x-skip').should.be.equal(0);
   });
 
   it('@app_task_list_paginated', async () => {

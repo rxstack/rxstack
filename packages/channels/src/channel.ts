@@ -6,7 +6,7 @@ export class Channel {
 
   children: Channel[] = [];
 
-  constructor(public ns: string) {}
+  constructor(public ns: string) { }
 
   get length(): number {
     return this.connections.length;

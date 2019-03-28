@@ -2,10 +2,10 @@ import {Request, Response} from '@rxstack/core';
 import {OperationEvent} from '../events';
 import {ResourceOperationTypesEnum} from '../enums';
 import {AbstractOperation} from './abstract-operation';
-import {ServiceInterface} from '../interfaces';
+import {Pagination, ServiceInterface} from '../interfaces';
 import {ResourceOperationMetadata} from '../metadata';
 import {NotFoundException} from '@rxstack/exceptions';
-import {FilterType, QueryInterface} from '@rxstack/query-filter';
+import {queryFilter, QueryFilterSchema, QueryInterface} from '@rxstack/query-filter';
 
 export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   metadata: ResourceOperationMetadata<T>;
@@ -47,7 +47,9 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
     event.statusCode = 201;
   }
 
-  private async get(event: OperationEvent): Promise<void> { }
+  private async get(event: OperationEvent): Promise<void> {
+    event.statusCode = 200;
+  }
 
   private async update(event: OperationEvent): Promise<void> {
     await this.getService().updateOne(event.getData()[this.getService().options.idField], event.request.body);
@@ -77,24 +79,30 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   private async list(event: OperationEvent): Promise<void> {
     const query: QueryInterface = event.request.attributes.get('query');
     const resources = await this.getService().findMany(query);
-    const paginated = !!this.metadata.extra['paginated'];
-    const count = paginated ? await this.getService().count(query.where) : resources.length;
     event.setData(resources);
-    event.request.attributes.set('pagination', {
-      count: count,
-      limit: query.limit,
-      skip: query.skip
-    });
+    const paginated = this.metadata.pagination && this.metadata.pagination.enabled;
+    if (paginated) {
+      const pagination: Pagination = {
+        count: await this.getService().count(query.where),
+        limit: query.limit,
+        skip: query.skip
+      };
+      event.request.attributes.set('pagination', pagination);
+    }
   }
 
   private initializeDefaults(request: Request): void {
     switch (this.metadata.type) {
       case ResourceOperationTypesEnum.LIST:
-          request.attributes.set('query', {
-            'where': { },
-            'limit': this.metadata.extra['limit'] || 25,
-            'skip': 0
-          });
+          const limit = this.metadata.pagination && this.metadata.pagination.limit
+            ? this.metadata.pagination.limit : this.getService().options.defaultLimit;
+
+          const defaultSchema: QueryFilterSchema = {
+            properties: {},
+            defaultLimit: limit
+          };
+          const query = queryFilter.createQuery(defaultSchema, request.params.toObject());
+          request.attributes.set('query', query);
         break;
       case ResourceOperationTypesEnum.PATCH:
       case ResourceOperationTypesEnum.BULK_REMOVE:

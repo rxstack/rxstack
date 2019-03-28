@@ -4,6 +4,7 @@ import {Injector} from 'injection-js';
 import {SocketioServer} from '../src/socketio.server';
 import {MockEventListener} from './mocks/mock-event-listener';
 import {SOCKET_APP_OPTIONS} from './mocks/socketio-app-options';
+import * as _ from 'lodash';
 const io = require('socket.io-client');
 
 
@@ -36,7 +37,7 @@ describe('SocketIOServer', () => {
   it('should call mock_json', (done: Function) => {
     defaultNs.emit('mock_json', null, function (response: any) {
       response['statusCode'].should.be.equal(200);
-      JSON.stringify(response['content']).should.be.equal(JSON.stringify({ id: 'json' }));
+      _.isEqual(response['content'], { id: 'json' }).should.be.equal(true);
       done();
     });
   });
@@ -98,6 +99,7 @@ describe('SocketIOServer', () => {
     defaultNs.emit('mock_stream', null, function (response: any) {
       response['statusCode'].should.be.equal(500);
       response['message'].should.be.equal('Streaming is not supported.');
+
       done();
     });
   });

@@ -7,15 +7,13 @@
 > RxStack is a realtime object-oriented framework which helps you build a micro service web applications
 on top of other frameworks like `express` and `socketio` by adding an abstraction layer.
 
+> Switch to [Rapid Application Development Platform](https://github.com/rxstack/rxstack/tree/master/packages/platform) - 
+The fastest way to build web applications
 
-![lifecycle](assets/lifecycle.jpg)  
-
-## Getting started
+## Table of content
 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Project folder and file structure](#project-structure)
-- [NPM Scripts](#npm-scripts)
 - [Controllers](#controllers)
     - [Creating a Controller](#controllers-create)
     - [Mapping a URL and socket event to a Controller](#controllers-mapping)
@@ -40,29 +38,37 @@ on top of other frameworks like `express` and `socketio` by adding an abstractio
     - [Usage client side](#channel-manager-usage-client-side)
     - [References](https://github.com/rxstack/rxstack/tree/master/packages/channels)
 - [Databases](#databases)
+    - [Platform Service Modules](#platform-service-modules)
     - [TypeORM](#databases)
-    - [Mongoose](#databases)
 - [Testing](#testing)
     - [Unit](#testing-unit)
     - [Integration](#testing-integration)
     - [Functional](#testing-functional)
 - [References]()
+    - [Skeleton Application](https://github.com/rxstack/skeleton)
     - [Async Event Dispatcher](https://github.com/rxstack/rxstack/tree/master/packages/async-event-dispatcher)
     - [Channels](https://github.com/rxstack/rxstack/tree/master/packages/channels)
-    - [Exceptions](https://github.com/rxstack/rxstack/tree/master/packages/exceptions)
-    - [Query Filter](https://github.com/rxstack/rxstack/tree/master/packages/query-filter)
-    - [Service Registry](https://github.com/rxstack/rxstack/tree/master/packages/service-registry)
     - [Configuration](https://github.com/rxstack/rxstack/tree/master/packages/configuration)
     - [Core](https://github.com/rxstack/rxstack/tree/master/packages/core)
+    - [Data Fixtures](https://github.com/rxstack/rxstack/tree/master/packages/data-fixtures)
+    - [Exceptions](https://github.com/rxstack/rxstack/tree/master/packages/exceptions)
     - [Express Server](https://github.com/rxstack/rxstack/tree/master/packages/express-server)
     - [Express File Upload](https://github.com/rxstack/rxstack/tree/master/packages/express-file-upload)
-    - [SocketIO Server](https://github.com/rxstack/rxstack/tree/master/packages/socketio-server)
+    - [Query Filter](https://github.com/rxstack/rxstack/tree/master/packages/query-filter)
     - [Security](https://github.com/rxstack/rxstack/tree/master/packages/security)
+    - [Service Registry](https://github.com/rxstack/rxstack/tree/master/packages/service-registry)
+    - [Socketio Server](https://github.com/rxstack/rxstack/tree/master/packages/socketio-server)
     - [Utils](https://github.com/rxstack/rxstack/tree/master/packages/utils)
+    - [Platform](https://github.com/rxstack/rxstack/tree/master/packages/platform)
+    - [Platform Helpers](https://github.com/rxstack/platform-callbacks)
+    - [Memory Service](https://github.com/rxstack/memory-service)
+    - [Mongoose Service](https://github.com/rxstack/mongoose-service)
+    - [Sequelize Service](https://github.com/rxstack/sequelize-service)
+    - [Todo Application](https://github.com/rxstack/to-do)
     
 
 ## <a name="prerequisites"></a> Prerequisites
-`RxStack` requires `Node v8.0.0` and later. On MacOS and other Unix systems the 
+`RxStack` requires `Node v9.0.0` and later. On MacOS and other Unix systems the 
 [Node Version Manager](https://github.com/creationix/nvm) is a good way 
 to quickly install the latest version of NodeJS and keep up it up to date. You'll also need git installed.
 After successful installation, the node, npm and git commands should be available on the terminal 
@@ -70,22 +76,22 @@ and show something similar when running the following commands:
 
 ```bash
 $ node --version
-v8.5.0
+v11.10.0
 ```
 
 ```bash
 $ npm --version
-6.1.0
+6.9.0
 ```
 
 ```bash
 $ git --version
-git version 2.7.4
+git version 2.17.1
 ```
 
 ## <a name="installation"></a> Installation
 
-Let's clone the pre-configured skeleton application:
+Let's clone the pre-configured [skeleton application](https://github.com/rxstack/skeleton):
 
 ```bash
 $ git clone https://github.com/rxstack/skeleton.git my-project
@@ -94,8 +100,7 @@ $ npm install
 $ npm run dev
 ```
 
-If you now try to access [localhost](http://localhost:3000/) in the browser you should see the welcome page 
-or you can access it via websockets:
+Open [localhost](http://localhost:3000/) in the browser and you should see the welcome page or you can access it via websockets:
 
 ```typescript
 const io = require('socket.io-client');
@@ -105,35 +110,6 @@ conn.emit('app_index', null, function (response: any) {
   console.log(response); // should output Response object
 });
 ```
-
-## <a name="project-structure"></a> Project folder and file structure
-
-- `src` - all your code lives here
-    - `index.ts` - application entry file
-    - `app` - application related files
-        - `APPLICATION_OPTIONS.ts` - all application configurations [read more](https://github.com/rxstack/rxstack/blob/master/packages/core/docs/application.md).
-        - `commands` - command line application files [read more](https://github.com/rxstack/rxstack/blob/master/packages/core/docs/console.md).
-        - `controllers` - all your controller files [read more](https://github.com/rxstack/rxstack/blob/master/packages/core/docs/kernel.md).
-        - `event-listeners` - all your event listener files [read more](https://github.com/rxstack/rxstack/blob/master/packages/async-event-dispatcher).
-    - `environments` - configuration files [read more](https://github.com/rxstack/rxstack/tree/master/packages/configuration).
-- `test` - all tests files
-- `static` - all static files
-- `tslint.json` - typescript linter configuration
-- `tsconfig.json` - typescript configuration
-
-## <a name="npm-scripts"></a> NPM scripts
-
-- `$ npm run dev` - starts the application in development environment with `nodemon` and watches for file changes
-- `$ npm run compile` - compiles the source code
-- `$ npm run watch` - watching for file changes
-- `$ npm run clean` - removes the `dist` directory
-- `$ npm run lint` - lints the source code using `tslint.json`
-- `$ npm run mocha` - runs tests using `mocha.opts`
-- `$ npm run coverage` - runs tests with `nyc`
-- `$ npm test` - runs lint, mocha and coverage
-- `$ npm run cli` - runs command line applications
-- `$ npm run prod` - starts the application in production environment
-    
       
 ## <a name="controllers"></a> Controllers
 A controller is a typescript function you create that reads information from the `Request` object 
@@ -142,7 +118,7 @@ a 404 error or anything else you can dream up.
 The controller executes whatever arbitrary logic your application needs to send a response to the client.
  
 ### <a name="controllers-create"></a> Creating a controller 
-A controller is usually a method inside a controller class:
+A controller action is usually a method inside a controller class:
 
 ```typescript
 // my-project/src/app/controllers/lucky.controller.ts
@@ -337,10 +313,10 @@ export const APP_LISTENERS_PROVIDERS: ProviderDefinition[] = [
 ## <a name="console"></a> Console
 Your console commands can be used for any recurring task, such as cronjobs, imports, or other batch jobs.
 
-To see the build-in command you can run:
+To see the available commands you can run:
 
 ```
-    $ npm run cli
+    $ npm run cli -- -h
 ```
 
 - `$ npm run cli debug:http-metadata` - Prints http metadata for an application
@@ -463,7 +439,7 @@ export const APP_SECURITY_PROVIDERS: ProviderDefinition[] = [
     useFactory: () => {
       return new InMemoryUserProvider<UserInterface>(
         environment.users,
-        (data: UserInterface) => new User(data.username, data.password, data.roles)
+        (data: any) => new User(data.username, data.password, data.roles)
       );
     },
     deps: [],
@@ -556,7 +532,7 @@ const io = require('socket.io-client');
 const conn = io('ws://localhost:4000', {transports: ['websocket']});
 
 conn.emit('security_login', {params: {username: 'admin', password: 'admin'}}, function (response: any) {
-  console.log(response.content); // should output {"token": "...", "refreshToken": "..."}
+  console.log(response.content); // should output {"token": "...", "refreshToken": {...}}
 });
 ```
 
@@ -796,14 +772,18 @@ conn.on('say_hello', function (data: any) {
 
 ## <a name="databases"></a> Databases
 
-`RxStack` doesn't provide a module to work with the database, but you can add any of your choice.
-Below you find some database examples:
+`RxStack` provides several modules to work with databases via 
+[`@rxstack/platform`](https://github.com/rxstack/rxstack/tree/master/packages/platform#services).
 
+Here is the list of built-in platform database services:
 
-### <a name="databases-typeorm"></a> TypeOrm
-TypeORM is Object Relational Mapper
+> You can use these services outside `@rxstack/platform`
 
-[Please read the documentations](http://typeorm.io)
+- [Memory Service](https://github.com/rxstack/memory-service)
+- [Mongoose Service](https://github.com/rxstack/mongoose-service)
+- [Sequelize Service](https://github.com/rxstack/sequelize-service)
+
+Here is an example of integrating [TypeORM](http://typeorm.io):
 
 > We assume that mysql is installed and running on your machine.
 
@@ -881,206 +861,31 @@ export class Cat {
 }
 ```
 
-Let's create the service class:
+Controller usage:
 
 ```typescript
-// my-project/src/app/services/cat.service.ts
-
 import {Injectable} from 'injection-js';
+import {Http, Request, Response, WebSocket} from '@rxstack/core';
+import {ForbiddenException} from '@rxstack/exceptions';
 import {Cat} from '../entities/cat';
-import {Repository} from 'typeorm';
+import {Connection} from 'typeorm';
 
 @Injectable()
-export class CatService {
+export class CatController {
+  
+  constructor(private connection: Connection) { }
 
-  constructor(protected repo: Repository<Cat>) { }
-
-  async create(data: any): Promise<Cat> {
-    const createdCat = await this.repo.merge(this.repo.create(), data);
-    return await this.repo.save(createdCat);
-  }
-
-  async findAll(): Promise<Cat[]> {
-    return await this.repo.find();
-  }
-}
-```
-
-we need to register the service in the service providers:
-
-```typescript
-
-// my-project/src/app/services/APP_SERVICE_PROVIDERS.ts
-
-import {ProviderDefinition} from '@rxstack/core';
-import {CatService} from './cat.service';
-import {Connection as TypeormConnection} from 'typeorm';
-import {Cat} from '../entities/cat';
-
-export const APP_SERVICE_PROVIDERS: ProviderDefinition[] = [
-  {
-    provide: CatService,
-    useFactory: (connection: TypeormConnection) => {
-      return new CatService(connection.getRepository(Cat));
-    },
-    deps: [TypeormConnection]
-  },
-];
-```
-
-> `APP_SERVICE_PROVIDERS` needs to be registered in the application providers
-
-That's it, we can get the service from anywhere:
-
-```typescript
-// ...
-
-const service = this.injector.get(CatService);
-const result = await service.create({
-  'name': 'amanda', 'age': 5, 'breed': 'Birman'
-});
-```
-
-### <a name="databases-mongoose"></a> Mongoose
-Mongoose provides a straight-forward, schema-based solution to model your application data. 
-It includes built-in type casting, validation, query building, business logic hooks and more, out of the box.
-
-[Please read the documentations](http://mongoosejs.com/)
-
-> We assume that mongodb is installed and running on your machine.
-
-Let's install dependencies: 
-
-```bash
-$ npm install --save mongodb mongoose @types/mongoose
-```
-
-Next step is to add the configurations:
-
-```typescript
-// my-project/src/environments/environment.ts
-
-// ...
-  mongoose: {
-    uri: 'mongodb://localhost:27017/test',
-    options: {
-      useNewUrlParser: true
-    }
-  }
-```
-
-now we can create the mongoose connection provider:
-
-```typescript
-// my-project/src/app/APP_COMMON_PROVIDERS.ts
-import {ProviderDefinition} from '@rxstack/core';
-import {Connection as MongooseConnection} from 'mongoose';
-import mongoose = require('mongoose');
-import {Provider} from 'injection-js';
-import {environment} from '../environments/environment';
-mongoose.Promise = global.Promise;
-
-const mongooseProvider =  async function(): Promise<Provider> {
-  const connection: MongooseConnection = mongoose.createConnection(environment.mongoose.uri, environment.mongoose.options);
-  return { provide: MongooseConnection, useValue: connection};
-};
-
-export const APP_COMMON_PROVIDERS: ProviderDefinition[] = [
-  // ...
-  mongooseProvider()
-];
-```
-
-> Pay attention how we register async providers
-
-Let's create the model:
-
-```typescript
-// my-project/src/app/models/cat.interface.ts
-
-export interface CatInterface {
-  name: string;
-  age: number;
-  breed: string;
-}
-```
-
-and the schema:
-
-
-```typescript
-// my-project/src/app/schemas/cat.schema.ts
-
-import * as mongoose from 'mongoose';
-
-export const CatSchema = new mongoose.Schema({
-  name: String,
-  age: Number,
-  breed: String,
-});
-```
-
-Let's create the service class:
-
-```typescript
-// my-project/src/app/services/cat-mongoose.service.ts
-
-import {Injectable} from 'injection-js';
-import {Model} from 'mongoose';
-import {CatInterface} from '../models/cat.interface';
-
-@Injectable()
-export class CatMongooseService {
-
-  constructor(protected model: Model<any>) { }
-
-  async create(data: any): Promise<CatInterface> {
-      const result = await this.model.create(data);
-      return result.toObject ? result.toObject() : result;
-  }
-
-  async findAll(): Promise<CatInterface[]> {
-    return await this.model.find().lean(true).exec();
+  @Http('POST', '/cats', 'app_cat_create')
+  @WebSocket('app_cat_create')
+  async createAction(request: Request): Promise<Response> {
+    const repo = connection.getRepository(Cat);
+    const cat = await repo.merge(this.repo.create(), request.body);
+    return new Response(cat, 201);
   }
 }
 ```
 
-we need to register the service in the service providers:
-
-```typescript
-
-// my-project/src/app/services/APP_SERVICE_PROVIDERS.ts
-
-import {ProviderDefinition} from '@rxstack/core';
-import {CatMongooseService} from './cat-mongoose.service';
-import {Connection as MongooseConnection} from 'mongoose';
-import {CatSchema} from '../schemas/cat.schema';
-
-export const APP_SERVICE_PROVIDERS: ProviderDefinition[] = [
-  {
-    provide: CatMongooseService,
-    useFactory: (connection: MongooseConnection) => {
-      return new CatMongooseService(connection.model('Cat', CatSchema, 'cats'));
-    },
-    deps: [MongooseConnection]
-  },
-];
-```
-
-> `APP_SERVICE_PROVIDERS` needs to be registered in the application providers
-
-That's it, we can get the service from anywhere:
-
-```typescript
-// ...
-
-const service = this.injector.get(CatMongooseService);
-const result = await service.create({
-  'name': 'amanda', 'age': 5, 'breed': 'Birman'
-});
-```
-
-As you see you can integrate any database framework.
+As you see you can integrate any database framework with ease.
 
 ## <a name="testing"></a> Testing
 Automated tests are an essential part of the fully functional software product. That is very critical to cover at least 
@@ -1346,19 +1151,13 @@ describe('Functional:Controllers:HelloController', () => {
       resolveWithFullResponse: true,
       json: false
     };
-
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        const headers = response.headers;
-        headers['x-powered-by'].should.be.equal('Express');
-        response['statusCode'].should.be.equal(200);
-        response['content'].should.be.equal('hello');
-      })
-      .catch((err: any) => {
-        // make sure test fails
-        true.should.be.false;
-      })
-    ;
+    
+    const response: IncomingMessage = await rp(options);
+    const headers = response.headers;
+    headers['x-powered-by'].should.be.equal('Express');
+    response['statusCode'].should.be.equal(200);
+    response['content'].should.be.equal('hello');
+    
   });
 
   it('#sayHello over socket should return hello', (done: Function) => {
@@ -1373,7 +1172,8 @@ describe('Functional:Controllers:HelloController', () => {
 
 > Tip: you can test the response content against JSON schema
 
-For more examples please check the `test` folder in the `@rxstack/skeleton` application.
+For more examples how to test controller actions please check the `test` folder in 
+the [`@rxstack/skeleton`](https://github.com/rxstack/skeleton) application.
 
 
 ## License

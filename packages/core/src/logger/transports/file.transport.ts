@@ -6,7 +6,7 @@ const winston = require('winston');
 @Injectable()
 export class FileTransport implements LoggerTransportInterface {
 
-  static transportName = 'file';
+  static readonly transportName = 'file';
 
   createInstance(options: Object): any {
     return new winston.transports.File(options);

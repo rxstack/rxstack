@@ -2,9 +2,8 @@ import {FilterType, QueryFilterSchema, QueryInterface, SortInterface, TransformC
 import * as _ from 'lodash';
 
 class QueryFilter {
-
   createQuery(schema: QueryFilterSchema, rawParams: Object): QueryInterface {
-    const normalizedParams = this.normalize(rawParams);
+    const normalizedParams = this.convertToEquality(rawParams);
     let where = this.create(schema, normalizedParams);
 
     if (schema.allowOrOperator && rawParams['$or']) {
@@ -40,7 +39,7 @@ class QueryFilter {
 
   getSort(schema: QueryFilterSchema, rawParams: Object): SortInterface {
     let sort = rawParams['$sort'];
-    const result = {};
+    const result = { };
     if (typeof sort !== 'object') {
       return null;
     }
@@ -60,7 +59,7 @@ class QueryFilter {
   }
 
   protected create(schema: QueryFilterSchema, rawParams: Object): Object {
-    const query = {};
+    const query = { };
     const params = _.pick(rawParams, _.keys(schema.properties));
     _.forEach(params, (value: any, key: any) => {
       const filterSchema = schema.properties[key];
@@ -92,8 +91,8 @@ class QueryFilter {
     return operator;
   }
 
-  protected normalize(rawQuery: Object): Object {
-    const normalized = {};
+  protected convertToEquality(rawQuery: Object): Object {
+    const normalized = { };
     _.forEach(rawQuery, (value: any, key: any): void => {
       if (typeof value !== 'object') {
         normalized[key] = {'$eq': value};
@@ -101,7 +100,6 @@ class QueryFilter {
         normalized[key] = value;
       }
     });
-
     return normalized;
   }
 }

@@ -1,5 +1,5 @@
-export const environmentWithoutRsa = {
-  servers: ['none'],
+export const environmentWithoutRsa: any = {
+  servers: [],
   user_providers: {
     in_memory: {
       users: [

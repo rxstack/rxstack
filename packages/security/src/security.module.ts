@@ -2,7 +2,7 @@ import {Module, ModuleWithProviders, ProviderDefinition} from '@rxstack/core';
 import {SecurityConfiguration} from './security-configuration';
 import {InjectionToken} from 'injection-js';
 import {
-  AuthenticationProviderInterface, PasswordEncoderInterface, RefreshTokenManagerInterface, TokenExtractorInterface,
+  AuthenticationProviderInterface, PasswordEncoderInterface, TokenExtractorInterface,
   TokenManagerInterface,
   UserProviderInterface
 } from './interfaces';
@@ -23,7 +23,7 @@ import {SecurityController} from './controllers/security-controller';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {TokenAuthenticationProvider} from './authentication/token.authentication-provider';
 import {ConnectionListener} from './event-listeners/connection-listener';
-import {KeyLoader, TokenManager} from './services';
+import {AbstractRefreshTokenManager, KeyLoader, TokenManager} from './services';
 import {PlainTextPasswordEncoder} from './password-encoders';
 
 export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
@@ -31,7 +31,7 @@ export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]
 export const PASSWORD_ENCODER_REGISTRY = new InjectionToken<PasswordEncoderInterface[]>('PASSWORD_ENCODER_REGISTRY');
 export const TOKEN_EXTRACTOR_REGISTRY = new InjectionToken<TokenExtractorInterface[]>('TOKEN_EXTRACTOR_REGISTRY');
 export const TOKEN_MANAGER = new InjectionToken<TokenManagerInterface>('TOKEN_MANAGER');
-export const REFRESH_TOKEN_MANAGER = new InjectionToken<RefreshTokenManagerInterface>('REFRESH_TOKEN_MANAGER');
+export const REFRESH_TOKEN_MANAGER = new InjectionToken<AbstractRefreshTokenManager>('REFRESH_TOKEN_MANAGER');
 
 @Module()
 export class SecurityModule {
@@ -41,9 +41,7 @@ export class SecurityModule {
       providers: [
         {
           provide: SecurityConfiguration,
-          useFactory: () => {
-            return new SecurityConfiguration(configuration);
-          },
+          useFactory: () => new SecurityConfiguration(configuration),
           deps: []
         },
         ...this.addCommonProviders(),
@@ -83,7 +81,7 @@ export class SecurityModule {
         provide: SecurityController,
         useFactory: (authManager: AuthenticationProviderManager,
                      tokenManager: TokenManagerInterface,
-                     refreshTokenManager: RefreshTokenManagerInterface,
+                     refreshTokenManager: AbstractRefreshTokenManager,
                      dispatcher: AsyncEventDispatcher,
                      configuration: SecurityConfiguration
         ) => {

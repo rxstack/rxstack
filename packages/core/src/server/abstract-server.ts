@@ -80,8 +80,7 @@ export abstract class AbstractServer {
    * Kicks off the server using the specific underlying engine
    */
   async startEngine(): Promise<void> {
-    this.getHttpServer()
-      .listen(this.port, this.host, this.logMessage('Starting'));
+    this.getHttpServer().listen(this.port, this.host, () => this.logMessage('Starting'));
   }
 
   /**
@@ -90,7 +89,7 @@ export abstract class AbstractServer {
    * @returns {Promise<void>}
    */
   async stopEngine(): Promise<void> {
-    this.getHttpServer().close(this.logMessage('Closing'));
+    this.getHttpServer().close(() => this.logMessage('Closing'));
   }
 
   /**
@@ -129,8 +128,8 @@ export abstract class AbstractServer {
    *
    * @param {string} message
    */
-  protected logMessage(message: string): Function {
-    return () => this.getLogger().debug(`${message} ${this.getHost()}`, {'source': this.constructor.name});
+  protected logMessage(message: string): void {
+    this.getLogger().debug(`${message} ${this.getHost()}`, {'source': this.constructor.name});
   }
 
   /**

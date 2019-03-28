@@ -6,6 +6,9 @@
 
 ```
 npm install @rxstack/socketio-server --save
+
+// peerDependencies
+npm install @rxstack/async-event-dispatcher@^0.2 @rxstack/core@^0.2 @rxstack/exceptions@^0.2
 ```
 
 ## Documentation
@@ -49,7 +52,7 @@ The module accepts the following options::
 - `maxListeners`: Max listeners attached to the connection. By default is set to 64
 
 ### <a name="server-events"></a>  Server Events
-`SocketioServer` supports the following events:
+`SocketioServer` dispatches the following events:
 
 - `ServerEvents.CONFIGURE` - triggered when server is created but not started, used to configure the `IO`, register native middleware ... etc.
 - `ServerEvents.CONNECTED` - triggered when a client is connected.

@@ -1,6 +1,6 @@
 # The RxStack QueryFilter
 
-> The QueryFilter component helps you build a db query from http or socket request.
+> The QueryFilter component helps you build a `mongodb` like query from http or socket request.
 
 ## Installation
 
@@ -20,6 +20,7 @@ npm install @rxstack/query-filter --save
 * [$limit](#operator-limit)
 * [$skip](#operator-skip)
 * [$sort](#operator-sort)
+* [Replace original operator](#operator-replace)
 
 ### <a name="query-filter-schema"></a>  Query filter schema
 `QueryFilterSchema` is used to whitelist properties coming from the request, 
@@ -33,7 +34,6 @@ import {QueryFilterSchema, queryFilter} from '@rxstack/query-filter';
 export const myQueryFilterSchema: QueryFilterSchema = {
   'properties': {
     'id': {
-      'property_path': 'id',
       'operators': ['$eq', '$ne'],
       'sort': true,
       'transformers': [parseInt],
@@ -147,6 +147,34 @@ If sorting is enabled for a specific field in the schema then a sort object is r
 ex: `/messages?$limit=10&$sort[createdAt]=-1`
 
 output: `{'limit': 10, 'sort': {'createdAt': -1}}`
+
+##### <a name="operator-replace"> Replace original operator
+In some cases you need to replace the original operator with something db-specific.
+
+Let's assume we need to perform `$regex` search on a db-field `name` with `mongoose`:
+
+ex: `/messages?search=something`
+
+```typescript
+import {QueryFilterSchema} from '@rxstack/query-filter';
+
+export const customQueryFilter: QueryFilterSchema = {
+  'properties': {
+    'search': {
+      'property_path': 'name',
+      'operators': ['$eq'],
+      'replace_operators': [['$eq', '$regex']],
+      'transformers': [
+        (value: any) => new RegExp(`${value}`, 'i')
+      ],
+      'sort': true
+    }
+  },
+  'allowOrOperator': false,
+  'defaultLimit': 25
+};
+```
+
 
 ## License
 

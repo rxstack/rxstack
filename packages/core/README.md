@@ -4,7 +4,12 @@
 
 ## Installation
 
-` npm install @rxstack/core --save `
+```
+npm install @rxstack/core --save
+
+// peerDependencies
+npm install @rxstack/async-event-dispatcher@^0.2 @rxstack/exceptions@^0.2
+```
 
 ## Documentation
 

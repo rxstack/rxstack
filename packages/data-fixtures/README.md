@@ -6,6 +6,9 @@
 
 ```
 npm install @rxstack/data-fixtures --save
+
+// peerDependencies
+npm install @rxstack/core@^0.2 @rxstack/exceptions@^0.2 @rxstack/service-registry@^0.2 @rxstack/async-event-dispatcher@^0.2
 ```
 
 ## Documentation
@@ -88,7 +91,7 @@ export class MyFixture extends AbstractFixture {
     const service = '...'; // any persistent service
     
     // save the data
-    const result = await service.save({
+    const result = await service.insertOne({
       'name': 'Nikolay',
       'pasword': 'secret'
     });

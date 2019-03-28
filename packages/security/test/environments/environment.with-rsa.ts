@@ -1,5 +1,5 @@
-export const environmentWitRsa = {
-  servers: ['none'],
+export const environmentWitRsa: any = {
+  servers: [],
   user_providers: {
     in_memory: {
       users: [

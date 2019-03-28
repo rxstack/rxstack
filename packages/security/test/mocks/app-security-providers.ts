@@ -2,7 +2,6 @@ import {environmentSecurity} from '../environments/environment.security';
 import {TestAuthenticationProvider} from './test.authentication-provider';
 import {TestTokenManager} from './test.token-manager';
 import {Noop2UserProvider} from './noop2-user-provider';
-import {PlainTextPasswordEncoder} from '../../src/password-encoders/plain-text.password-encoder';
 import {ProviderDefinition, UserInterface} from '@rxstack/core';
 import {
   AUTH_PROVIDER_REGISTRY,
@@ -28,14 +27,6 @@ export const APP_SECURITY_PROVIDERS: ProviderDefinition[] = [
   {
     provide: AuthListener,
     useClass: AuthListener
-  },
-  {
-    provide: PASSWORD_ENCODER_REGISTRY,
-    useFactory: () => {
-      return new PlainTextPasswordEncoder();
-    },
-    deps: [],
-    multi: true
   },
   {
     provide: USER_PROVIDER_REGISTRY,

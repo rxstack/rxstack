@@ -11,5 +11,5 @@ export class User implements UserInterface {
    * @param {string} password
    * @param {string[]} roles
    */
-  constructor(public username: string, public password?: string, public roles: string[] = []) {}
+  constructor(public username: string, public password?: string, public roles: string[] = []) { }
 }

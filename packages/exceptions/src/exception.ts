@@ -5,9 +5,12 @@ export class Exception implements Error {
   stack?: string;
   data: any;
   name: string;
+  originalError: Error;
 
   constructor(public message: string) {
-    Error.captureStackTrace(this);
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, Exception);
+    }
     this.name = this.constructor.name;
   }
 }

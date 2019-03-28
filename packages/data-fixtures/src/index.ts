@@ -5,3 +5,4 @@ export * from './interfaces';
 export * from './noop-fixture';
 export * from './noop-purger';
 export * from './reference-repository';
+export * from './load-fixtures.command';

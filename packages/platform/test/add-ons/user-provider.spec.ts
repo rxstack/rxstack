@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 import {Injector} from 'injection-js';
 import {Application, Kernel} from '@rxstack/core';
-import {PLATFORM_APP_OPTIONS} from './PLATFORM_APP_OPTIONS';
-import {UserProvider} from '../src';
+import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
+import {UserProvider} from '../../src/index';
 import {User, UserNotFoundException} from '@rxstack/security';
 
-describe('Platform:UserProvider', () => {
+describe('Platform:Add-Ons:UserProvider', () => {
   // Setup application
 
   const app = new Application(PLATFORM_APP_OPTIONS);

@@ -25,16 +25,16 @@ describe('TokenManager', () => {
     const manager = injector.get(TOKEN_MANAGER);
     const encoded = await manager.encode({'key': 'value'});
     const decoded = await manager.decode(encoded);
-    decoded.hasOwnProperty('key').should.be.true;
-    decoded.hasOwnProperty('iss').should.be.true;
-    decoded.hasOwnProperty('iat').should.be.true;
-    decoded.hasOwnProperty('exp').should.be.true;
+    decoded.hasOwnProperty('key').should.be.equal(true);
+    decoded.hasOwnProperty('iss').should.be.equal(true);
+    decoded.hasOwnProperty('iat').should.be.equal(true);
+    decoded.hasOwnProperty('exp').should.be.equal(true);
     console.log(decoded);
   });
 
   it('should throw an exception if token is invalid', async () => {
     const manager = injector.get(TOKEN_MANAGER);
-    let exception: any;
+    let exception: JWTDecodeFailureException;
     try {
       await manager.decode('invalid');
     } catch (e) {

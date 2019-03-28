@@ -15,14 +15,13 @@ import * as compress from 'compression';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {ExpressServerConfiguration} from './express-server-configuration';
 import {Injectable} from 'injection-js';
-import * as _ from 'lodash';
 import {Stream} from 'stream';
 import {exceptionToObject} from '@rxstack/exceptions';
 
 @Injectable()
 export class ExpressServer extends AbstractServer {
 
-  static serverName = 'express';
+  static readonly serverName = 'express';
 
   getTransport(): Transport {
     return 'HTTP';
@@ -55,10 +54,9 @@ export class ExpressServer extends AbstractServer {
     const request = new Request('HTTP');
     request.path = routeDefinition.path;
     request.headers.fromObject(req.headers);
-    request.params.fromObject(Object.assign(_.isPlainObject(req.body) ? req.body : {}, req.query, req.params));
+    request.params.fromObject(Object.assign(req.query, req.params));
     request.files.fromObject(req['files'] || {});
     request.body = req.body;
-
     return request;
   }
 
@@ -68,10 +66,12 @@ export class ExpressServer extends AbstractServer {
 
     return this.engine[routeDefinition.method.toLowerCase()](path,
       async (req: ExpressRequest, res: ExpressResponse, next: NextFunction): Promise<void> => {
-        return routeDefinition.handler(this.createRequest(req, routeDefinition))
-          .then((response: Response) => this.responseHandler(response, res))
-          .catch(err => this.errorHandler()(err, req, res, next))
-        ;
+        try {
+          const response = await routeDefinition.handler(this.createRequest(req, routeDefinition));
+          this.responseHandler(response, res);
+        } catch (e) {
+          this.errorHandler()(e, req, res, next);
+        }
     });
   }
 

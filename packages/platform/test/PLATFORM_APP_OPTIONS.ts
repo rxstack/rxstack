@@ -13,7 +13,10 @@ import {PaginatedListTaskOperation} from './mocks/operations/paginated-list-task
 import {CustomTaskOperation} from './mocks/operations/custom-task.operation';
 import {BulkCreateTaskOperation} from './mocks/operations/bulk-create-task.operation';
 import {UserService} from './mocks/user.service';
-import {User} from '@rxstack/security';
+import {RefreshTokenInterface, User} from '@rxstack/security';
+import {RefreshTokenManager} from '../src/add-ons';
+import {RefreshTokenService} from './mocks/refresh-token.service';
+import {MockTokenManager} from './mocks/mock.token-manager';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   imports: [
@@ -22,6 +25,8 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   providers: [
     { provide: TaskService, useClass: TaskService },
     { provide: UserService, useClass: UserService },
+    { provide: MockTokenManager, useClass: MockTokenManager },
+    { provide: RefreshTokenService, useClass: RefreshTokenService },
     { provide: CreateTaskOperation, useClass: CreateTaskOperation },
     { provide: BulkCreateTaskOperation, useClass: BulkCreateTaskOperation },
     { provide: GetTaskOperation, useClass: GetTaskOperation },
@@ -38,6 +43,13 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
         return new UserProvider<User>(userService);
       },
       deps: [UserService]
+    },
+    {
+      provide: RefreshTokenManager,
+      useFactory: (refreshTokenService: RefreshTokenService, tokenManager: MockTokenManager) => {
+        return new RefreshTokenManager<RefreshTokenInterface>(refreshTokenService, tokenManager, 100);
+      },
+      deps: [RefreshTokenService, RefreshTokenService]
     }
   ],
   servers: environmentPlatform.servers,

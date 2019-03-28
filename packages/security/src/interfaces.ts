@@ -1,7 +1,7 @@
 import {Request, TokenInterface, UserInterface} from '@rxstack/core';
 import {NamedServiceInterface} from '@rxstack/service-registry';
 
-export type UserFactoryFunc<T extends UserInterface> = (data: UserInterface) => T;
+export type UserFactoryFunc<T extends UserInterface> = (data: any) => T;
 
 export interface AuthenticationProviderInterface extends NamedServiceInterface {
   authenticate(token: TokenInterface): Promise<TokenInterface>;
@@ -27,22 +27,10 @@ export interface TokenManagerInterface {
 }
 
 export interface RefreshTokenInterface {
-  token: string;
+  identifier: string;
   username: string;
   payload: Object;
-  isValid(): boolean;
-  invalidate(): void;
-  toString(): string;
-}
-
-export interface RefreshTokenManagerInterface {
-  count(): Promise<number>;
-  create(authToken: TokenInterface): Promise<RefreshTokenInterface>;
-  has(refreshToken: string): Promise<boolean>;
-  get(refreshToken: string): Promise<RefreshTokenInterface>;
-  disable(refreshToken: RefreshTokenInterface): Promise<void>;
-  refresh(refreshToken: RefreshTokenInterface): Promise<string>;
-  clear(): Promise<void>;
+  expiresAt: number;
 }
 
 export interface TokenExtractorInterface extends NamedServiceInterface {

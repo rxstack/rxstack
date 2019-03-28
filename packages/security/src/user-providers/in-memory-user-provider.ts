@@ -11,16 +11,14 @@ export class InMemoryUserProvider<T extends UserInterface> implements UserProvid
 
   private users: T[] = [];
 
-  constructor(data: T[],  factory: UserFactoryFunc<T>) {
-    data.forEach((item) => this.users.push(factory(item)));
+  constructor(data: any,  factory: UserFactoryFunc<T>) {
+    data.forEach((item: any) => this.users.push(factory(item)));
   }
 
-  async loadUserByUsername(username: string): Promise<UserInterface> {
-    const user = _.find<UserInterface>(this.users, {'username': username});
-    if (!user) {
-      throw new UserNotFoundException(username);
-    }
-    return user;
+  async loadUserByUsername(username: string): Promise<T> {
+    const user = _.find(this.users, {username});
+    if (!user) throw new UserNotFoundException(username);
+    return user as T;
   }
 
   getName(): string {

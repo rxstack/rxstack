@@ -8,7 +8,7 @@ import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
 describe('Security:TokenExtractors', () => {
   // Setup application
   const app = new Application(SECURITY_APP_OPTIONS);
-  let injector: Injector = null;
+  let injector: Injector;
 
   before(async() =>  {
     await app.start();
@@ -39,7 +39,7 @@ describe('Security:TokenExtractors', () => {
 
       const request = new Request('HTTP');
       request.params.set('some', 'generated-token');
-      (manager.extract(request) === null).should.be.true;
+      (manager.extract(request) === null).should.be.equal(true);
     });
   });
 
@@ -57,7 +57,7 @@ describe('Security:TokenExtractors', () => {
 
       const request = new Request('HTTP');
       request.headers.set('some', 'generated-token');
-      (manager.extract(request) === null).should.be.true;
+      (manager.extract(request) === null).should.be.equal(true);
     });
 
     it('should not extract the token if prefix is not found', async () => {
@@ -65,7 +65,7 @@ describe('Security:TokenExtractors', () => {
 
       const request = new Request('HTTP');
       request.headers.set('authorization', 'generated-token');
-      (manager.extract(request) === null).should.be.true;
+      (manager.extract(request) === null).should.be.equal(true);
     });
   });
 });

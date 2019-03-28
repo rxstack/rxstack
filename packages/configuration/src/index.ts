@@ -7,7 +7,9 @@ class Configuration {
     const baseFile: Object = require(dir + path.sep + filename);
     try {
       const envFile: Object = require(dir + path.sep + filename + '.' + this.getEnvironment());
-      _.merge(baseFile, envFile);
+      _.mergeWith(baseFile, envFile, (a: any, b: any) =>  {
+        if (_.isArray(a) && _.isArray(b) && b.length === 0) return b;
+      });
     } catch (e) {
       // do nothing
     }
@@ -20,7 +22,7 @@ class Configuration {
   }
 
   getEnvironment(): string {
-    let env: string = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
+    const env: string = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
     return env.toLowerCase();
   }
 

@@ -1,13 +1,16 @@
 {
   "name": "@rxstack/channels",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "RxStack Channels Component",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=9"
+  },
   "repository": {
     "type": "git",
-    "url": "git://github.com/rxstack/channels.git"
+    "url": "git://github.com/rxstack/rxstack.git"
   },
   "main": "dist/index",
   "typings": "dist/index",
@@ -21,14 +24,13 @@
     "test": "npm run lint && npm run coverage"
   },
   "devDependencies": {
-    "@types/node": "^7.0.65",
     "@types/chai": "^4.1.2",
     "@types/mocha": "^2.2.48",
+    "@types/node": "^11.10.5",
     "chai": "3.5.0",
-    "should": "^13.2.3",
-    "istanbul": "0.4.5",
     "mocha": "^5.2.0",
-    "nyc": "^11.0.3",
+    "nyc": "^13.3.0",
+    "should": "^13.2.3",
     "source-map-support": "^0.4.15",
     "ts-node": "^3.1.0",
     "tslint": "^5.9.1",
@@ -48,17 +50,8 @@
     "./../../LICENSE"
   ],
   "nyc": {
-    "include": [
-      "./src/**/*.ts"
-    ],
-    "exclude": [
-      "./test/**/*.spec.ts"
-    ],
     "extension": [
       ".ts"
-    ],
-    "require": [
-      "ts-node/register"
     ],
     "reporter": [
       "text-summary",

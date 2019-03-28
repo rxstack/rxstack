@@ -38,10 +38,8 @@ export class ServiceRegistry<T extends NamedServiceInterface> {
   }
 
   unregister(name: string): this {
-    if (!this.has(name)) {
-      throw new NonExistingServiceException(name);
-    }
-    this.registry.delete(name);
+    const service = this.get(name);
+    this.registry.delete(service.getName());
     return this;
   }
 

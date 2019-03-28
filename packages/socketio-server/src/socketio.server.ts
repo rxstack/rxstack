@@ -14,7 +14,7 @@ import {Stream} from 'stream';
 @Injectable()
 export class SocketioServer extends AbstractServer {
 
-  static serverName = 'socketio';
+  static readonly serverName = 'socketio';
 
   getName(): string {
     return SocketioServer.serverName;
@@ -58,9 +58,12 @@ export class SocketioServer extends AbstractServer {
 
   private registerRoute(definition: WebSocketDefinition, socket: EventEmitter): void {
     socket.on(definition.name, async (args: any, callback: Function) => {
-      return definition.handler(this.createRequest(definition, socket, args))
-        .then((response: Response) => this.responseHandler(response, callback))
-        .catch((err: Exception) => this.errorHandler(err, callback));
+      try {
+        const response = await definition.handler(this.createRequest(definition, socket, args));
+        this.responseHandler(response, callback);
+      } catch (e) {
+        this.errorHandler(e, callback);
+      }
     });
   }
 
@@ -70,9 +73,8 @@ export class SocketioServer extends AbstractServer {
     request.headers.fromObject(socket['request'].headers);
     request.params.fromObject(args.params || {});
     request.files.fromObject({}); // todo - implement file upload
-    request.body = args.body || null;
+    request.body = args.body;
     request.connection = socket;
-
     return request;
   }
 
@@ -83,7 +85,7 @@ export class SocketioServer extends AbstractServer {
     }
     callback.call(null, {
       'statusCode': response.statusCode,
-      'content': response.content || null,
+      'content': response.content === undefined ? null : response.content,
     });
   }
 

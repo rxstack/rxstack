@@ -42,7 +42,7 @@ describe('Security:Listeners', () => {
         exception = e;
       }
     }
-    (exception !== null).should.be.true;
+    (exception !== null).should.be.equal(true);
   });
 
   it('should throw UnauthorizedException if token is not valid', async () => {
@@ -58,14 +58,14 @@ describe('Security:Listeners', () => {
         exception = e;
       }
     }
-    (exception !== null).should.be.true;
+    (exception !== null).should.be.equal(true);
   });
 
   it('should get anonymous token', async () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'test_anon');
     const request = new Request('HTTP');
-    let response: Response = await def.handler(request);
+    const response: Response = await def.handler(request);
     response.content.username.should.be.equal('anon');
   });
 
@@ -76,6 +76,6 @@ describe('Security:Listeners', () => {
     const listener = injector.get(ConnectionListener);
     const event = new ConnectionEvent(connection, server);
     await listener.onDisconnect(event);
-    (null === connection['tokenTimeout']).should.be.true;
+    (null === connection['tokenTimeout']).should.be.equal(true);
   });
 });

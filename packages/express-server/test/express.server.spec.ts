@@ -4,6 +4,9 @@ import {Injector} from 'injection-js';
 import {IncomingMessage} from 'http';
 import {Application, ServerManager} from '@rxstack/core';
 import {EXPRESS_APP_OPTIONS} from './mocks/express-app-options';
+import * as _ from 'lodash';
+import {Exception} from '../../exceptions/src';
+
 const rp = require('request-promise');
 
 describe('ExpressServer', () => {
@@ -36,18 +39,13 @@ describe('ExpressServer', () => {
       json: true
     };
 
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        const headers = response.headers;
-        headers['x-powered-by'].should.be.equal('Express');
-        headers['content-type'].should.be.equal('text/html; charset=utf-8');
-        response['statusCode'].should.be.equal(200);
-        response['body'].should.be.equal('something');
-      })
-      .catch((err: any) => {
-        true.should.be.false;
-      })
-    ;
+    const response: IncomingMessage = await rp(options);
+    const headers = response.headers;
+    headers['x-powered-by'].should.be.equal('Express');
+    headers['content-type'].should.be.equal('text/html; charset=utf-8');
+    response['statusCode'].should.be.equal(200);
+    response['body'].should.be.equal('something');
+
   });
 
   it('should call mock_json', async () => {
@@ -57,17 +55,11 @@ describe('ExpressServer', () => {
       json: true
     };
 
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        const headers = response.headers;
-        headers['content-type'].should.be.equal('application/json; charset=utf-8');
-        response['statusCode'].should.be.equal(200);
-        JSON.stringify(response['body']).should.be.equal(JSON.stringify({ id: 'json' }));
-      })
-      .catch((err: any) => {
-        true.should.be.false;
-      })
-    ;
+    const response: IncomingMessage = await rp(options);
+    const headers = response.headers;
+    headers['content-type'].should.be.equal('application/json; charset=utf-8');
+    response['statusCode'].should.be.equal(200);
+    _.isEqual(response['body'], { id: 'json' }).should.be.equal(true);
   });
 
   it('should call express middleware', async () => {
@@ -76,19 +68,12 @@ describe('ExpressServer', () => {
       resolveWithFullResponse: true,
       json: true
     };
-
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        const headers = response.headers;
-        headers['x-powered-by'].should.be.equal('Express');
-        headers['content-type'].should.be.equal('application/json; charset=utf-8');
-        response['statusCode'].should.be.equal(200);
-        JSON.stringify(response['body']).should.be.equal(JSON.stringify({ id: 'express' }));
-      })
-      .catch((err: any) => {
-        true.should.be.false;
-      })
-    ;
+    const response: IncomingMessage = await rp(options);
+    const headers = response.headers;
+    headers['x-powered-by'].should.be.equal('Express');
+    headers['content-type'].should.be.equal('application/json; charset=utf-8');
+    response['statusCode'].should.be.equal(200);
+    _.isEqual(response['body'], { id: 'express' }).should.be.equal(true);
   });
 
   it('should download file', async () => {
@@ -97,17 +82,11 @@ describe('ExpressServer', () => {
       method: 'GET',
       resolveWithFullResponse: true,
     };
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        const headers = response.headers;
-        response['statusCode'].should.be.equal(200);
-        headers['content-disposition'].should.be.equal('attachment; filename="video.mp4"');
-        headers['content-type'].should.be.equal('video/mp4');
-      })
-      .catch((err: any) => {
-        true.should.be.false;
-      })
-    ;
+    const response: IncomingMessage = await rp(options);
+    const headers = response.headers;
+    response['statusCode'].should.be.equal(200);
+    headers['content-disposition'].should.be.equal('attachment; filename="video.mp4"');
+    headers['content-type'].should.be.equal('video/mp4');
   });
 
   it('should stream video', async () => {
@@ -120,16 +99,10 @@ describe('ExpressServer', () => {
       resolveWithFullResponse: true,
     };
 
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        response['statusCode'].should.be.equal(206);
-        response['headers']['content-range'].should.be.equal('bytes 1-200/424925');
-        response['headers']['content-length'].should.be.equal('200');
-      })
-      .catch((err: any) => {
-        true.should.be.false;
-      })
-    ;
+    const response: IncomingMessage = await rp(options);
+    response['statusCode'].should.be.equal(206);
+    response['headers']['content-range'].should.be.equal('bytes 1-200/424925');
+    response['headers']['content-length'].should.be.equal('200');
   });
 
   it('should throw an 404 exception', async () => {
@@ -143,15 +116,14 @@ describe('ExpressServer', () => {
       json: true
     };
 
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        true.should.be.false;
-      })
-      .catch((err: any) => {
-        err['statusCode'].should.be.equal(404);
-        err['response']['body']['message'].should.be.equal('Not Found');
-      })
-    ;
+    let err: Exception;
+    try {
+      await rp(options);
+    } catch (e) {
+      err = e;
+    }
+    err['statusCode'].should.be.equal(404);
+    err['response']['body']['message'].should.be.equal('Not Found');
   });
 
   it('should throw an exception', async () => {
@@ -162,15 +134,15 @@ describe('ExpressServer', () => {
       json: true
     };
 
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        true.should.be.false;
-      })
-      .catch((err: any) => {
-        err['statusCode'].should.be.equal(500);
-        err['response']['body']['message'].should.be.equal('something');
-      })
-    ;
+    let err: Exception;
+    try {
+      await rp(options);
+    } catch (e) {
+      err = e;
+    }
+
+    err['statusCode'].should.be.equal(500);
+    err['response']['body']['message'].should.be.equal('something');
   });
 
   it('should throw an exception in production', async () => {
@@ -182,15 +154,16 @@ describe('ExpressServer', () => {
       json: true
     };
 
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        true.should.be.false;
-      })
-      .catch((err: any) => {
-        err['statusCode'].should.be.equal(500);
-        err['response']['body']['message'].should.be.equal('Internal Server Error');
-      })
-    ;
+    let err: Exception;
+    try {
+      await rp(options);
+    } catch (e) {
+      err = e;
+    }
+
+    err['statusCode'].should.be.equal(500);
+    err['response']['body']['message'].should.be.equal('Internal Server Error');
+
     process.env.NODE_ENV = 'testing';
   });
 
@@ -202,13 +175,12 @@ describe('ExpressServer', () => {
       json: true
     };
 
-    await rp(options)
-      .then((response: IncomingMessage) => {
-        true.should.be.false;
-      })
-      .catch((err: any) => {
-        err['statusCode'].should.be.equal(500);
-      })
-    ;
+    let err: Exception;
+    try {
+      await rp(options);
+    } catch (e) {
+      err = e;
+    }
+    err['statusCode'].should.be.equal(500);
   });
 });

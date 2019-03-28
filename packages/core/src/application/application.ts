@@ -15,10 +15,11 @@ import {ServerManager} from '../server';
 import {CORE_PROVIDERS} from './CORE_PROVDERS';
 import {ApplicationOptions} from './application-options';
 import {CommandManager} from '../console';
+import {Logger} from '../logger';
 
 export class Application {
   private providers: ProviderDefinition[];
-  private injector?: Injector;
+  private injector: Injector;
   private options: ApplicationOptions;
   constructor(options: ApplicationOptions) {
     this.options = new ApplicationOptions(options);
@@ -35,6 +36,10 @@ export class Application {
       const manager = this.injector.get(ServerManager);
       await manager.start();
     }
+    const logger = this.injector.get(Logger);
+    this.handleUncaughtExceptions(logger);
+    this.handleUnhandledRejection(logger);
+    this.handleWarnings(logger);
     return this;
   }
 
@@ -54,7 +59,7 @@ export class Application {
   }
 
   private async doBootstrap(): Promise<Injector> {
-    return Promise.all(this.providers).then(async (providers) => {
+    return await Promise.all(this.providers).then(async (providers) => {
       const resolvedProviders = ReflectiveInjector.resolve(CORE_PROVIDERS(this.options).concat(providers));
       const injector = ReflectiveInjector.fromResolvedProviders(resolvedProviders);
       const dispatcher = injector.get(AsyncEventDispatcher);
@@ -101,5 +106,32 @@ export class Application {
         );
       });
     }
+  }
+
+  private handleUncaughtExceptions(logger: Logger) {
+    if (process.listeners('uncaughtException').length > 0) {
+      return;
+    }
+    process.on('uncaughtException', (err: any) => {
+      logger.error('UncaughtException', err);
+    });
+  }
+
+  private handleUnhandledRejection(logger: Logger) {
+    if (process.listeners('unhandledRejection').length > 0) {
+      return;
+    }
+    process.on('unhandledRejection', function (reason: any, promise: Promise<any>) {
+      logger.error('UnhandledRejection', {reason, promise});
+    });
+  }
+
+  private handleWarnings(logger: Logger) {
+    if (process.listeners('warning').length > 0) {
+      return;
+    }
+    process.on('warning', function (e: any) {
+      logger.warning('Warning', {warning: e});
+    });
   }
 }

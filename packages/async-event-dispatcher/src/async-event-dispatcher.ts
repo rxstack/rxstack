@@ -72,8 +72,7 @@ export class AsyncEventDispatcher {
    * @returns {Promise<GenericEvent>}
    */
   async dispatch(eventName: string, event?: GenericEvent): Promise<GenericEvent> {
-    if (!event)
-      event = new GenericEvent();
+    if (!event) event = new GenericEvent();
     const listeners = this.getListeners(eventName);
     if (listeners.length > 0)
       await this.doDispatch(listeners, event);
