@@ -2,6 +2,8 @@
 
 > Rapid Application Development platform to build modern API-driven projects, built on top of rxstack framework.
 
+> Switch to [RxStack Framework](https://github.com/rxstack/rxstack)
+
 ## Table of content
 
 - [Installation](#installation)
@@ -55,13 +57,13 @@ cd my-project
 npm install
 ```
 
-After you cloned `skeleton application` you need to install:
+After you cloned `skeleton application` you need to install the platform:
 
 ```
 npm install @rxstack/platform --save
 ```
 
-> you need also to install peer dependencies:
+> you need also to install peer dependencies (of not installed already):
 
 ```
 npm install @rxstack/async-event-dispatcher@^0.2 @rxstack/core@^0.2 @rxstack/exceptions@^0.2 @rxstack/query-filter@^0.2 @rxstack/security@^0.2
