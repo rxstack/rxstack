@@ -37,7 +37,6 @@ export class MyCustomCommand extends AbstractCommand {
     const force: boolean = argv.force;
     const myService = this.injector.get(MyService);
     // do something
-    process.exit();
   }
 }
 
@@ -64,29 +63,29 @@ export const APP_OPTIONS: ApplicationOptions = {
         }
       }
     ]
-  },
-  console: true
+  }
 };
 
 // creates application instance
 const app = new Application(APP_OPTIONS);
-// bootstraps components and starts the servers
-await app.start();
+// bootstraps components and starts the application in cli environment
+await app.start(true);
 ```
 
 ### <a name="list-commands"></a>  List available commands
 
-We first need to build the source. Let's assume that source is built in `/dist`.
 To execute our custom command you need to run: 
 
 ```bash
-$ node ./dist/cli.js -h
+$ ts-node ./cli.ts -h
 ```
 
 ### <a name="run-command"></a>  Running a command
 To execute our custom command you need to run: 
 
 ```bash
-$ node ./dist/cli.js my-custom-command -f true
+$ ts- node ./cli.ts my-custom-command -f true
 ```
+
+> Pay attention that we execute commands with `ts-node` instead of `node`
 
