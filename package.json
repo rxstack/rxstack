@@ -34,7 +34,7 @@
     "@rxstack/utils": "^0.2",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^11.11.7",
+    "@types/node": "^11.12.0",
     "chai": "3.5.0",
     "lerna": "^3.13.1",
     "mocha": "^5.2.0",
