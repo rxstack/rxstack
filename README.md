@@ -14,8 +14,6 @@ The fastest way to build web applications
 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Project folder and file structure](#project-structure)
-- [NPM Scripts](#npm-scripts)
 - [Controllers](#controllers)
     - [Creating a Controller](#controllers-create)
     - [Mapping a URL and socket event to a Controller](#controllers-mapping)
@@ -70,7 +68,7 @@ The fastest way to build web applications
     
 
 ## <a name="prerequisites"></a> Prerequisites
-`RxStack` requires `Node v8.0.0` and later. On MacOS and other Unix systems the 
+`RxStack` requires `Node v9.0.0` and later. On MacOS and other Unix systems the 
 [Node Version Manager](https://github.com/creationix/nvm) is a good way 
 to quickly install the latest version of NodeJS and keep up it up to date. You'll also need git installed.
 After successful installation, the node, npm and git commands should be available on the terminal 
@@ -93,18 +91,16 @@ git version 2.17.1
 
 ## <a name="installation"></a> Installation
 
-Let's clone the pre-configured skeleton application:
+Let's clone the pre-configured [skeleton application](https://github.com/rxstack/skeleton):
 
 ```bash
 $ git clone https://github.com/rxstack/skeleton.git my-project
 $ cd my-project
 $ npm install
 $ npm run dev
-$ npm run watch // in a separate window
 ```
 
-If you now try to access [localhost](http://localhost:3000/) in the browser you should see the welcome page 
-or you can access it via websockets:
+Open [localhost](http://localhost:3000/) in the browser and you should see the welcome page or you can access it via websockets:
 
 ```typescript
 const io = require('socket.io-client');
@@ -114,35 +110,6 @@ conn.emit('app_index', null, function (response: any) {
   console.log(response); // should output Response object
 });
 ```
-
-## <a name="project-structure"></a> Project folder and file structure
-
-- `src` - all your code lives here
-    - `index.ts` - application entry file
-    - `app` - application related files
-        - `APPLICATION_OPTIONS.ts` - all application configurations [read more](https://github.com/rxstack/rxstack/blob/master/packages/core/docs/application.md).
-        - `commands` - command line application files [read more](https://github.com/rxstack/rxstack/blob/master/packages/core/docs/console.md).
-        - `controllers` - all your controller files [read more](https://github.com/rxstack/rxstack/blob/master/packages/core/docs/kernel.md).
-        - `event-listeners` - all your event listener files [read more](https://github.com/rxstack/rxstack/blob/master/packages/async-event-dispatcher).
-    - `environments` - configuration files [read more](https://github.com/rxstack/rxstack/tree/master/packages/configuration).
-- `test` - all tests files
-- `static` - all static files
-- `tslint.json` - typescript linter configuration
-- `tsconfig.json` - typescript configuration
-
-## <a name="npm-scripts"></a> NPM scripts
-
-- `$ npm run dev` - starts the application in development environment with `nodemon`
-- `$ npm run compile` - compiles the source code
-- `$ npm run watch` - watching for file changes
-- `$ npm run clean` - removes the `dist` directory
-- `$ npm run lint` - lints the source code using `tslint.json`
-- `$ npm run mocha` - runs tests using `mocha.opts`
-- `$ npm run coverage` - runs tests with `nyc`
-- `$ npm test` - runs lint, mocha and coverage
-- `$ npm run cli` - runs command line applications
-- `$ npm run prod` - starts the application in production environment
-    
       
 ## <a name="controllers"></a> Controllers
 A controller is a typescript function you create that reads information from the `Request` object 
