@@ -25,12 +25,12 @@ export class Application {
     this.options = new ApplicationOptions(options);
   }
 
-  async start(): Promise<this> {
+  async start(cli = false): Promise<this> {
     this.providers = [];
     this.options.imports.forEach((module) => this.resolveModule(module));
     this.providers.push(...this.options.providers);
     this.injector = await this.doBootstrap();
-    if (this.options.console) {
+    if (cli) {
       this.injector.get(CommandManager).execute();
     } else {
       const manager = this.injector.get(ServerManager);
