@@ -22,7 +22,8 @@ export class SecurityController {
               protected configuration: SecurityConfiguration) { }
 
   async loginAction(request: Request): Promise<Response> {
-    const token = new UsernameAndPasswordToken(request.params.get('username'), request.params.get('password'));
+    const body: any = request.body || {};
+    const token = new UsernameAndPasswordToken(body.username, body.password);
     request.token = await this.authManager.authenticate(token);
     await this.dispatcher.dispatch(AuthenticationEvents.LOGIN_SUCCESS, new AuthenticationRequestEvent(request));
     const rawToken = await this.tokenManager.encode(request.token.getPayload());
@@ -31,14 +32,16 @@ export class SecurityController {
   }
 
   async logoutAction(request: Request): Promise<Response> {
-    const refreshToken = await this.findRefreshTokenOr404(request.params.get('refreshToken'));
+    const body = request.body || {};
+    const refreshToken = await this.findRefreshTokenOr404(body['refreshToken']);
     await this.refreshTokenManager.disable(refreshToken);
     await this.dispatcher.dispatch(AuthenticationEvents.LOGOUT_SUCCESS, new AuthenticationRequestEvent(request));
     return new Response(null, 204);
   }
 
   async refreshTokenAction(request: Request): Promise<Response> {
-    const refreshToken = await this.findRefreshTokenOr404(request.params.get('refreshToken'));
+    const body = request.body || {};
+    const refreshToken = await this.findRefreshTokenOr404(body['refreshToken']);
     const token = await this.refreshTokenManager.refresh(refreshToken);
     await this.dispatcher.dispatch(AuthenticationEvents.REFRESH_TOKEN_SUCCESS, new AuthenticationRequestEvent(request));
     return new Response({'token': token, 'refreshToken': refreshToken});
