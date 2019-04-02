@@ -630,7 +630,14 @@ Allows user to generate a token via `HTTP` or `WebSocket` using `username` and `
 Using `CURL`
 
 ```bash
-curl -X POST http://localhost:3000/security/login -d username=admin -d password=admin
+curl -X POST \
+  http://localhost:3000/security/login \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  -d '{
+	"username": "admin",
+	"password": "admin"
+}'
 ```
 
 Using `SocketIO` client:
@@ -638,7 +645,7 @@ Using `SocketIO` client:
 ```typescript
 const io = require('socket.io-client');
 const defaultNs = io('http://localhost:4000');
-defaultNs.emit('security_login', {'params': {'username': 'admin', 'password': 'admin'}}, function (response: any) {
+defaultNs.emit('security_login', {'body': {'username': 'admin', 'password': 'admin'}}, function (response: any) {
   // do something with the response
 });
 ```
@@ -671,7 +678,13 @@ Allows user to refresh the token via `HTTP`.
 Using `CURL`
 
 ```bash
-curl -X POST http://localhost:3000/security/refresh-token -d refreshToken=dc62acc7460cdba807c3649c8fd6081e
+curl -X POST \
+  http://localhost:3000/security/refresh-token \
+  -H 'accept: application/json' \
+  -H 'content-type: application/json' \
+  -d '{
+  "refreshToken": "f93fd3853e21712d849cd23631c861a3"
+}'
 ```
 
 On success will return the same response as [`loginAction`](#login-action).
@@ -687,7 +700,12 @@ Allows user to invalidate the refresh token
 Using `CURL`
 
 ```bash
-curl -X POST http://localhost:3000/security/logout -d refreshToken=dc62acc7460cdba807c3649c8fd6081e
+curl -X POST \
+  http://localhost:3000/security/logout \
+    -H 'accept: application/json' \
+  -d '{
+  "refreshToken": "f93fd3853e21712d849cd23631c861a3"
+}'
 ```
 
 If `refreshToken` is found then it is disabled and status code 204 is returned, otherwise status code 404

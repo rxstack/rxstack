@@ -26,8 +26,10 @@ describe('Security:HttpController', () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_login');
     const request = new Request('HTTP');
-    request.params.set('username', 'admin');
-    request.params.set('password', 'admin');
+    request.body = {
+      username: 'admin',
+      password: 'admin'
+    };
     let response: Response = await def.handler(request);
     response.content.token.should.be.equal('generated-token');
     (typeof response.content.refreshToken).should.be.equal('object');
@@ -39,8 +41,10 @@ describe('Security:HttpController', () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_login');
     const request = new Request('HTTP');
-    request.params.set('username', 'not-valid');
-    request.params.set('password', 'not-valid');
+    request.body = {
+      username: 'not-valid',
+      password: 'not-valid'
+    };
     let exception: UserNotFoundException;
     try {
       await def.handler(request);
@@ -55,7 +59,9 @@ describe('Security:HttpController', () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_refresh_token');
     const request = new Request('HTTP');
-    request.params.set('refreshToken', refreshToken.identifier);
+    request.body = {
+      'refreshToken': refreshToken.identifier
+    };
     let response: Response = await def.handler(request);
     response.content.token.should.be.equal('generated-token');
   });
@@ -64,7 +70,9 @@ describe('Security:HttpController', () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_refresh_token');
     const request = new Request('HTTP');
-    request.params.set('refreshToken', 'invalid');
+    request.body = {
+      'refreshToken': 'invalid'
+    };
     let exception: NotFoundException;
     try {
       await def.handler(request);
@@ -78,7 +86,9 @@ describe('Security:HttpController', () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_logout');
     const request = new Request('HTTP');
-    request.params.set('refreshToken', refreshToken.identifier);
+    request.body = {
+      'refreshToken': refreshToken.identifier
+    };
     const response: Response = await def.handler(request);
     response.statusCode.should.be.equal(204);
     const refreshTokenObj = await injector.get(REFRESH_TOKEN_MANAGER).get(refreshToken.identifier);
