@@ -550,6 +550,8 @@ you can replace criteria using `preExecute` hook.
 
 > Operation uses service method [`updateMany`](#service-methods-updateMany).
 
+> `request.params.get('ids')` should be converted to array, ex: `request.params.get('ids').split(',')`
+
 ```typescript
 import {
   AbstractResourceOperation,
@@ -686,12 +688,10 @@ export class TaskBulkRemoveOperation extends AbstractResourceOperation<TaskModel
 cURL:
 ```
 curl -X DELETE \
-  http://localhost:3000/tasks-bulk-delete \
-  -H 'Content-Type: application/json' \
-  -d '{
-	"ids": ["9709f168-d0c0-483a-b17b-458a5392eb30"]
-}'
+  http://localhost:3000/tasks-bulk-delete?ids=1,2
 ```
+
+> `request.params.get('ids')` should be converted to array, ex: `request.params.get('ids').split(',')`
 
 ### <a name="hooks"></a> Hooks
 Hooks are async middleware functions that can be registered in operations. You can use them to validate, authorize and etc...
