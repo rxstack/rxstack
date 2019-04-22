@@ -38,8 +38,6 @@ The fastest way to build web applications
     - [Usage client side](#channel-manager-usage-client-side)
     - [References](https://github.com/rxstack/rxstack/tree/master/packages/channels)
 - [Databases](#databases)
-    - [Platform Service Modules](#platform-service-modules)
-    - [TypeORM](#databases)
 - [Testing](#testing)
     - [Unit](#testing-unit)
     - [Integration](#testing-integration)
@@ -64,8 +62,6 @@ The fastest way to build web applications
     - [Memory Service](https://github.com/rxstack/memory-service)
     - [Mongoose Service](https://github.com/rxstack/mongoose-service)
     - [Sequelize Service](https://github.com/rxstack/sequelize-service)
-    - [Todo Application](https://github.com/rxstack/to-do)
-    
 
 ## <a name="prerequisites"></a> Prerequisites
 `RxStack` requires `Node v9.0.0` and later. On MacOS and other Unix systems the 
@@ -522,18 +518,6 @@ curl -X POST \
 	"username": "admin",
 	"password": "admin"
 }'
-```
-
-or via websockets:
-
-
-```typescript
-const io = require('socket.io-client');
-const conn = io('ws://localhost:4000', {transports: ['websocket']});
-
-conn.emit('security_login', {params: {username: 'admin', password: 'admin'}}, function (response: any) {
-  console.log(response.content); // should output {"token": "...", "refreshToken": {...}}
-});
 ```
 
 > Token expiration time is set in the `ttl` option in the security module.

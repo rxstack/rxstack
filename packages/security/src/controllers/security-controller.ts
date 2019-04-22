@@ -3,7 +3,7 @@ import {AuthenticationProviderManager} from '../authentication/authentication-pr
 import {RefreshTokenInterface, TokenManagerInterface} from '../interfaces';
 import {Request, Response} from '@rxstack/core';
 import {UsernameAndPasswordToken} from '../models/username-and-password.token';
-import {NotFoundException, UnauthorizedException} from '@rxstack/exceptions';
+import {ForbiddenException, NotFoundException, UnauthorizedException} from '@rxstack/exceptions';
 import {Token} from '../models/token';
 import {AnonymousToken} from '../models';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
@@ -62,6 +62,9 @@ export class SecurityController {
   }
 
   async unauthenticateAction(request: Request): Promise<Response> {
+    if (!request.token.isAuthenticated()) {
+      throw new ForbiddenException();
+    }
     await this.dispatcher.dispatch(AuthenticationEvents.SOCKET_UNAUTHENTICATION_SUCCESS, new AuthenticationRequestEvent(request));
     this.clearConnectionTimeout(request.connection);
     request.connection['token'] = new AnonymousToken();
@@ -82,7 +85,7 @@ export class SecurityController {
     if (token) {
       connection['tokenTimeout'] = setTimeout(() => {
         token.setFullyAuthenticated(false);
-      }, this.configuration.ttl);
+      }, this.configuration.ttl * 1000);
     }
   }
 

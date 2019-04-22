@@ -30,10 +30,6 @@ export class BootstrapListener {
 
   static socketMetadata = [
     {
-      name: 'security_login',
-      action: 'loginAction'
-    },
-    {
       name: 'security_authenticate',
       action: 'authenticateAction'
     },
@@ -50,9 +46,10 @@ export class BootstrapListener {
     if (this.configuration.local_authentication) {
       BootstrapListener.httpMetadata
         .forEach(meta => httpMetadataStorage.add(this.createHttpMetadata(meta)));
-      BootstrapListener.socketMetadata
-        .forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
     }
+
+    BootstrapListener.socketMetadata
+      .forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
   }
 
   private createHttpMetadata(meta: Object): HttpMetadata {

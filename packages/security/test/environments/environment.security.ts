@@ -36,7 +36,7 @@ export const environmentSecurity: any = {
       }
     },
     local_authentication: true,
-    ttl: 100,
+    ttl: 1,
     secret: 'my_secret',
     signature_algorithm: 'HS512'
   }
