@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
-import {UnauthorizedException} from '@rxstack/exceptions';
+import {ForbiddenException, UnauthorizedException} from '@rxstack/exceptions';
 import {EventEmitter} from 'events';
 import {AnonymousToken, Token} from '../src/models';
 import {findWebSocketDefinition} from './helpers/kernel-definition-finder';
@@ -66,5 +66,20 @@ describe('Security:SocketController', () => {
     let response: Response = await def.handler(request);
     response.statusCode.should.be.equal(204);
     request.connection['token'].should.be.instanceOf(AnonymousToken);
+  });
+
+
+  it('should throw an exception on unauthenticate if user is not authenticated', async () => {
+    const kernel = injector.get(Kernel);
+    const def = findWebSocketDefinition(kernel.webSocketDefinitions, 'security_unauthenticate');
+    const request = new Request('SOCKET');
+    request.connection = connection;
+    let exception: ForbiddenException;
+    try {
+      await def.handler(request);
+    } catch (e) {
+      exception = e;
+    }
+    exception.should.be.instanceOf(ForbiddenException);
   });
 });

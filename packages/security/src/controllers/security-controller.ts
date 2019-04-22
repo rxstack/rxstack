@@ -3,7 +3,7 @@ import {AuthenticationProviderManager} from '../authentication/authentication-pr
 import {RefreshTokenInterface, TokenManagerInterface} from '../interfaces';
 import {Request, Response} from '@rxstack/core';
 import {UsernameAndPasswordToken} from '../models/username-and-password.token';
-import {NotFoundException, UnauthorizedException} from '@rxstack/exceptions';
+import {ForbiddenException, NotFoundException, UnauthorizedException} from '@rxstack/exceptions';
 import {Token} from '../models/token';
 import {AnonymousToken} from '../models';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
@@ -12,7 +12,6 @@ import {AuthenticationRequestEvent} from '../events/authentication-request-event
 import {EventEmitter} from 'events';
 import {SecurityConfiguration} from '../security-configuration';
 import {AbstractRefreshTokenManager} from '../services';
-import {ForbiddenException} from '../../../exceptions/src/forbidden.exception';
 
 @Injectable()
 export class SecurityController {

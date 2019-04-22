@@ -520,18 +520,6 @@ curl -X POST \
 }'
 ```
 
-or via websockets:
-
-
-```typescript
-const io = require('socket.io-client');
-const conn = io('ws://localhost:4000', {transports: ['websocket']});
-
-conn.emit('security_login', {params: {username: 'admin', password: 'admin'}}, function (response: any) {
-  console.log(response.content); // should output {"token": "...", "refreshToken": {...}}
-});
-```
-
 > Token expiration time is set in the `ttl` option in the security module.
 
 

@@ -41,10 +41,6 @@ describe('Security:HttpController', () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_login');
     const request = new Request('HTTP');
-    request.body = {
-      username: 'not-valid',
-      password: 'not-valid'
-    };
     let exception: UserNotFoundException;
     try {
       await def.handler(request);
@@ -70,9 +66,6 @@ describe('Security:HttpController', () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_refresh_token');
     const request = new Request('HTTP');
-    request.body = {
-      'refreshToken': 'invalid'
-    };
     let exception: NotFoundException;
     try {
       await def.handler(request);
@@ -93,5 +86,18 @@ describe('Security:HttpController', () => {
     response.statusCode.should.be.equal(204);
     const refreshTokenObj = await injector.get(REFRESH_TOKEN_MANAGER).get(refreshToken.identifier);
     refreshTokenObj.expiresAt.should.equal(0);
+  });
+
+  it('should throw exception when logut without token', async () => {
+    const kernel = injector.get(Kernel);
+    const def = findHttpDefinition(kernel.httpDefinitions, 'security_logout');
+    const request = new Request('HTTP');
+    let exception: NotFoundException;
+    try {
+      await def.handler(request);
+    } catch (e) {
+      exception = e;
+    }
+    exception.should.be.instanceOf(NotFoundException);
   });
 });

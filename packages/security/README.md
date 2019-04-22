@@ -620,12 +620,12 @@ changing password or payments. In that case you can force the user to re-authent
 
 ### <a name="local-authentication"></a> Local Authentication
 
-If enabled it allows users to authenticate via `HTTP` or `WebSocket` using `username` and `password`.
+If enabled it allows users to authenticate via `HTTP` using `username` and `password`.
 Under the hood it uses [`SecurityController`](./src/controllers/security-controller.ts) which has the following actions:
 
 ##### <a name="login-action"></a> `SecurityController.loginAction` 
 
-Allows user to generate a token via `HTTP` or `WebSocket` using `username` and `password`.
+Allows user to generate a token via `HTTP` using `username` and `password`.
 
 Using `CURL`
 
@@ -638,16 +638,6 @@ curl -X POST \
 	"username": "admin",
 	"password": "admin"
 }'
-```
-
-Using `SocketIO` client:
-
-```typescript
-const io = require('socket.io-client');
-const defaultNs = io('http://localhost:4000');
-defaultNs.emit('security_login', {'body': {'username': 'admin', 'password': 'admin'}}, function (response: any) {
-  // do something with the response
-});
 ```
 
 On success with status code 200:
@@ -735,12 +725,12 @@ Allows user to unauthenticate via `WebSocket`. It will destroy token in the `Req
 ```typescript
 const io = require('socket.io-client');
 const defaultNs = io('http://localhost:4000');
-defaultNs.emit('security_unauthenticate', {'params': {'bearer': 'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9......'}}, function (response: any) {
+defaultNs.emit('security_unauthenticate', null, function (response: any) {
   // should return status code 204 (on success) or 401 (on failure)
 });
 ```
 
-Always return status code 204
+It should return status code `204` or `403` on failure (id user was not previously authenticated)
 
 > An `AuthenticationEvents.SOCKET_UNAUTHENTICATION_SUCCESS` will be dispatched.
 
