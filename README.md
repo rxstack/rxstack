@@ -38,8 +38,6 @@ The fastest way to build web applications
     - [Usage client side](#channel-manager-usage-client-side)
     - [References](https://github.com/rxstack/rxstack/tree/master/packages/channels)
 - [Databases](#databases)
-    - [Platform Service Modules](#platform-service-modules)
-    - [TypeORM](#databases)
 - [Testing](#testing)
     - [Unit](#testing-unit)
     - [Integration](#testing-integration)
@@ -64,8 +62,6 @@ The fastest way to build web applications
     - [Memory Service](https://github.com/rxstack/memory-service)
     - [Mongoose Service](https://github.com/rxstack/mongoose-service)
     - [Sequelize Service](https://github.com/rxstack/sequelize-service)
-    - [Todo Application](https://github.com/rxstack/to-do)
-    
 
 ## <a name="prerequisites"></a> Prerequisites
 `RxStack` requires `Node v9.0.0` and later. On MacOS and other Unix systems the 

@@ -55,7 +55,7 @@ describe('Security:SocketController', () => {
     setTimeout(() => {
       connection['token']['fullyAuthenticated'].should.be.equal(false);
       done();
-    }, 1000);
+    }, 1200);
   });
 
   it('should unauthenticate', async () => {

@@ -85,6 +85,7 @@ export class SocketioServer extends AbstractServer {
     }
     callback.call(null, {
       'statusCode': response.statusCode,
+      'headers': response.headers.toObject(),
       'content': response.content === undefined ? null : response.content,
     });
   }

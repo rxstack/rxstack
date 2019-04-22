@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/socketio-server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "RxStack SocketIO Server Module",
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -40,18 +40,18 @@
     "@types/chai": "^4.1.7",
     "@types/lodash": "^4.14.123",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^11.11.6",
+    "@types/node": "^11.13.5",
     "@types/socket.io": "^1.4.40",
     "chai": "3.5.0",
     "lodash": "^4.17.11",
     "mocha": "^5.2.0",
-    "nyc": "^13.3.0",
+    "nyc": "^14.0.0",
     "should": "^13.2.3",
     "socket.io-client": "^2.2.0",
     "source-map-support": "^0.4.15",
     "ts-node": "^3.1.0",
-    "tslint": "^5.14.0",
-    "typescript": "^3.3.4000"
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.3"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"

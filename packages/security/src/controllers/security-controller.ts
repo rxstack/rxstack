@@ -12,6 +12,7 @@ import {AuthenticationRequestEvent} from '../events/authentication-request-event
 import {EventEmitter} from 'events';
 import {SecurityConfiguration} from '../security-configuration';
 import {AbstractRefreshTokenManager} from '../services';
+import {ForbiddenException} from '../../../exceptions/src/forbidden.exception';
 
 @Injectable()
 export class SecurityController {
@@ -62,6 +63,9 @@ export class SecurityController {
   }
 
   async unauthenticateAction(request: Request): Promise<Response> {
+    if (!request.token.isAuthenticated()) {
+      throw new ForbiddenException();
+    }
     await this.dispatcher.dispatch(AuthenticationEvents.SOCKET_UNAUTHENTICATION_SUCCESS, new AuthenticationRequestEvent(request));
     this.clearConnectionTimeout(request.connection);
     request.connection['token'] = new AnonymousToken();
@@ -82,7 +86,7 @@ export class SecurityController {
     if (token) {
       connection['tokenTimeout'] = setTimeout(() => {
         token.setFullyAuthenticated(false);
-      }, this.configuration.ttl);
+      }, this.configuration.ttl * 1000);
     }
   }
 
