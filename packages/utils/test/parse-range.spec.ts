@@ -24,6 +24,6 @@ describe('ParseRange', () => {
 
   it('should not parse with unavailable range', async () => {
     const result = parseRange('bytes=1000-100000000000', 10000);
-    result.should.be.false;
+    (null === result).should.be.true;
   });
 });
