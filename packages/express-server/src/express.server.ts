@@ -16,7 +16,7 @@ import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {ExpressServerConfiguration} from './express-server-configuration';
 import {Injectable} from 'injection-js';
 import {Stream} from 'stream';
-import {exceptionToObject} from '@rxstack/exceptions';
+import {exceptionToObject, transformToException} from '@rxstack/exceptions';
 
 @Injectable()
 export class ExpressServer extends AbstractServer {
@@ -55,7 +55,6 @@ export class ExpressServer extends AbstractServer {
     request.path = routeDefinition.path;
     request.headers.fromObject(req.headers);
     request.params.fromObject(Object.assign(req.query, req.params));
-    request.files.fromObject(req['files'] || {});
     request.body = req.body;
     return request;
   }
@@ -68,18 +67,19 @@ export class ExpressServer extends AbstractServer {
       async (req: ExpressRequest, res: ExpressResponse, next: NextFunction): Promise<void> => {
         try {
           const response = await routeDefinition.handler(this.createRequest(req, routeDefinition));
-          this.responseHandler(response, res);
+          this.responseHandler(response, req, res, next);
         } catch (e) {
           this.errorHandler()(e, req, res, next);
         }
     });
   }
 
-  private responseHandler(response: Response, res: ExpressResponse): void {
+  private responseHandler(response: Response, req: ExpressRequest, res: ExpressResponse, next: NextFunction): void {
     response.headers.forEach((value, key) => res.header(key, value));
     res.status(response.statusCode);
     if (response.content instanceof Stream.Readable) {
       response.content.pipe(res);
+      response.content.on('error', (err: any) => next(transformToException(err)));
     } else {
       res.send(response.content);
     }
@@ -90,6 +90,7 @@ export class ExpressServer extends AbstractServer {
       const status = err.statusCode ? err.statusCode : 500;
       const transformedException = exceptionToObject(err, {status: status});
       if (status >= 500) {
+        res.getHeaderNames().forEach((name) => res.removeHeader(name));
         this.getLogger().error(err.message, transformedException);
       } else {
         this.getLogger().debug(err.message, transformedException);

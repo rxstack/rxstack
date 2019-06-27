@@ -16,7 +16,7 @@ export class InMemoryUserProvider<T extends UserInterface> implements UserProvid
   }
 
   async loadUserByUsername(username: string): Promise<T> {
-    const user = _.find(this.users, {username});
+    const user = _.find(this.users, ['username', username]);
     if (!user) throw new UserNotFoundException(username);
     return user as T;
   }

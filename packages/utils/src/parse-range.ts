@@ -1,4 +1,4 @@
-export function parseRange(raw: string, size: number): { start: number, end: number, chunkSize: number } | false {
+export function parseRange(raw: string, size: number): { start: number, end: number, chunkSize: number } {
   const parts = raw.split(/bytes=([0-9]*)-([0-9]*)/);
   let start = parseInt(parts[1], 10);
   let end = parseInt(parts[2], 10);
@@ -18,7 +18,7 @@ export function parseRange(raw: string, size: number): { start: number, end: num
   }
 
   if (start >= size || end >= size) {
-    return false;
+    return null;
   }
   result.chunkSize = (result.end - result.start) + 1;
   return result;

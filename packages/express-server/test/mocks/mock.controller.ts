@@ -15,11 +15,6 @@ export class MockController {
     return new Response({'id': 'json'});
   }
 
-  @Http('POST', '/mock/upload', 'mock_upload')
-  async uploadAction(request: Request): Promise<Response> {
-    return new Response(request.files.get('file'));
-  }
-
   @Http('GET', '/mock/download', 'mock_download')
   async downloadAction(request: Request): Promise<Response> {
     const path =  __dirname + '/../assets/video.mp4';

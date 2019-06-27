@@ -1,5 +1,4 @@
 import {ParameterBag} from './parameter-bag';
-import {FileBag} from './file-bag';
 import {HeaderBag} from './header-bag';
 import {AttributeBag} from './attribute-bag';
 import {HttpMethod, TokenInterface, Transport} from '../interfaces';
@@ -19,11 +18,6 @@ export class Request {
    * Parameters
    */
   params: ParameterBag;
-
-  /**
-   * Files
-   */
-  files: FileBag;
 
   /**
    *  Body
@@ -74,6 +68,5 @@ export class Request {
     this.headers = new HeaderBag();
     this.params = new ParameterBag();
     this.attributes = new AttributeBag();
-    this.files = new FileBag();
   }
 }
