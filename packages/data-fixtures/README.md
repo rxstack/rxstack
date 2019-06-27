@@ -8,7 +8,7 @@
 npm install @rxstack/data-fixtures --save
 
 // peerDependencies
-npm install @rxstack/core@^0.2 @rxstack/exceptions@^0.2 @rxstack/service-registry@^0.2 @rxstack/async-event-dispatcher@^0.2
+npm install @rxstack/core@^0.3 @rxstack/exceptions@^0.3 @rxstack/service-registry@^0.3 @rxstack/async-event-dispatcher@^0.3
 ```
 
 ## Documentation

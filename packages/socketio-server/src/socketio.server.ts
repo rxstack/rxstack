@@ -72,7 +72,6 @@ export class SocketioServer extends AbstractServer {
     const request = new Request('SOCKET');
     request.headers.fromObject(socket['request'].headers);
     request.params.fromObject(args.params || {});
-    request.files.fromObject({}); // todo - implement file upload
     request.body = args.body;
     request.connection = socket;
     return request;

@@ -69,7 +69,6 @@ A Request object holds information about the client request. This information ca
 
 - `headers`: server request headers
 - `params`: merged query string and post parameters
-- `files`: uploaded files
 - `body`: raw request body
 - `attributes`: extra data
 - `path`: http path (available only in http servers)
