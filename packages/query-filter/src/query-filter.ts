@@ -9,9 +9,13 @@ class QueryFilter {
     if (schema.allowOrOperator && rawParams['$or']) {
       const orQuery: Object[] = [];
       rawParams['$or'].forEach((orParams: Object) => {
-        orQuery.push(this.create(schema, orParams));
+        const orResult = this.create(schema, orParams);
+        if (Object.keys(orResult).length > 0) {
+          orQuery.push(orResult);
+        }
       });
-      where['$or'] = orQuery;
+      const orOper = schema.replaceOrOperatorWith ? schema.replaceOrOperatorWith : '$or';
+      where[orOper] = orQuery;
     }
 
     return {

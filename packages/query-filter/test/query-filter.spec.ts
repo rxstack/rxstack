@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {
   sampleQueryFilterSchema,
   sampleQueryFilterSchemaWithCustomOperator,
-  sampleQueryFilterSchemaWithOrDisabled
+  sampleQueryFilterSchemaWithOrDisabled, sampleQueryFilterSchemaWithOrReplaced
 } from './query-filter-schemas';
 import {queryFilter} from '../src/query-filter';
 const chai = require('chai');
@@ -107,6 +107,13 @@ describe('QueryFilter', () => {
       let result = queryFilter.createQuery(sampleQueryFilterSchemaWithOrDisabled, params);
       const expected = {'db_name': {'$eq': 'any'}};
       expect(_.isEqual(result.where, expected)).to.be.equal(true);
+    });
+
+    it(`should replace $or operator`, () => {
+      let params = {'query_name': {'$eq': 'any'}, '$or': [{'query_name': {'$eq': 12}}, {'query_name': {'$lt': 24}}]};
+      let result = queryFilter.createQuery(sampleQueryFilterSchemaWithOrReplaced, params);
+      const s = Object.getOwnPropertySymbols(result.where).shift().toString();
+      expect(s === 'Symbol(or)').to.be.equal(true);
     });
 
     it(`should build $in operator with transformer`, () => {

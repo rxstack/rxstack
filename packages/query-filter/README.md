@@ -21,6 +21,7 @@ npm install @rxstack/query-filter --save
 * [$skip](#operator-skip)
 * [$sort](#operator-sort)
 * [Replace original operator](#operator-replace)
+* [Replace $or operator](#operator-replace-or)
 
 ### <a name="query-filter-schema"></a>  Query filter schema
 `QueryFilterSchema` is used to whitelist properties coming from the request, 
@@ -172,6 +173,20 @@ export const customQueryFilter: QueryFilterSchema = {
   },
   'allowOrOperator': false,
   'defaultLimit': 25
+};
+```
+
+
+##### <a name="operator-replace"> Replace `$or` operator
+In some cases you need to replace the `$or` operator with something db-specific.
+
+```typescript
+import {QueryFilterSchema} from '@rxstack/query-filter';
+
+export const customQueryFilter: QueryFilterSchema = {
+  // ...
+  'allowOrOperator': true,
+  'replaceOrOperatorWith': Symbor('or'),
 };
 ```
 

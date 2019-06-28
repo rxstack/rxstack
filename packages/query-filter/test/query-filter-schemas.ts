@@ -45,6 +45,19 @@ export const sampleQueryFilterSchemaWithOrDisabled: QueryFilterSchema = {
   'defaultLimit': 10
 };
 
+export const sampleQueryFilterSchemaWithOrReplaced: QueryFilterSchema = {
+  'properties': {
+    'query_name': {
+      'property_path': 'db_name',
+      'operators': ['$eq'],
+      'sort': true
+    },
+  },
+  'allowOrOperator': true,
+  'replaceOrOperatorWith': Symbol('or'),
+  'defaultLimit': 10
+};
+
 export const sampleQueryFilterSchemaWithCustomOperator: QueryFilterSchema = {
   'properties': {
     'query_name': {

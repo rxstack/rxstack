@@ -23,5 +23,6 @@ export interface QueryFilterSchema {
     }
   };
   allowOrOperator?: boolean;
+  replaceOrOperatorWith?: any;
   defaultLimit: number;
 }
