@@ -3,6 +3,7 @@ export class QueryParameterExtractorOptions {
   enabled: boolean;
 
   constructor(obj?: any) {
+    obj = obj || {};
     this.name = obj && obj.name || 'bearer';
     this.enabled = obj && obj.enabled;
   }
@@ -14,6 +15,7 @@ export class AuthorizationHeaderExtractorOptions {
   enabled: boolean;
 
   constructor(obj?: any) {
+    obj = obj || {};
     this.name = obj && obj.name || 'authorization';
     this.prefix = obj && obj.prefix || 'Bearer';
     this.enabled = obj && obj.enabled;
@@ -25,6 +27,7 @@ export class TokenExtractorsOptions {
   authorization_header?: AuthorizationHeaderExtractorOptions;
 
   constructor(obj?: any) {
+    obj = obj || {};
     this.query_parameter = new QueryParameterExtractorOptions(obj.query_parameter);
     this.authorization_header = new AuthorizationHeaderExtractorOptions(obj.authorization_header);
   }
@@ -36,6 +39,7 @@ export class Rsa {
   passphrase?: string;
 
   constructor(obj: any) {
+    obj = obj || {};
     this.public_key = obj.public_key;
     this.private_key = obj.private_key || null;
     this.passphrase = obj.passphrase || null;
@@ -52,6 +56,7 @@ export class SecurityConfiguration {
   ttl?: number;
   refresh_token_ttl?: number;
   constructor(obj?: any) {
+    obj = obj || {};
     this.token_extractors = new TokenExtractorsOptions(obj.token_extractors);
     this.local_authentication = obj.local_authentication || false;
     this.user_identity_field = obj.user_identity_field || 'username';
