@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/security",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "RxStack Security Module",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
@@ -34,7 +34,7 @@
     "@rxstack/service-registry": "^0.3"
   },
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcryptjs": "^2.4.3",
     "crypto-js": "^3.1.9-1",
     "injection-js": "^2.1.0",
     "jsonwebtoken": "^8.5.1",

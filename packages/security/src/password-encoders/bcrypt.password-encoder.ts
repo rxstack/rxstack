@@ -1,6 +1,7 @@
 import {Injectable} from 'injection-js';
 import {PasswordEncoderInterface} from '../interfaces';
-const bcrypt = require('bcrypt');
+
+const bcrypt = require('bcryptjs');
 
 @Injectable()
 export class BcryptPasswordEncoder implements PasswordEncoderInterface {
@@ -8,11 +9,11 @@ export class BcryptPasswordEncoder implements PasswordEncoderInterface {
   static readonly ENCODER_NAME = 'bcrypt';
 
   async encodePassword(raw: string): Promise<string> {
-    return await bcrypt.hash(raw, 10);
+    return bcrypt.hashSync(raw, 10);
   }
 
   async isPasswordValid(encoded: string, raw: string): Promise<boolean> {
-    return await bcrypt.compare(raw, encoded);
+    return bcrypt.compareSync(raw, encoded);
   }
 
   getName(): string {
