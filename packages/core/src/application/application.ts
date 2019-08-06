@@ -15,6 +15,7 @@ import {ServerManager} from '../server';
 import {CORE_PROVIDERS} from './CORE_PROVDERS';
 import {ApplicationOptions} from './application-options';
 import {CommandManager} from '../console';
+import {isMainThread} from 'worker_threads';
 
 export class Application {
   private providers: ProviderDefinition[];
@@ -29,6 +30,10 @@ export class Application {
     this.options.imports.forEach((module) => this.resolveModule(module));
     this.providers.push(...this.options.providers);
     this.injector = await this.doBootstrap();
+    if (!isMainThread) {
+      return this;
+    }
+
     if (cli) {
       this.injector.get(CommandManager).execute();
     } else {

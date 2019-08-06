@@ -19,3 +19,9 @@ export interface ModuleWithProviders extends ModuleMetadata {
 export interface InjectorAwareInterface {
   setInjector(injector: Injector): void;
 }
+
+export enum AppEnv {
+  SERVER,
+  CLI,
+  WORKER
+}

@@ -47,7 +47,7 @@ describe('FixtureManager', () => {
     spy.restore();
   });
 
-  it('should #adReference and #getReference in fixture service', async () => {
+  it('should #addReference and #getReference in fixture service', async () => {
     manager.get('fixture-1').addReference('new-ref-1', 'val1');
     manager.get('fixture-2').getReference('new-ref-1').should.be.equal('val1');
   });
