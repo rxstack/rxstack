@@ -1,7 +1,6 @@
 import {HangWorkerThread} from './hang.worker-thread';
 import {ApplicationOptions} from '@rxstack/core';
 import {WORKER_THREADS_POOL_REGISTRY, WorkerThreadsPoolModule} from '../../src';
-import {configuration} from '@rxstack/configuration';
 import {StandardWorkerThread} from './standard.worker-thread';
 import {ExitWorkerThread} from './exit.worker-thread';
 import {ThrowWorkerThread} from './throw.worker-thread';

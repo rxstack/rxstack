@@ -38,7 +38,6 @@
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@rxstack/configuration": "^0.4.0",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^2.2.48",
     "@types/node": "^12.7.1",
