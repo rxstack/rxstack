@@ -15,7 +15,6 @@ import {ServerManager} from '../server';
 import {CORE_PROVIDERS} from './CORE_PROVDERS';
 import {ApplicationOptions} from './application-options';
 import {CommandManager} from '../console';
-import {isMainThread} from 'worker_threads';
 
 export class Application {
   private providers: ProviderDefinition[];
@@ -25,21 +24,24 @@ export class Application {
     this.options = new ApplicationOptions(options);
   }
 
-  async start(cli = false): Promise<this> {
+  async run(): Promise<Injector> {
     this.providers = [];
     this.options.imports.forEach((module) => this.resolveModule(module));
     this.providers.push(...this.options.providers);
     this.injector = await this.doBootstrap();
-    if (!isMainThread) {
-      return this;
-    }
+    return this.injector;
+  }
 
-    if (cli) {
-      this.injector.get(CommandManager).execute();
-    } else {
-      const manager = this.injector.get(ServerManager);
-      await manager.start();
-    }
+  async cli(): Promise<this> {
+    const injector = await this.run();
+    injector.get(CommandManager).execute();
+    return this;
+  }
+
+  async start(): Promise<this> {
+    const injector = await this.run();
+    const manager = injector.get(ServerManager);
+    await manager.start();
     return this;
   }
 

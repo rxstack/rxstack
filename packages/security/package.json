@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/security",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "RxStack Security Module",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
@@ -14,7 +14,7 @@
     "security"
   ],
   "engines": {
-    "node": ">=9"
+    "node": ">=12"
   },
   "main": "dist/index",
   "typings": "dist/index",
@@ -28,10 +28,10 @@
     "test": "npm run lint && npm run coverage"
   },
   "peerDependencies": {
-    "@rxstack/async-event-dispatcher": "^0.3",
-    "@rxstack/core": "^0.3",
-    "@rxstack/exceptions": "^0.3",
-    "@rxstack/service-registry": "^0.3"
+    "@rxstack/async-event-dispatcher": "^0.4",
+    "@rxstack/core": "^0.4",
+    "@rxstack/exceptions": "^0.4",
+    "@rxstack/service-registry": "^0.4"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -46,7 +46,7 @@
     "@types/chai": "^4.1.7",
     "@types/lodash": "^4.14.136",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^11.13.17",
+    "@types/node": "^12.7.1",
     "@types/sinon": "^5.0.7",
     "chai": "3.5.0",
     "mocha": "^5.2.0",
@@ -55,7 +55,7 @@
     "sinon": "^6.3.5",
     "source-map-support": "^0.4.15",
     "std-mocks": "^1.0.1",
-    "ts-node": "^3.1.0",
+    "ts-node": "^8.3.0",
     "tslint": "^5.18.0",
     "typescript": "^3.5.3"
   },

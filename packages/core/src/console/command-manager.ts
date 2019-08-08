@@ -1,8 +1,6 @@
-import {Injectable, InjectionToken} from 'injection-js';
+import {Injectable} from 'injection-js';
 import {AbstractCommand} from './abstract-command';
 const cli = require('yargs');
-
-export const COMMAND_REGISTRY = new InjectionToken<AbstractCommand[]>('COMMAND_REGISTRY');
 
 @Injectable()
 export class CommandManager {

@@ -1,6 +1,6 @@
 import {NamedServiceInterface} from '@rxstack/service-registry';
 import {Injector} from 'injection-js';
-import {InjectorAwareInterface} from '../application';
+import {InjectorAwareInterface} from '@rxstack/core';
 
 export abstract class AbstractWorkerThread implements NamedServiceInterface, InjectorAwareInterface {
 

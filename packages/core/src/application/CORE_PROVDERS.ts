@@ -11,22 +11,6 @@ import {NoopWebsocketServer} from '../server/noop-websocket.server';
 import {COMMAND_REGISTRY, CommandManager, DebugHttpMetadataCommand} from '../console';
 import {AbstractCommand} from '../console/abstract-command';
 import {DebugWebSocketMetadataCommand} from '../console/debug-web-socket-metadata.command';
-import {AbstractWorkerThread, NoopWorkerThread, THREAD_POOL_REGISTRY, WorkerPool} from '../thread-pool';
-import {configuration} from '@rxstack/configuration';
-
-
-const WORKER_THREADS_PROVIDERS = function (options: ApplicationOptions): Provider[] {
-  return [
-    { provide: THREAD_POOL_REGISTRY, useClass: NoopWorkerThread, multi: true },
-    {
-      provide: WorkerPool,
-      useFactory: (registry: AbstractWorkerThread[]) => {
-        return new WorkerPool(registry, {max: 2, maxWaiting: 5, path: configuration.getRootPath() + '/test/thread-pool/executor.ts'});
-      },
-      deps: [THREAD_POOL_REGISTRY]
-    }
-  ];
-};
 
 const LOGGER_PROVIDERS = function (options: ApplicationOptions): Provider[] {
   return [
@@ -74,7 +58,6 @@ export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]
   return [
     { provide: AsyncEventDispatcher, useClass: AsyncEventDispatcher},
     { provide: Kernel, useClass: Kernel },
-    ...WORKER_THREADS_PROVIDERS(options),
     ...LOGGER_PROVIDERS(options),
     ...SERVER_PROVIDERS(options),
     ...COMMAND_PROVIDERS(options),

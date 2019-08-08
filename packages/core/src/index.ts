@@ -3,4 +3,3 @@ export * from './application';
 export * from './server';
 export * from './logger';
 export * from './console';
-export * from './thread-pool';

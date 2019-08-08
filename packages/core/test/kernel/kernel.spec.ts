@@ -13,13 +13,8 @@ describe('Kernel', () => {
   let kernel: Kernel;
 
   before(async () => {
-    await app.start();
-    injector = app.getInjector();
+    injector = await app.run();
     kernel = injector.get(Kernel);
-  });
-
-  after(async () => {
-    await app.stop();
   });
 
   it('should call controller index action', async () => {

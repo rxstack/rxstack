@@ -41,12 +41,28 @@ export const APP_OPTIONS: ApplicationOptions = {
 
 // creates an application instance
 const app = new Application(APP_OPTIONS);
+
+// bootstraps components
+app.run().then((injector) => {
+  // do something
+});
+
+// bootstraps components and runs command manager
+app.cli().then((injector) => {
+  // do something
+});
+
 // bootstraps components and starts the servers
-await app.start();
-// gets the injector
-const injector = app.getInjector();
-// stops the servers
-await app.stop();
+app.start().then((app: Application) => {
+  const injector = app.getInjector();
+  // do something
+});
+
+// stops all servers
+app.stop().then((app: Application) => {
+  const injector = app.getInjector();
+  // do something
+});
 ```
 ### <a name="modules"></a>  Modules
 Modules are reusable components plugged into your application. They are registered in the `ApplicationOptions`.
