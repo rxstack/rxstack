@@ -1,3 +1,4 @@
+
 # The Console
 
 > The Console component allows you to create a command-line application. Your console commands can be used for
