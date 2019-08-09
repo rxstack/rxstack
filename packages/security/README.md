@@ -9,7 +9,7 @@ but also allows you to implement your own authentication strategies.
 npm install @rxstack/security --save
 
 // peerDependencies
-npm install @rxstack/async-event-dispatcher@^0.3 @rxstack/core@^0.3 @rxstack/exceptions@^0.3 @rxstack/service-registry@^0.3 
+npm install @rxstack/async-event-dispatcher@^0.4 @rxstack/core@^0.4 @rxstack/exceptions@^0.4 @rxstack/service-registry@^0.4
 ```
 
 ## Documentation
@@ -303,7 +303,7 @@ From now on `UserWithEncoder` will use `PlainTextPasswordEncoder`;
 ##### <a name="build-in-encoders"></a> Build-in encoders
 There are two build-in encodes both enabled by default:
 
-- `BcryptPasswordEncoder`: uses [bcrypt](https://github.com/kelektiv/node.bcrypt.js) and it is the default encoder.
+- `BcryptPasswordEncoder`: uses [bcrypt](https://github.com/dcodeIO/bcrypt.js) and it is the default encoder.
 - `PlainTextPasswordEncoder`: does not encode anything, it just returns the value as it is. 
 
 ##### <a name="password-encoders-usage"></a> Usage

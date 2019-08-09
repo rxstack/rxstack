@@ -11,7 +11,7 @@ describe('Console:DebugWebSocketMetaDataCommand', () => {
   let consoleSpy: any;
 
   before(async () => {
-    await app.start();
+    await app.cli();
     consoleSpy = sinon.spy(console, 'log');
   });
 

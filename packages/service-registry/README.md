@@ -8,7 +8,7 @@
 npm install @rxstack/service-registry --save
 
 // peerDependencies
-npm install @rxstack/exceptions@^0.3
+npm install @rxstack/exceptions@^0.4
 ```
 
 ## Documentation

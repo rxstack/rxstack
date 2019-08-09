@@ -30,6 +30,7 @@ The fastest way to build web applications
     - [Securing controller with authentication listener](#security-listener)
     - [References](https://github.com/rxstack/rxstack/tree/master/packages/security)
 - [Servers](#servers)
+- [Workers](#workers)
 - [Databases](#databases)
 - [Testing](#testing)
     - [Unit](#testing-unit)
@@ -55,7 +56,7 @@ The fastest way to build web applications
     - [Sequelize Service](https://github.com/rxstack/sequelize-service)
 
 ## <a name="prerequisites"></a> Prerequisites
-`RxStack` requires `Node v9.0.0` and later. On MacOS and other Unix systems the 
+`RxStack` requires `Node v12.0.0` and later. On MacOS and other Unix systems the 
 [Node Version Manager](https://github.com/creationix/nvm) is a good way 
 to quickly install the latest version of NodeJS and keep up it up to date. You'll also need git installed.
 After successful installation, the node, npm and git commands should be available on the terminal 
@@ -63,7 +64,7 @@ and show something similar when running the following commands:
 
 ```bash
 $ node --version
-v11.10.0
+v12.6.0
 ```
 
 ```bash
@@ -615,6 +616,11 @@ There are two build-in server modules:
 - [ExpressServerModule](https://github.com/rxstack/rxstack/tree/master/packages/express-server)
 - [SocketioServerModule](https://github.com/rxstack/rxstack/tree/master/packages/socketio-server)
 
+## <a name="workers"></a> Workers
+`RxStack` offers an easy way to create a pool of workers for offloading computations as well as managing a pool of workers.
+
+[More details](https://github.com/rxstack/rxstack/tree/master/packages/worker-threads-pool)
+
 ## <a name="databases"></a> Databases
 
 `RxStack` provides several modules to work with databases via 
@@ -878,13 +884,8 @@ describe('Integration:MasterService', () => {
   let masterService: MasterService;
 
   before(async () => {
-    await app.start();
-    injector = app.getInjector();
+    injector = await app.run();
     masterService = injector.get(MasterService);
-  });
-
-  after(async () => {
-    await app.stop();
   });
 
   it('#getValue should return real value', async () => {
@@ -928,13 +929,8 @@ describe('Integration:MasterService', () => {
   let masterService: MasterService;
 
   before(async () => {
-    await app.start();
-    injector = app.getInjector();
+    injector = await app.run();
     masterService = injector.get(MasterService);
-  });
-
-  after(async () => {
-    await app.stop();
   });
 
   it('#getValue should return fake value', async () => {

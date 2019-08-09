@@ -6,3 +6,4 @@
 --full-trace
 --bail
 --exit
+--timeout 100000

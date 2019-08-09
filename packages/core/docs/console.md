@@ -1,3 +1,4 @@
+
 # The Console
 
 > The Console component allows you to create a command-line application. Your console commands can be used for
@@ -69,7 +70,7 @@ export const APP_OPTIONS: ApplicationOptions = {
 // creates application instance
 const app = new Application(APP_OPTIONS);
 // bootstraps components and starts the application in cli environment
-await app.start(true);
+app.cli().catch(console.err);
 ```
 
 ### <a name="list-commands"></a>  List available commands
@@ -84,7 +85,7 @@ $ ts-node ./cli.ts -h
 To execute our custom command you need to run: 
 
 ```bash
-$ ts- node ./cli.ts my-custom-command -f true
+$ ts-node ./cli.ts my-custom-command -f true
 ```
 
 > Pay attention that we execute commands with `ts-node` instead of `node`
