@@ -12,6 +12,5 @@ export const EXPRESS_APP_OPTIONS: ApplicationOptions = {
     { provide: MockController, useClass: MockController },
     { provide: ConfigurationListener, useClass: ConfigurationListener },
   ],
-  servers: express_server_environment.servers,
-  logger: express_server_environment.logger
+  servers: express_server_environment.servers
 };

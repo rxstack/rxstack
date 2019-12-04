@@ -16,16 +16,6 @@ export const environmentWithoutRsa: any = {
       ]
     }
   },
-  logger: {
-    handlers: [
-      {
-        type: 'console',
-        options: {
-          level: 'silly',
-        }
-      }
-    ]
-  },
   security: {
     token_extractors: {
       query_parameter: {

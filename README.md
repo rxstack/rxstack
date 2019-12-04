@@ -112,18 +112,14 @@ A controller action is usually a method inside a controller class:
 // my-project/src/app/controllers/lucky.controller.ts
 
 import {Injectable} from 'injection-js';
-import {Http, Logger, Request, Response, WebSocket} from '@rxstack/core';
+import {Http, Request, Response, WebSocket} from '@rxstack/core';
 
 @Injectable()
 export class LuckyController {
 
-  // Logger is injected via constructor method
-  constructor(private logger: Logger) { }
-
   @Http('GET', '/lucky/number/:max', 'app_lucky_number')
   @WebSocket('app_lucky_number')
   async number(request: Request): Promise<Response> {
-    this.logger.debug('Debugging request params: ', request.params.toObject());
     const num: number = Math.floor(Math.random() * Math.floor(request.params.get('max')));
     return new Response({num});
   }
@@ -193,7 +189,7 @@ Otherwise, the response will have a 500 HTTP status code:
 // my-project/src/app/controllers/lucky.controller.ts
 
 import {Injectable} from 'injection-js';
-import {Http, Logger, Request, Response, WebSocket} from '@rxstack/core';
+import {Http, Request, Response, WebSocket} from '@rxstack/core';
 import {BadRequestException} from '@rxstack/exceptions';
 
 @Injectable()
@@ -869,22 +865,19 @@ and now let's test it:
 //  my-project/test/integration/services/master.service.spec.ts
 
 import 'reflect-metadata';
-import {configuration} from '@rxstack/configuration';
-configuration.initialize(configuration.getRootPath() + '/src/environments');
-import {MasterService} from '../../../src/app/services/master.service';
-import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
-import {APP_OPTIONS} from '../../../src/app/APP_OPTIONS';
+import {MasterService} from '../../../src/app/services/master.service';
+import {app} from '../../../src/app/app';
 
 describe('Integration:MasterService', () => {
 
   // Setup application
-  const app = new Application(APP_OPTIONS);
   let injector: Injector;
   let masterService: MasterService;
 
   before(async () => {
-    injector = await app.run();
+    await app.run();
+    injector = app.getInjector();
     masterService = injector.get(MasterService);
   });
 
@@ -901,7 +894,6 @@ sometimes you need to replace the real service with the mock one:
 import 'reflect-metadata';
 import {configuration} from '@rxstack/configuration';
 configuration.initialize(configuration.getRootPath() + '/src/environments');
-
 import {MasterService} from '../../../src/app/services/master.service';
 import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
@@ -953,12 +945,8 @@ and [socket.io-client](https://github.com/socketio/socket.io-client) :
 > You can use you any other http or socket client
 
 ```typescript
-import 'reflect-metadata';
-import {configuration} from '@rxstack/configuration';
-configuration.initialize(configuration.getRootPath() + '/src/environments');
-import {APP_OPTIONS} from '../../../src/app/APP_OPTIONS';
 import {Injector} from 'injection-js';
-import {Application, ServerManager} from '@rxstack/core';
+import {ServerManager} from '@rxstack/core';
 import {IncomingMessage} from 'http';
 
 const rp = require('request-promise');
@@ -967,7 +955,6 @@ const io = require('socket.io-client');
 describe('Functional:Controllers:HelloController', () => {
 
   // Setup application
-  const app = new Application(APP_OPTIONS);
   let injector: Injector;
   let httpHost: string;
   let wsHost: string;

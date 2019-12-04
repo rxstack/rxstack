@@ -12,6 +12,5 @@ export const SOCKET_APP_OPTIONS: ApplicationOptions = {
     { provide: MockController, useClass: MockController },
     { provide: MockEventListener, useClass: MockEventListener },
   ],
-  servers: socketio_environment.servers,
-  logger: socketio_environment.logger
+  servers: socketio_environment.servers
 };

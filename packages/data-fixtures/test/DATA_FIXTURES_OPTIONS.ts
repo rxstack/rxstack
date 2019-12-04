@@ -10,15 +10,5 @@ export const DATA_FIXTURES_OPTIONS: ApplicationOptions = {
   providers: [
     { provide: FIXTURE_REGISTRY, useClass: FixtureTest1, multi: true },
     { provide: FIXTURE_REGISTRY, useClass: FixtureTest2, multi: true },
-  ],
-  logger: {
-    handlers: [
-      {
-        type: 'console',
-        options: {
-          level: 'silly',
-        }
-      }
-    ]
-  }
+  ]
 };

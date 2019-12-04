@@ -54,17 +54,7 @@ export const APP_OPTIONS: ApplicationOptions = {
   providers: [
     { provide: MyService, useClass: MyService },
     { provide: COMMAND_REGISTRY, useClass: MyCustomCommand, multi: true },
-  ],
-  logger: {
-    'handlers': [
-      {
-        type: 'console',
-        options: {
-          level: 'silly',
-        }
-      }
-    ]
-  }
+  ]
 };
 
 // creates application instance

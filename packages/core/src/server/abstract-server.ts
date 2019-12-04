@@ -1,7 +1,8 @@
 import { Server as HttpServer } from 'http';
 import {Injector} from 'injection-js';
 import {Transport, TransportDefinition} from '../kernel';
-import {Logger} from '../logger';
+
+const winston = require('winston');
 
 /**
  * Base class for servers
@@ -115,21 +116,12 @@ export abstract class AbstractServer {
   abstract getTransport(): Transport;
 
   /**
-   * Logger
-   *
-   * @returns {Logger}
-   */
-  protected getLogger(): Logger {
-    return this.getInjector().get(Logger);
-  }
-
-  /**
    * Logs server message
    *
    * @param {string} message
    */
   protected logMessage(message: string): void {
-    this.getLogger().debug(`${message} ${this.getHost()}`, {'source': this.constructor.name});
+    winston.debug(`${message} ${this.getHost()}`);
   }
 
   /**

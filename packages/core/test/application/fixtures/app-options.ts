@@ -13,5 +13,4 @@ export const APP_OPTIONS: ApplicationOptions = {
   ],
   imports: [Test1Module.configure(app_environment.test_module_1), Test2Module],
   servers: app_environment.servers,
-  logger: app_environment.logger
 };

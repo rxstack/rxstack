@@ -11,6 +11,8 @@ import {SocketioServerConfiguration} from './socketio-server-configuration';
 import {EventEmitter} from 'events';
 import {Stream} from 'stream';
 
+const winston = require('winston');
+
 @Injectable()
 export class SocketioServer extends AbstractServer {
 
@@ -93,9 +95,9 @@ export class SocketioServer extends AbstractServer {
     err['statusCode'] = err['statusCode'] || 500;
     const transformedException = exceptionToObject(err, {status: err['statusCode']});
     if (err['statusCode'] >= 500) {
-      this.getLogger().error(err.message, transformedException);
+      winston.error(err.message, transformedException);
     } else {
-      this.getLogger().debug(err.message, transformedException);
+      winston.debug(err.message, transformedException);
     }
 
     if (process.env.NODE_ENV === 'production' && err['statusCode'] >= 500) {
