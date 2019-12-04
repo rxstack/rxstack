@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/worker-threads-pool",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "RxStack Worker Threads Pool Module",
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -29,26 +29,25 @@
     "test": "npm run lint && npm run coverage"
   },
   "peerDependencies": {
-    "@rxstack/core": "^0.4",
-    "@rxstack/exceptions": "^0.4",
-    "@rxstack/service-registry": "^0.4"
+    "@rxstack/core": "^0.5",
+    "@rxstack/service-registry": "^0.5"
   },
   "dependencies": {
-    "injection-js": "^2.1.0",
+    "injection-js": "^2.2.2",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@types/chai": "^4.1.7",
+    "@types/chai": "^4.2.6",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^12.7.1",
+    "@types/node": "^12.12.14",
     "chai": "3.5.0",
     "mocha": "^5.2.0",
     "nyc": "^14.1.1",
     "should": "^13.2.3",
     "source-map-support": "^0.4.15",
-    "ts-node": "^8.3.0",
-    "tslint": "^5.18.0",
-    "typescript": "^3.5.2"
+    "ts-node": "^8.5.4",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.3"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"

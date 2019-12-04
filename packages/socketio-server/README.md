@@ -8,7 +8,7 @@
 npm install @rxstack/socketio-server --save
 
 // peerDependencies
-npm install @rxstack/async-event-dispatcher@^0.4 @rxstack/core@^0.4 @rxstack/exceptions@^0.4
+npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/core@^0.5 @rxstack/exceptions@^0.5 winston@^3.2.1
 ```
 
 ## Documentation
@@ -36,10 +36,7 @@ export const SOCKETIO_APP_OPTIONS: ApplicationOptions = {
   servers: ['socketio'], //enables the server
   providers: [
     // ...
-  ],
-  logger: {
-    // ...
-  }
+  ]
 };
 
 new Application(SOCKETIO_APP_OPTIONS).start();

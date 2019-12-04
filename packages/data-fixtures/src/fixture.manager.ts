@@ -2,12 +2,13 @@ import {ServiceRegistry} from '@rxstack/service-registry';
 import {AbstractFixture} from './abstract-fixture';
 import {Injectable} from 'injection-js';
 import {PurgerInterface} from './interfaces';
-import {Logger} from '@rxstack/core';
+
+const winston = require('winston');
 
 @Injectable()
 export class FixtureManager extends ServiceRegistry<AbstractFixture> {
 
-  constructor(registry: AbstractFixture[], private purger: PurgerInterface, private logger: Logger) {
+  constructor(registry: AbstractFixture[], private purger: PurgerInterface) {
     super(registry);
   }
 
@@ -17,7 +18,7 @@ export class FixtureManager extends ServiceRegistry<AbstractFixture> {
     }
     const fixtures = this.getOrderedFixtures();
     for (let i = 0; i < fixtures.length; i++) {
-      this.logger.debug(`Loading fixture "${fixtures[i].getName()}"`, {source: 'data-fixtures'});
+      winston.debug(`Loading fixture "${fixtures[i].getName()}"`);
       await fixtures[i].load();
     }
   }

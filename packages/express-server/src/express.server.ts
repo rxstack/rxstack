@@ -18,6 +18,8 @@ import {Injectable} from 'injection-js';
 import {Stream} from 'stream';
 import {exceptionToObject, transformToException} from '@rxstack/exceptions';
 
+const winston = require('winston');
+
 @Injectable()
 export class ExpressServer extends AbstractServer {
 
@@ -91,9 +93,9 @@ export class ExpressServer extends AbstractServer {
       const transformedException = exceptionToObject(err, {status: status});
       if (status >= 500) {
         res.getHeaderNames().forEach((name) => res.removeHeader(name));
-        this.getLogger().error(err.message, transformedException);
+        winston.error(err.message, transformedException);
       } else {
-        this.getLogger().debug(err.message, transformedException);
+        winston.debug(err.message, transformedException);
       }
 
       if (process.env.NODE_ENV === 'production' && status >= 500) {

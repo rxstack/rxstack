@@ -9,6 +9,5 @@ export const CONSOLE_APP_OPTIONS: ApplicationOptions = {
     { provide: COMMAND_REGISTRY, useClass: TestCommand, multi: true },
   ],
   imports: [Console1Module],
-  servers: application_environment.servers,
-  logger: application_environment.logger
+  servers: application_environment.servers
 };

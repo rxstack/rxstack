@@ -8,14 +8,13 @@
 npm install @rxstack/core --save
 
 // peerDependencies
-npm install @rxstack/async-event-dispatcher@^0.4 @rxstack/exceptions@^0.4
+npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/exceptions@^0.5 winston@^3.2.1
 ```
 
 ## Documentation
 
 * [Kernel](docs/kernel.md)
 * [Application](docs/application.md)
-* [Logger](docs/logger.md)
 * [Server](docs/server.md)
 * [Console](docs/console.md)
 

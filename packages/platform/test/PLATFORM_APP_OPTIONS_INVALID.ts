@@ -10,6 +10,5 @@ export const PLATFORM_APP_OPTIONS_INVALID: ApplicationOptions = {
   providers: [
     { provide: InvalidTaskOperation, useClass: InvalidTaskOperation },
   ],
-  servers: environmentPlatform.servers,
-  logger: environmentPlatform.logger
+  servers: environmentPlatform.servers
 };

@@ -15,7 +15,6 @@
 - `imports`: other modules to be imported in the application. 
 - `providers`: provider definitions
 - `servers`: an array of server names (server modules should be registered)
-- `logger`: logger configurations
 
 ```typescript
 import {ApplicationOptions} from '@rxstack/core'
@@ -26,17 +25,7 @@ export const APP_OPTIONS: ApplicationOptions = {
   providers: [
     { provide: MyService, useClass: MyService }
   ],
-  servers: ['express'],
-  logger: {
-    'handlers': [
-      {
-        type: 'console',
-        options: {
-          level: 'silly',
-        }
-      }
-    ]
-  }
+  servers: ['express']
 };
 
 // creates an application instance

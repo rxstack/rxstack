@@ -11,6 +11,5 @@ export const SECURITY_APP_OPTIONS: ApplicationOptions = {
     SecurityModule.configure(environmentSecurity.security)
   ],
   providers: APP_SECURITY_PROVIDERS,
-  servers: environmentSecurity.servers,
-  logger: environmentSecurity.logger
+  servers: environmentSecurity.servers
 };

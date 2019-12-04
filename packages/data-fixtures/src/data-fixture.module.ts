@@ -1,4 +1,4 @@
-import {COMMAND_REGISTRY, Logger, Module} from '@rxstack/core';
+import {COMMAND_REGISTRY, Module} from '@rxstack/core';
 import {FIXTURE_REGISTRY, PURGER_SERVICE, PurgerInterface} from './interfaces';
 import {NoopPurger} from './noop-purger';
 import {FixtureManager} from './fixture.manager';
@@ -12,10 +12,10 @@ import {LoadFixturesCommand} from './load-fixtures.command';
     { provide: ReferenceRepository, useClass: ReferenceRepository },
     {
       provide: FixtureManager,
-      useFactory: (purger: PurgerInterface, registry: AbstractFixture[], logger: Logger) => {
-        return new FixtureManager(registry, purger, logger);
+      useFactory: (purger: PurgerInterface, registry: AbstractFixture[]) => {
+        return new FixtureManager(registry, purger);
       },
-      deps: [PURGER_SERVICE, FIXTURE_REGISTRY, Logger]
+      deps: [PURGER_SERVICE, FIXTURE_REGISTRY]
     },
     { provide: FIXTURE_REGISTRY, useClass: NoopFixture, multi: true },
     { provide: PURGER_SERVICE, useClass: NoopPurger },

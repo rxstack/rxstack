@@ -8,6 +8,5 @@ export const KERNEL_APP_OPTIONS: ApplicationOptions = {
     { provide: AnnotatedController, useClass: AnnotatedController },
     { provide: AnnotatedListener, useClass: AnnotatedListener },
   ],
-  servers: application_environment.servers,
-  logger: application_environment.logger
+  servers: application_environment.servers
 };

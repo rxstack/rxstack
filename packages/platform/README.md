@@ -66,7 +66,7 @@ npm install @rxstack/platform --save
 > you need also to install peer dependencies (of not installed already):
 
 ```
-npm install @rxstack/async-event-dispatcher@^0.4 @rxstack/core@^0.4 @rxstack/exceptions@^0.4 @rxstack/query-filter@^0.4 @rxstack/security@^0.4
+npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/core@^0.5 @rxstack/exceptions@^0.5 @rxstack/query-filter@^0.5 @rxstack/security@^0.5 winston@^3.2.1
 ```
 
 Now register the module in the `APP_OPTIONS`

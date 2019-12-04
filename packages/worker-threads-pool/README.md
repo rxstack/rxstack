@@ -8,7 +8,7 @@
 npm install @rxstack/worker-threads-pool --save
 
 // peerDependencies
-npm install @rxstack/core@^0.4 @rxstack/exceptions@^0.4
+npm install @rxstack/core@^0.5 @rxstack/exceptions@^0.5 winston@^3.2.1
 ```
 
 ## Documentation
@@ -34,7 +34,6 @@ Each task should extends `AbstractWorkerThread` class:
 
 ```typescript
 // ./src/app/workers/my-task.ts
-import {Logger} from '@rxstack/core';
 import {AbstractWorkerThread} from '@rxstack/worker-threads-pool';
 import {Injectable} from 'injection-js';
 import {parentPort, workerData} from 'worker_threads';
@@ -43,7 +42,6 @@ import {parentPort, workerData} from 'worker_threads';
 export class MyTask extends AbstractWorkerThread {
 
   async run(): Promise<void> {
-    this.injector.get(Logger).info('my task is running ...');
     parentPort.postMessage(`hello ${workerData.options.message} - from worker`);
   }
 
@@ -79,7 +77,7 @@ and communicate with the connected client via socket connection:
 
 ```typescript
 import {Injectable, Injector} from 'injection-js';
-import {InjectorAwareInterface, Logger, Request, Response, WebSocket} from '@rxstack/core';
+import {InjectorAwareInterface, Request, Response, WebSocket} from '@rxstack/core';
 import {WorkerThreadsPool} from '@rxstack/worker-threads-pool';
 
 @Injectable()
@@ -112,7 +110,7 @@ export class IndexController implements InjectorAwareInterface {
         // task is completed
         request.connection.emit('message', code === 0 ? 'success' : 'fail');
       });
-    }).catch(e => this.injector.get(Logger).error(e.message));
+    }).catch(e => console.error(e.message));
     
     return new Response('Task is scheduled', 202);
   }

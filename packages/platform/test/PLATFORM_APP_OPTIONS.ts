@@ -52,6 +52,5 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
       deps: [RefreshTokenService, RefreshTokenService]
     }
   ],
-  servers: environmentPlatform.servers,
-  logger: environmentPlatform.logger
+  servers: environmentPlatform.servers
 };

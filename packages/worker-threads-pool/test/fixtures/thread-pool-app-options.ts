@@ -20,16 +20,6 @@ export const createAppOptions = (max = 1, maxWaiting = 2): ApplicationOptions =>
       { provide: WORKER_THREADS_POOL_REGISTRY, useClass: ExitWorkerThread, multi: true },
       { provide: WORKER_THREADS_POOL_REGISTRY, useClass: ThrowWorkerThread, multi: true },
     ],
-    servers: [],
-    logger: {
-      handlers: [
-        {
-          type: 'console',
-          options: {
-            level: 'silly',
-          }
-        }
-      ]
-    },
+    servers: []
   };
 };

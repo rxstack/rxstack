@@ -8,7 +8,6 @@ export function jwt_app_options(options: any): ApplicationOptions {
     imports: [
       SecurityModule.configure(options.security),
     ],
-    servers: options.servers,
-    logger: options.logger
+    servers: options.servers
   };
 }
