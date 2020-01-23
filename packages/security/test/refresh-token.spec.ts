@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import {Injector} from 'injection-js';
-import {REFRESH_TOKEN_MANAGER} from '../src/security.module';
-import {RefreshTokenInterface} from '../src/interfaces';
+import {REFRESH_TOKEN_MANAGER, RefreshTokenInterface} from '../src/interfaces';
 import {Token} from '../src/models/token';
 import {User} from '../src/models/user';
 import {UnauthorizedException} from '@rxstack/exceptions';

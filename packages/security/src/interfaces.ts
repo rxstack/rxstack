@@ -1,5 +1,15 @@
 import {Request, TokenInterface, UserInterface} from '@rxstack/core';
-import {NamedServiceInterface} from '@rxstack/service-registry';
+import {NamedServiceInterface, ServiceRegistry} from '@rxstack/service-registry';
+import {InjectionToken} from 'injection-js';
+import {AbstractRefreshTokenManager, SecretLoader} from './services';
+
+export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
+export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
+export const PASSWORD_ENCODER_REGISTRY = new InjectionToken<PasswordEncoderInterface[]>('PASSWORD_ENCODER_REGISTRY');
+export const TOKEN_EXTRACTOR_REGISTRY = new InjectionToken<TokenExtractorInterface[]>('TOKEN_EXTRACTOR_REGISTRY');
+export const TOKEN_MANAGER = new InjectionToken<TokenManagerInterface>('TOKEN_MANAGER');
+export const REFRESH_TOKEN_MANAGER = new InjectionToken<AbstractRefreshTokenManager>('REFRESH_TOKEN_MANAGER');
+export const SECRET_MANAGER = new InjectionToken<ServiceRegistry<SecretLoader>>('SECRET_MANAGER');
 
 export type UserFactoryFunc<T extends UserInterface> = (data: any) => T;
 

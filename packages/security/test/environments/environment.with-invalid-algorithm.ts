@@ -26,8 +26,13 @@ export const environmentWithInvalidAlgorithm: any = {
       }
     },
     local_authentication: true,
-    socket_authentication: true,
-    secret: 'my_secret',
-    signature_algorithm: 'invalid'
+    default_issuer: 'default',
+    secret_configurations: [
+      {
+        issuer: 'default',
+        secret: 'my_secret',
+        signature_algorithm: 'invalid',
+      },
+    ]
   }
 };

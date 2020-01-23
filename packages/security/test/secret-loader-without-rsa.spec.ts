@@ -2,18 +2,21 @@ import 'reflect-metadata';
 import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {environmentWithoutRsa} from './environments/environment.without-rsa';
-import {KeyLoader} from '../src/services';
+import {SecretLoader} from '../src/services';
 import {jwt_app_options} from './mocks/jwt-app-options';
-import {KeyType} from '../src/interfaces';
+import {KeyType, SECRET_MANAGER} from '../src/interfaces';
+import {ServiceRegistry} from '@rxstack/service-registry';
 
-describe('KeyLoaderWithoutRsa', () => {
+describe('SecretLoaderWithoutRsa', () => {
   // Setup application
   const app = new Application(jwt_app_options(environmentWithoutRsa));
   let injector: Injector = null;
+  let secretManager: ServiceRegistry<SecretLoader>;
 
   before(async() =>  {
     await app.start();
     injector = app.getInjector();
+    secretManager = injector.get(SECRET_MANAGER);
   });
 
   after(async() =>  {
@@ -21,12 +24,12 @@ describe('KeyLoaderWithoutRsa', () => {
   });
 
   it('should load public key', async () => {
-    const key = await injector.get(KeyLoader).loadKey(KeyType.PRIVATE_KEY);
+    const key = await secretManager.get('default').loadKey(KeyType.PRIVATE_KEY);
     key.should.be.equal('my_secret');
   });
 
   it('should load private key', async () => {
-    const key = await injector.get(KeyLoader).loadKey(KeyType.PUBLIC_KEY);
+    const key = await secretManager.get('default').loadKey(KeyType.PUBLIC_KEY);
     key.should.be.equal('my_secret');
   });
 });

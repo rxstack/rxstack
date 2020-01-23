@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
-import {environmentWithInvalidAlgorithm} from './environments/environment.with-invalid-algowithm';
+import {environmentWithInvalidAlgorithm} from './environments/environment.with-invalid-algorithm';
 import {JWTEncodeFailureException} from '../src/exceptions';
 import {TOKEN_MANAGER} from '../src';
 import {jwt_app_options} from './mocks/jwt-app-options';
@@ -12,7 +12,7 @@ describe('TokenManagerWithInvalidAlgorithm', () => {
   let injector: Injector;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
   });
 

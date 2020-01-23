@@ -1,9 +1,13 @@
 import {Module, ModuleWithProviders, ProviderDefinition} from '@rxstack/core';
-import {SecurityConfiguration} from './security-configuration';
-import {InjectionToken} from 'injection-js';
+import {SecretConfiguration, SecurityConfiguration} from './security-configuration';
 import {
-  AuthenticationProviderInterface, PasswordEncoderInterface, TokenExtractorInterface,
-  TokenManagerInterface,
+  AUTH_PROVIDER_REGISTRY,
+  AuthenticationProviderInterface,
+  PASSWORD_ENCODER_REGISTRY,
+  PasswordEncoderInterface, REFRESH_TOKEN_MANAGER, SECRET_MANAGER, TOKEN_EXTRACTOR_REGISTRY,
+  TOKEN_MANAGER,
+  TokenExtractorInterface,
+  TokenManagerInterface, USER_PROVIDER_REGISTRY,
   UserProviderInterface
 } from './interfaces';
 import {BcryptPasswordEncoder} from './password-encoders/bcrypt.password-encoder';
@@ -23,15 +27,10 @@ import {SecurityController} from './controllers/security-controller';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {TokenAuthenticationProvider} from './authentication/token.authentication-provider';
 import {ConnectionListener} from './event-listeners/connection-listener';
-import {AbstractRefreshTokenManager, KeyLoader, TokenManager} from './services';
+import {AbstractRefreshTokenManager, SecretLoader, TokenManager} from './services';
 import {PlainTextPasswordEncoder} from './password-encoders';
+import {ServiceRegistry} from '@rxstack/service-registry';
 
-export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
-export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
-export const PASSWORD_ENCODER_REGISTRY = new InjectionToken<PasswordEncoderInterface[]>('PASSWORD_ENCODER_REGISTRY');
-export const TOKEN_EXTRACTOR_REGISTRY = new InjectionToken<TokenExtractorInterface[]>('TOKEN_EXTRACTOR_REGISTRY');
-export const TOKEN_MANAGER = new InjectionToken<TokenManagerInterface>('TOKEN_MANAGER');
-export const REFRESH_TOKEN_MANAGER = new InjectionToken<AbstractRefreshTokenManager>('REFRESH_TOKEN_MANAGER');
 
 @Module()
 export class SecurityModule {
@@ -56,8 +55,24 @@ export class SecurityModule {
 
   private static addCommonProviders(): ProviderDefinition[] {
     return [
-      { provide: KeyLoader, useClass: KeyLoader },
-      { provide: TOKEN_MANAGER,  useClass: TokenManager },
+      {
+        provide: SECRET_MANAGER,
+        useFactory: (configuration: SecurityConfiguration) => {
+          const service = new ServiceRegistry<SecretLoader>();
+          configuration.secret_configurations
+            .forEach((secret: SecretConfiguration) => service.register(new SecretLoader(secret)))
+          ;
+          return service;
+        },
+        deps: [SecurityConfiguration]
+      },
+      {
+        provide: TOKEN_MANAGER,
+        useFactory: (secretManager: ServiceRegistry<SecretLoader>, configuration: SecurityConfiguration) => {
+          return new TokenManager(secretManager, configuration);
+        },
+        deps: [SECRET_MANAGER, SecurityConfiguration]
+      },
     ];
   }
 

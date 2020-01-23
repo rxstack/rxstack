@@ -1,30 +1,33 @@
 import {Injectable} from 'injection-js';
-import {KeyLoader} from './key-loader';
+import {SecretLoader} from './secret-loader';
 import {JWTDecodeFailureException, JWTEncodeFailureException} from '../exceptions';
 import {KeyType, Secret, TokenManagerInterface} from '../interfaces';
-import {Rsa, SecurityConfiguration} from '../security-configuration';
+import {SecurityConfiguration} from '../security-configuration';
+import {ServiceRegistry} from '@rxstack/service-registry';
 const jwt = require('jsonwebtoken');
 
 @Injectable()
 export class TokenManager implements TokenManagerInterface {
 
-  constructor(private keyLoader: KeyLoader, private config: SecurityConfiguration) {}
+  constructor(private secretManager: ServiceRegistry<SecretLoader>, private config: SecurityConfiguration) { }
 
   async encode(payload: Object): Promise<string> {
-    const key = await this.keyLoader.loadKey(KeyType.PRIVATE_KEY);
-    let secret: Secret|string;
+    const iss = (typeof payload === 'object' && payload['iss']) ? payload['iss'] : this.config.default_issuer;
+    const secretLoader = this.secretManager.get(iss);
+    const key = await secretLoader.loadKey(KeyType.PRIVATE_KEY);
+    let secretOrPrivateKey: Secret|string;
 
-    if (this.config.secret instanceof Rsa) {
-      secret = { key: key, passphrase: this.config.secret['passphrase'] };
+    if (typeof key === 'string') {
+      secretOrPrivateKey = key;
     } else {
-      secret = this.config.secret;
+      secretOrPrivateKey = { key: key, passphrase: secretLoader.config.secret['passphrase'] };
     }
 
     try {
-      return jwt.sign(payload, secret, {
-        algorithm: this.config.signature_algorithm,
+      return jwt.sign(payload, secretOrPrivateKey, {
+        algorithm: secretLoader.config.signature_algorithm,
         expiresIn: this.config.ttl,
-        issuer: this.config.issuer
+        issuer: secretLoader.config.issuer
       });
     } catch (e) {
       throw new JWTEncodeFailureException(
@@ -35,10 +38,19 @@ export class TokenManager implements TokenManagerInterface {
   }
 
   async decode(token: string): Promise<Object> {
-    const loadedPublicKey = await this.keyLoader.loadKey(KeyType.PUBLIC_KEY);
+    let iss: string;
+    try {
+      const decoded = jwt.decode(token, {json: true, complete: true});
+      iss = decoded.payload['iss'] ? decoded.payload['iss'] : this.config.default_issuer;
+    } catch (e) {
+      throw new JWTDecodeFailureException('Invalid JWT Token', e.message);
+    }
+
+    const secretLoader = this.secretManager.get(iss);
+    const loadedPublicKey = await secretLoader.loadKey(KeyType.PUBLIC_KEY);
     let options: Object = {
-      algorithms: [this.config.signature_algorithm],
-      issuer: this.config.issuer
+      algorithms: [secretLoader.config.signature_algorithm],
+      issuer: secretLoader.config.issuer
     };
 
     try {

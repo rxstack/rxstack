@@ -2,7 +2,6 @@ import 'reflect-metadata';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import { NotFoundException} from '@rxstack/exceptions';
-import {EventEmitter} from 'events';
 import {REFRESH_TOKEN_MANAGER, RefreshTokenInterface, UserNotFoundException} from '../src';
 import {findHttpDefinition} from './helpers/kernel-definition-finder';
 import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
