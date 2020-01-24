@@ -49,7 +49,7 @@ export class Application {
   }
 
   async stop(): Promise<this> {
-    this.injector.get(Kernel).reset();
+    // this.injector.get(Kernel).reset(); todo - should be removed???
     const manager = this.injector.get(ServerManager);
     try {
       await manager.stop();
