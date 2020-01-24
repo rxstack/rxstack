@@ -20,21 +20,13 @@ describe('ReferenceRepository', () => {
     await app.stop();
   });
 
-  it('should #addReference', async () => {
-    repository.addReference('ref1', 'val1');
+  it('should #setReference', async () => {
+    repository.setReference('ref1', 'val1');
     repository.hasReference('ref1').should.be.true;
   });
 
-  it('should throw an exception on #addReference', async () => {
-    repository.addReference('ref2', 'val2');
-    const func = () => {
-      repository.addReference('ref2', 'val2');
-    };
-    func.should.throw();
-  });
-
   it('should #getReference', async () => {
-    repository.addReference('ref3', 'val3');
+    repository.setReference('ref3', 'val3');
     repository.getReference('ref3').should.be.equal('val3');
   });
 

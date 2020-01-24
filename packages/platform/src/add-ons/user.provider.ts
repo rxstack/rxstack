@@ -8,10 +8,10 @@ export class UserProvider<T extends UserInterface> implements UserProviderInterf
 
   static readonly PROVIDE_NAME = 'platform-service';
 
-  constructor(private service: ServiceInterface<T>) { }
+  constructor(private service: ServiceInterface<T>, private userIdentityField: string) { }
 
   async loadUserByUsername(username: string): Promise<T> {
-    const user = await this.service.findOne({'username': {'$eq': username}});
+    const user = await this.service.findOne({[this.userIdentityField]: {'$eq': username}});
     if (user) return user; else throw new UserNotFoundException(username);
   }
 

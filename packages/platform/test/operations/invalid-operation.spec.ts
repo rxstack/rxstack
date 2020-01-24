@@ -9,7 +9,7 @@ describe('Platform:Operation:Invalid', () => {
     let exception: Exception;
     try {
       const app = new Application(PLATFORM_APP_OPTIONS_INVALID);
-      await app.start();
+      await app.run();
     } catch (e) {
       exception = e;
     }

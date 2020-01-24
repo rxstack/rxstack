@@ -1,8 +1,8 @@
 import {Injectable} from 'injection-js';
-import {TokenManagerInterface} from '@rxstack/security';
+import {TokenEncoderInterface} from '@rxstack/security';
 
 @Injectable()
-export class MockTokenManager implements TokenManagerInterface {
+export class MockTokenEncoder implements TokenEncoderInterface {
 
   async encode(payload: Object): Promise<string> {
     return 'generated-token';

@@ -8,7 +8,7 @@
 npm install @rxstack/data-fixtures --save
 
 // peerDependencies
-npm install @rxstack/core@^0.5 @rxstack/exceptions@^0.5 @rxstack/service-registry@^0.5 @rxstack/async-event-dispatcher@^0.5 winston@^3.2.1
+npm install @rxstack/core@^0.6 @rxstack/exceptions@^0.5 @rxstack/service-registry@^0.5 @rxstack/async-event-dispatcher@^0.5 winston@^3.2.1
 ```
 
 ## Documentation
@@ -94,7 +94,7 @@ export class MyFixture extends AbstractFixture {
     });
     
     // share the result with other fixtures
-    this.addReference('result-1', result);
+    this.setReference('result-1', result);
   }
   
   getName(): string {
@@ -134,9 +134,6 @@ export class MySecondFixture extends AbstractFixture {
 
   async load(): Promise<void> {
     const result = '...';
-    
-    // adds the result to the `ReferenceRepository`, if name exists an exception will be thrown
-    this.addReference('result-2', result);
     
     // sets the result to the `ReferenceRepository`
     this.setReference('result-2', result);

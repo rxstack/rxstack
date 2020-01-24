@@ -1,7 +1,6 @@
 import {
   RefreshTokenInterface,
-  TokenManagerInterface,
-  AbstractRefreshTokenManager
+  AbstractRefreshTokenManager, TokenEncoderInterface
 } from '@rxstack/security';
 import {Injectable} from 'injection-js';
 import {ServiceInterface} from '../interfaces';
@@ -11,24 +10,24 @@ export class RefreshTokenManager<T extends RefreshTokenInterface> extends Abstra
 
   constructor(
     private service: ServiceInterface<T>,
-    tokenManager: TokenManagerInterface,
+    tokenEncoder: TokenEncoderInterface,
     ttl: number
   ) {
-    super(tokenManager, ttl);
+    super(tokenEncoder, ttl);
   }
 
   async persist(data: RefreshTokenInterface): Promise<T> {
-    const result = await this.get(data.identifier);
+    const result = await this.get(data._id);
     if (result) {
       await this.service.updateOne(data[this.service.options.idField], data);
-      return await this.get(data.identifier);
+      return await this.get(data._id);
     } else {
       return await this.service.insertOne(data);
     }
   }
 
   async get(identifier: string): Promise<T> {
-    return await this.service.findOne({'identifier': {'$eq': identifier}});
+    return await this.service.find({'_id': {'$eq': identifier}});
   }
 
   async clear(): Promise<void> {

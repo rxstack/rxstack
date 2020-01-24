@@ -66,7 +66,7 @@ npm install @rxstack/platform --save
 > you need also to install peer dependencies (of not installed already):
 
 ```
-npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/core@^0.5 @rxstack/exceptions@^0.5 @rxstack/query-filter@^0.5 @rxstack/security@^0.5 winston@^3.2.1
+npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/core@^0.6 @rxstack/exceptions@^0.5 @rxstack/query-filter@^0.5 @rxstack/security@^0.6 winston@^3.2.1
 ```
 
 Now register the module in the `APP_OPTIONS`
@@ -1027,7 +1027,7 @@ export const APP_OPTIONS: ApplicationOptions = {
   {
     provide: USER_PROVIDER_REGISTRY,
     useFactory: (userService: UserService) => {
-      return new UserProvider<UserModel>(userService);
+      return new UserProvider<UserModel>(userService, 'username');
     },
     deps: [UserService],
     multi: true
@@ -1062,10 +1062,10 @@ export const APP_OPTIONS: ApplicationOptions = {
     },
     {
       provide: REFRESH_TOKEN_MANAGER,
-      useFactory: (refreshTokenService: ServiceInterface<RefreshTokenInterface>, tokenManager: TokenManagerInterface) => {
-        return new RefreshTokenManager<RefreshTokenInterface>(refreshTokenService, tokenManager, 100);
+      useFactory: (refreshTokenService: ServiceInterface<RefreshTokenInterface>, tokenEncoder: TokenEncoderInterface) => {
+        return new RefreshTokenManager<RefreshTokenInterface>(refreshTokenService, tokenEncoder, 100);
       },
-      deps: [REFRESH_TOKEN_SERVICE, TOKEN_MANAGER]
+      deps: [REFRESH_TOKEN_SERVICE, TOKEN_ENCODER]
     }
   ]
 };

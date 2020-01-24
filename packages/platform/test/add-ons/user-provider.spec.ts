@@ -13,13 +13,9 @@ describe('Platform:Add-Ons:UserProvider', () => {
   let kernel: Kernel;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
     kernel = injector.get(Kernel);
-  });
-
-  after(async() =>  {
-    await app.stop();
   });
 
   it('should match provider name', async () => {

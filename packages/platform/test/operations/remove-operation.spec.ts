@@ -11,13 +11,9 @@ describe('Platform:Operation:Remove', () => {
   let kernel: Kernel;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
     kernel = injector.get(Kernel);
-  });
-
-  after(async() =>  {
-    await app.stop();
   });
 
   it('@app_task_remove ', async () => {

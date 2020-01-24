@@ -25,6 +25,9 @@ export class Application {
   }
 
   async run(): Promise<Injector> {
+    if (this.injector) {
+      return this.injector;
+    }
     this.providers = [];
     this.options.imports.forEach((module) => this.resolveModule(module));
     this.providers.push(...this.options.providers);
