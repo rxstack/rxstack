@@ -44,7 +44,7 @@ export interface TokenManagerInterface {
 }
 
 export interface RefreshTokenInterface {
-  identifier: string;
+  _id: string;
   payload: Object;
   expiresAt: number;
 }

@@ -12,7 +12,7 @@ export class InMemoryRefreshTokenManager extends AbstractRefreshTokenManager {
   }
 
   async persist(refreshToken: RefreshTokenInterface): Promise<RefreshTokenInterface> {
-    this.tokens.set(refreshToken.identifier, refreshToken);
+    this.tokens.set(refreshToken._id, refreshToken);
     return refreshToken;
   }
 

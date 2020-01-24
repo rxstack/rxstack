@@ -10,8 +10,8 @@ export abstract class AbstractRefreshTokenManager {
 
   async create(payload: Object): Promise<RefreshTokenInterface> {
     const data: RefreshTokenInterface = {
-      identifier: this.generate(),
-      payload: payload,
+      _id: md5(uuid()).toString(),
+      payload: Object.assign({}, payload, {refreshed: true}),
       expiresAt: new Date().getTime() + (this.ttl * 1000),
     };
     return await this.persist(data);
@@ -34,8 +34,4 @@ export abstract class AbstractRefreshTokenManager {
   abstract get(identifier: string): Promise<RefreshTokenInterface>;
 
   abstract clear(): Promise<void>;
-
-  private generate(): string {
-    return md5(uuid()).toString();
-  }
 }

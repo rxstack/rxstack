@@ -87,7 +87,7 @@ describe('Security:HttpController', () => {
     refreshTokenObj.expiresAt.should.equal(0);
   });
 
-  it('should throw exception when logut without token', async () => {
+  it('should throw exception when logout without token', async () => {
     const kernel = injector.get(Kernel);
     const def = findHttpDefinition(kernel.httpDefinitions, 'security_logout');
     const request = new Request('HTTP');

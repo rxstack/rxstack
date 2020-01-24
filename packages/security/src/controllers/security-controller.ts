@@ -36,7 +36,7 @@ export class SecurityController {
     ;
     const rawToken = await this.tokenManager.create(request.token.getUser());
     const refreshToken = await this.refreshTokenManager.create(payload);
-    return new Response({'token': rawToken, 'refreshToken': refreshToken.identifier});
+    return new Response({'token': rawToken, 'refreshToken': refreshToken._id});
   }
 
   async logoutAction(request: Request): Promise<Response> {
@@ -52,7 +52,7 @@ export class SecurityController {
     const refreshToken = await this.findRefreshTokenOr404(body['refreshToken']);
     const token = await this.refreshTokenManager.refresh(refreshToken);
     await this.dispatcher.dispatch(AuthenticationEvents.REFRESH_TOKEN_SUCCESS, new AuthenticationRequestEvent(request));
-    return new Response({'token': token, 'refreshToken': refreshToken.identifier});
+    return new Response({'token': token, 'refreshToken': refreshToken._id});
   }
 
   async authenticateAction(request: Request): Promise<Response> {
