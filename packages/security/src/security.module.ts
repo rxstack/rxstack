@@ -50,6 +50,7 @@ export class SecurityModule {
           deps: []
         },
         ...this.addCommonProviders(),
+        ...this.addTokenRelatedProviders(),
         ...this.addEncoderRelatedProviders(),
         ...this.addLocalAuthenticationProviders(),
         ...this.addUserRelatedProviders(),
@@ -72,6 +73,11 @@ export class SecurityModule {
         },
         deps: [SecurityConfiguration]
       },
+    ];
+  }
+
+  private static addTokenRelatedProviders(): ProviderDefinition[] {
+    return [
       {
         provide: TOKEN_ENCODER,
         useFactory: (secretManager: ServiceRegistry<SecretLoader>, configuration: SecurityConfiguration) => {
