@@ -12,6 +12,8 @@ import {AuthenticationRequestEvent} from '../events/authentication-request-event
 import {EventEmitter} from 'events';
 import {SecurityConfiguration} from '../security-configuration';
 import {AbstractRefreshTokenManager} from '../services';
+import {TokenManagerEvents} from '../token-manager-events';
+import {TokenPayloadEvent} from '../events';
 
 @Injectable()
 export class SecurityController {
@@ -26,9 +28,15 @@ export class SecurityController {
     const token = new UsernameAndPasswordToken(body.username, body.password);
     request.token = await this.authManager.authenticate(token);
     await this.dispatcher.dispatch(AuthenticationEvents.LOGIN_SUCCESS, new AuthenticationRequestEvent(request));
-    const rawToken = await this.tokenManager.encode(request.token.getPayload());
-    const refreshToken = await this.refreshTokenManager.createFromAuthToken(request.token);
-    return new Response({'token': rawToken, 'refreshToken': refreshToken});
+    let payload: Object;
+    this.dispatcher
+      .addListener(TokenManagerEvents.TOKEN_CREATED, async (event: TokenPayloadEvent): Promise<void> => {
+        payload = event.payload;
+      })
+    ;
+    const rawToken = await this.tokenManager.create(request.token.getUser());
+    const refreshToken = await this.refreshTokenManager.create(payload);
+    return new Response({'token': rawToken, 'refreshToken': refreshToken.identifier});
   }
 
   async logoutAction(request: Request): Promise<Response> {
@@ -44,7 +52,7 @@ export class SecurityController {
     const refreshToken = await this.findRefreshTokenOr404(body['refreshToken']);
     const token = await this.refreshTokenManager.refresh(refreshToken);
     await this.dispatcher.dispatch(AuthenticationEvents.REFRESH_TOKEN_SUCCESS, new AuthenticationRequestEvent(request));
-    return new Response({'token': token, 'refreshToken': refreshToken});
+    return new Response({'token': token, 'refreshToken': refreshToken.identifier});
   }
 
   async authenticateAction(request: Request): Promise<Response> {

@@ -14,7 +14,6 @@ describe('Security:RefreshToken', () => {
   // Setup application
   const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector = null;
-  let authToken: Token;
   let refreshToken: RefreshTokenInterface;
   let manager: AbstractRefreshTokenManager;
 
@@ -22,8 +21,6 @@ describe('Security:RefreshToken', () => {
     await app.start();
     injector = app.getInjector();
     manager = injector.get(REFRESH_TOKEN_MANAGER);
-    authToken = new Token('token');
-    authToken.setUser(new User('admin', 'admin', ['ADMIN']));
   });
 
   after(async() =>  {
@@ -31,7 +28,7 @@ describe('Security:RefreshToken', () => {
   });
 
   it('should create a token', async () => {
-    refreshToken = await manager.createFromAuthToken(authToken);
+    refreshToken = await manager.create({});
     (typeof refreshToken).should.be.equal('object');
     _.has(refreshToken, 'identifier').should.be.equal(true);
   });
@@ -63,7 +60,7 @@ describe('Security:RefreshToken', () => {
   });
 
   it('should remove all tokens', async () => {
-    await manager.createFromAuthToken(authToken);
+    await manager.create({});
     await manager.clear();
     const token = await manager.get(refreshToken.identifier);
     (!!token).should.be.equal(false);

@@ -1,62 +1,40 @@
 import {Injectable} from 'injection-js';
-import {SecretLoader} from './secret-loader';
-import {JWTDecodeFailureException, JWTEncodeFailureException} from '../exceptions';
-import {KeyType, Secret, TokenManagerInterface} from '../interfaces';
+import {TokenEncoderInterface, TokenManagerInterface} from '../interfaces';
 import {SecurityConfiguration} from '../security-configuration';
-import {ServiceRegistry} from '@rxstack/service-registry';
-const jwt = require('jsonwebtoken');
+import {User} from '../models';
+import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
+import {TokenDecodedEvent, TokenEncodedEvent, TokenPayloadEvent} from '../events';
+import {TokenManagerEvents} from '../token-manager-events';
+import {TokenInterface} from '@rxstack/core';
+import {JWTDecodeFailureException} from '../exceptions';
+
 
 @Injectable()
 export class TokenManager implements TokenManagerInterface {
 
-  constructor(private secretManager: ServiceRegistry<SecretLoader>, private config: SecurityConfiguration) { }
+  constructor(private tokenEncoder: TokenEncoderInterface, private eventDispatcher: AsyncEventDispatcher,
+              private config: SecurityConfiguration) { }
 
-  async encode(payload: Object): Promise<string> {
-    const iss = (typeof payload === 'object' && payload['iss']) ? payload['iss'] : this.config.default_issuer;
-    const secretLoader = this.secretManager.get(iss);
-    const key = await secretLoader.loadKey(KeyType.PRIVATE_KEY);
-    let secretOrPrivateKey: Secret|string;
-
-    if (typeof key === 'string') {
-      secretOrPrivateKey = key;
-    } else {
-      secretOrPrivateKey = { key: key, passphrase: secretLoader.config.secret['passphrase'] };
-    }
-
-    try {
-      return jwt.sign(payload, secretOrPrivateKey, {
-        algorithm: secretLoader.config.signature_algorithm,
-        expiresIn: this.config.ttl,
-        issuer: secretLoader.config.issuer
-      });
-    } catch (e) {
-      throw new JWTEncodeFailureException(
-        'An error occured while trying to encode the JWT token. ' +
-        'Please verify your configuration (private key/passphrase)',
-        e.message);
-    }
+  async create(user: User): Promise<string> {
+    const payload = {
+     [this.config.user_identity_field]: user[this.config.user_identity_field],
+      roles: user.roles
+    };
+    const tokenEvent = new TokenPayloadEvent(payload, user);
+    await this.eventDispatcher.dispatch(TokenManagerEvents.TOKEN_CREATED, tokenEvent);
+    const encoded = await this.tokenEncoder.encode(tokenEvent.payload);
+    const tokenEncodedEvent = new TokenEncodedEvent(encoded, user);
+    await this.eventDispatcher.dispatch(TokenManagerEvents.TOKEN_ENCODED, tokenEncodedEvent);
+    return tokenEncodedEvent.rawToken;
   }
 
-  async decode(token: string): Promise<Object> {
-    let iss: string;
-    try {
-      const decoded = jwt.decode(token, {json: true, complete: true});
-      iss = decoded.payload['iss'] ? decoded.payload['iss'] : this.config.default_issuer;
-    } catch (e) {
-      throw new JWTDecodeFailureException('Invalid JWT Token', e.message);
+  async decode(token: TokenInterface): Promise<Object> {
+    const payload = await this.tokenEncoder.decode(token.getCredentials());
+    const decodedEvent = new TokenDecodedEvent(payload);
+    await this.eventDispatcher.dispatch(TokenManagerEvents.TOKEN_DECODED, decodedEvent);
+    if (!decodedEvent.isValid()) {
+      throw new JWTDecodeFailureException('Invalid JWT Token');
     }
-
-    const secretLoader = this.secretManager.get(iss);
-    const loadedPublicKey = await secretLoader.loadKey(KeyType.PUBLIC_KEY);
-    let options: Object = {
-      algorithms: [secretLoader.config.signature_algorithm],
-      issuer: secretLoader.config.issuer
-    };
-
-    try {
-      return  jwt.verify(token, loadedPublicKey, options);
-    } catch (e) {
-      throw new JWTDecodeFailureException('Invalid JWT Token', e.message);
-    }
+    return decodedEvent.payload;
   }
 }

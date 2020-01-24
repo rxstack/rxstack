@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
-import {TokenManager} from '../src/services';
+import {TokenEncoder} from '../src/services';
 import {JWTDecodeFailureException} from '../src/exceptions';
 import {environmentWitRsa} from './environments/environment.with-rsa';
-import {TOKEN_MANAGER} from '../src';
 import {jwt_app_options} from './mocks/jwt-app-options';
+import {TOKEN_ENCODER} from '../src';
 
-describe('TokenManager', () => {
+describe('TokenEncoder', () => {
   // Setup application
   const app = new Application(jwt_app_options(environmentWitRsa));
   let injector: Injector = null;
@@ -22,9 +22,9 @@ describe('TokenManager', () => {
   });
 
   it('should encode and decode', async () => {
-    const manager = injector.get(TOKEN_MANAGER);
-    const encoded = await manager.encode({'key': 'value'});
-    const decoded = await manager.decode(encoded);
+    const encoder = injector.get(TOKEN_ENCODER);
+    const encoded = await encoder.encode({'key': 'value'});
+    const decoded = await encoder.decode(encoded);
     decoded.hasOwnProperty('key').should.be.equal(true);
     decoded.hasOwnProperty('iss').should.be.equal(true);
     decoded.hasOwnProperty('iat').should.be.equal(true);
@@ -33,10 +33,10 @@ describe('TokenManager', () => {
   });
 
   it('should throw an exception if token is invalid', async () => {
-    const manager = injector.get(TOKEN_MANAGER);
+    const encoder = injector.get(TOKEN_ENCODER);
     let exception: JWTDecodeFailureException;
     try {
-      await manager.decode('invalid');
+      await encoder.decode('invalid');
     } catch (e) {
       exception = e;
     }

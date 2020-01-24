@@ -773,7 +773,7 @@ export class AuthListener {
 
 ### <a name="token-manager"></a> Token Manager
 
-`TokenManager` service is responsible for encoding and decoding the JSON Web Token (JWT). 
+`TokenEncoder` service is responsible for encoding and decoding the JSON Web Token (JWT). 
 Under the hood it uses [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken).
 
 There are two async methods:

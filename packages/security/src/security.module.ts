@@ -4,10 +4,15 @@ import {
   AUTH_PROVIDER_REGISTRY,
   AuthenticationProviderInterface,
   PASSWORD_ENCODER_REGISTRY,
-  PasswordEncoderInterface, REFRESH_TOKEN_MANAGER, SECRET_MANAGER, TOKEN_EXTRACTOR_REGISTRY,
-  TOKEN_MANAGER,
+  PasswordEncoderInterface,
+  REFRESH_TOKEN_MANAGER,
+  SECRET_MANAGER,
+  TOKEN_ENCODER,
+  TOKEN_EXTRACTOR_REGISTRY,
+  TOKEN_MANAGER, TokenEncoderInterface,
   TokenExtractorInterface,
-  TokenManagerInterface, USER_PROVIDER_REGISTRY,
+  TokenManagerInterface,
+  USER_PROVIDER_REGISTRY,
   UserProviderInterface
 } from './interfaces';
 import {BcryptPasswordEncoder} from './password-encoders/bcrypt.password-encoder';
@@ -27,9 +32,10 @@ import {SecurityController} from './controllers/security-controller';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {TokenAuthenticationProvider} from './authentication/token.authentication-provider';
 import {ConnectionListener} from './event-listeners/connection-listener';
-import {AbstractRefreshTokenManager, SecretLoader, TokenManager} from './services';
+import {AbstractRefreshTokenManager, SecretLoader, TokenEncoder} from './services';
 import {PlainTextPasswordEncoder} from './password-encoders';
 import {ServiceRegistry} from '@rxstack/service-registry';
+import {TokenManager} from './services/token-manager';
 
 
 @Module()
@@ -67,11 +73,19 @@ export class SecurityModule {
         deps: [SecurityConfiguration]
       },
       {
-        provide: TOKEN_MANAGER,
+        provide: TOKEN_ENCODER,
         useFactory: (secretManager: ServiceRegistry<SecretLoader>, configuration: SecurityConfiguration) => {
-          return new TokenManager(secretManager, configuration);
+          return new TokenEncoder(secretManager, configuration);
         },
         deps: [SECRET_MANAGER, SecurityConfiguration]
+      },
+      {
+        provide: TOKEN_MANAGER,
+        useFactory: (tokenEncoder: TokenEncoder, eventDispatcher: AsyncEventDispatcher,
+                     configuration: SecurityConfiguration) => {
+          return new TokenManager(tokenEncoder, eventDispatcher, configuration);
+        },
+        deps: [TOKEN_ENCODER, AsyncEventDispatcher, SecurityConfiguration]
       },
     ];
   }
@@ -108,10 +122,10 @@ export class SecurityModule {
       },
       {
         provide: REFRESH_TOKEN_MANAGER,
-        useFactory: (tokenManager: TokenManagerInterface, config: SecurityConfiguration) => {
-          return new InMemoryRefreshTokenManager(tokenManager, config.refresh_token_ttl);
+        useFactory: (tokenEncoder: TokenEncoderInterface, config: SecurityConfiguration) => {
+          return new InMemoryRefreshTokenManager(tokenEncoder, config.refresh_token_ttl);
         },
-        deps: [TOKEN_MANAGER, SecurityConfiguration]
+        deps: [TOKEN_ENCODER, SecurityConfiguration]
       },
       { provide: BootstrapListener, useClass: BootstrapListener },
       { provide: ConnectionListener, useClass: ConnectionListener },

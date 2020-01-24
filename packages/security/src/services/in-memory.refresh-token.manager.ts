@@ -1,4 +1,4 @@
-import {RefreshTokenInterface, TokenManagerInterface} from '../interfaces';
+import {RefreshTokenInterface, TokenEncoderInterface} from '../interfaces';
 import {Injectable} from 'injection-js';
 import {AbstractRefreshTokenManager} from './abstract-refresh-token.manager';
 
@@ -7,7 +7,7 @@ export class InMemoryRefreshTokenManager extends AbstractRefreshTokenManager {
 
   private tokens: Map<string, RefreshTokenInterface> = new Map();
 
-  constructor(tokenManager: TokenManagerInterface, ttl: number) {
+  constructor(tokenManager: TokenEncoderInterface, ttl: number) {
     super(tokenManager, ttl);
   }
 

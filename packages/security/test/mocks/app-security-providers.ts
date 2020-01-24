@@ -1,6 +1,6 @@
 import {environmentSecurity} from '../environments/environment.security';
 import {TestAuthenticationProvider} from './test.authentication-provider';
-import {TestTokenManager} from './test.token-manager';
+import {TestTokenEncoder} from './test.token-encoder';
 import {Noop2UserProvider} from './noop2-user-provider';
 import {ProviderDefinition, UserInterface} from '@rxstack/core';
 import {InMemoryUserProvider} from '../../src/user-providers/in-memory-user-provider';
@@ -8,7 +8,7 @@ import {TestController} from './test.controller';
 import {TestUserWithEncoder} from './test-user-with-encoder';
 import {AuthListener} from './auth.listener';
 import {TestJwtAuthenticationProvider} from './test-jwt.authentication-provider';
-import {AUTH_PROVIDER_REGISTRY, TOKEN_MANAGER, USER_PROVIDER_REGISTRY} from '../../src';
+import {AUTH_PROVIDER_REGISTRY, TOKEN_ENCODER, TOKEN_MANAGER, USER_PROVIDER_REGISTRY} from '../../src';
 
 export const APP_SECURITY_PROVIDERS: ProviderDefinition[] = [
   {
@@ -16,8 +16,8 @@ export const APP_SECURITY_PROVIDERS: ProviderDefinition[] = [
     useClass: TestController
   },
   {
-    provide: TOKEN_MANAGER,
-    useClass: TestTokenManager
+    provide: TOKEN_ENCODER,
+    useClass: TestTokenEncoder
   },
   {
     provide: AuthListener,
