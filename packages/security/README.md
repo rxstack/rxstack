@@ -840,7 +840,7 @@ There are two async methods:
 
 `TokenManager` dispatches several events while creating and decoding.
 
-#### `security.token.created` 
+#### the `security.token.created` event
 the event is used to modify the payload before encoded.
 
 ```typescript
@@ -857,7 +857,7 @@ dispatcher.addListener(TokenManagerEvents.TOKEN_CREATED, async (event: TokenPayl
 
 ```
 
-#### `security.token.encoded` 
+#### The `security.token.encoded` event
 the event is used to replace the generated token.
 
 ```typescript
@@ -873,7 +873,7 @@ dispatcher.addListener(TokenManagerEvents.TOKEN_ENCODED, async (event: TokenEnco
 
 ```
 
-#### `security.token.decoded`
+#### The `security.token.decoded` event
 the event is used to modify the payload or mark token as invalid.
 
 
