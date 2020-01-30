@@ -906,14 +906,10 @@ describe('Platform:Operation:Create', () => {
   let kernel: Kernel;
 
   before(async() =>  {
-    await app.start();
-    injector = app.getInjector();
-    kernel = injector.get(Kernel);
+    injector = await app.run();
+    kernel = injector.get(Kernel);  
   });
 
-  after(async() =>  {
-    await app.stop();
-  });
 
   it('@app_task_create', async () => {
     // getting the http definition
@@ -1056,7 +1052,7 @@ export const APP_OPTIONS: ApplicationOptions = {
     {
       provide: REFRESH_TOKEN_SERVICE,
       useFactory: () => new MemoryService({
-        idField: 'identifier', defaultLimit: 25, collection: 'refreshTokens'
+        idField: '_id', defaultLimit: 25, collection: 'refreshTokens'
       }),
       deps: [],
     },

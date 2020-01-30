@@ -16,10 +16,6 @@ describe('TokenEncoderWithInvalidAlgorithm', () => {
     injector = app.getInjector();
   });
 
-  after(async() =>  {
-    await app.stop();
-  });
-
   it('should encode', async () => {
     const encoder = injector.get(TOKEN_ENCODER);
     let exception: JWTEncodeFailureException;

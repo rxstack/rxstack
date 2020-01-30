@@ -8,7 +8,6 @@ import {TokenManagerEvents} from '../token-manager-events';
 import {TokenInterface} from '@rxstack/core';
 import {JWTDecodeFailureException} from '../exceptions';
 
-
 @Injectable()
 export class TokenManager implements TokenManagerInterface {
 

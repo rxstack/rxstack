@@ -53,6 +53,9 @@ app.stop().then((app: Application) => {
   // do something
 });
 ```
+
+> Note: if you call again `Application.run()` it will not instantiate another instance of `Injector`!
+
 ### <a name="modules"></a>  Modules
 Modules are reusable components plugged into your application. They are registered in the `ApplicationOptions`.
 

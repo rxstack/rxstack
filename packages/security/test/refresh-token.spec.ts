@@ -16,13 +16,8 @@ describe('Security:RefreshToken', () => {
   let manager: AbstractRefreshTokenManager;
 
   before(async() =>  {
-    await app.start();
-    injector = app.getInjector();
+    injector = await app.run();
     manager = injector.get(REFRESH_TOKEN_MANAGER);
-  });
-
-  after(async() =>  {
-    await app.stop();
   });
 
   it('should create a token', async () => {

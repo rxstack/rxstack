@@ -13,14 +13,9 @@ describe('Security:TokenAuthenticationProvider', () => {
   let injector: Injector;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
   });
-
-  after(async() =>  {
-    await app.stop();
-  });
-
 
   it('should authenticate token', async () => {
     const token = new Token('generated-token');

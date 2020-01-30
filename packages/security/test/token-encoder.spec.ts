@@ -13,12 +13,8 @@ describe('TokenEncoder', () => {
   let injector: Injector = null;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
-  });
-
-  after(async() =>  {
-    await app.stop();
   });
 
   it('should encode and decode', async () => {
@@ -29,7 +25,6 @@ describe('TokenEncoder', () => {
     decoded.hasOwnProperty('iss').should.be.equal(true);
     decoded.hasOwnProperty('iat').should.be.equal(true);
     decoded.hasOwnProperty('exp').should.be.equal(true);
-    console.log(decoded);
   });
 
   it('should throw an exception if token is invalid', async () => {

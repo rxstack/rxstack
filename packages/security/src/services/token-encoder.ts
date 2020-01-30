@@ -13,6 +13,7 @@ export class TokenEncoder implements TokenEncoderInterface {
 
   async encode(payload: Object): Promise<string> {
     const iss = (typeof payload === 'object' && payload['iss']) ? payload['iss'] : this.config.default_issuer;
+    payload['iss'] = iss;
     const secretLoader = this.secretManager.get(iss);
     const key = await secretLoader.loadKey(KeyType.PRIVATE_KEY);
     let secretOrPrivateKey: Secret|string;
@@ -26,8 +27,7 @@ export class TokenEncoder implements TokenEncoderInterface {
     try {
       return jwt.sign(payload, secretOrPrivateKey, {
         algorithm: secretLoader.config.signature_algorithm,
-        expiresIn: this.config.ttl,
-        issuer: secretLoader.config.issuer
+        expiresIn: this.config.ttl
       });
     } catch (e) {
       throw new JWTEncodeFailureException(
@@ -50,7 +50,7 @@ export class TokenEncoder implements TokenEncoderInterface {
     const loadedPublicKey = await secretLoader.loadKey(KeyType.PUBLIC_KEY);
     let options: Object = {
       algorithms: [secretLoader.config.signature_algorithm],
-      issuer: secretLoader.config.issuer
+      issuer: iss
     };
 
     try {

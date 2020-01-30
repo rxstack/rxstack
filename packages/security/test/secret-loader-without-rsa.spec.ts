@@ -14,13 +14,9 @@ describe('SecretLoaderWithoutRsa', () => {
   let secretManager: ServiceRegistry<SecretLoader>;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
     secretManager = injector.get(SECRET_MANAGER);
-  });
-
-  after(async() =>  {
-    await app.stop();
   });
 
   it('should load public key', async () => {

@@ -41,8 +41,8 @@ export class Rsa {
   constructor(obj: any) {
     obj = obj || {};
     this.public_key = obj.public_key;
-    this.private_key = obj.private_key || null;
-    this.passphrase = obj.passphrase || null;
+    this.private_key = obj.private_key || undefined;
+    this.passphrase = obj.passphrase || undefined;
   }
 }
 

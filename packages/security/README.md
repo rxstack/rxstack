@@ -16,6 +16,7 @@ npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/core@^0.6 @rxstack/exc
 
 * [Setup](#setup)
 * [Configurations](#configurations)
+* [SecretLoader](#secret-loader)
 * [Token Extractors](#token-extractors)
     - [HeaderTokenExtractor](#token-extractor-header)
     - [QueryParameterTokenExtractor](#token-extractor-query)
@@ -41,6 +42,7 @@ npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/core@^0.6 @rxstack/exc
     - [AuthenticateAction](#authenticate-action)
     - [UnauthenticateAction](#unauthenticate-action)
     - [Local Authentication Events](#local-authentication-events)
+* [Token Encoder](#token-encoder)
 * [Token Manager](#token-manager)
 * [Refresh Token Manager](#refresh-token-manager)
 
@@ -55,7 +57,7 @@ export const SECURITY_APP_OPTIONS: ApplicationOptions = {
   imports: [
     // ...
     SecurityModule.configure({
-      local_authentication: true,
+      local_authentication: true, // defaults to false
       token_extractors: {
         query_parameter: {
           enabled: true,
@@ -68,8 +70,14 @@ export const SECURITY_APP_OPTIONS: ApplicationOptions = {
         }
       },
       ttl: 300,
-      secret: 'my_secret',
-      signature_algorithm: 'HS512'
+      default_issuer: 'default',
+      secret_configurations: [
+        {
+          issuer: 'default',
+          secret: 'my_secret',
+          signature_algorithm: 'HS512',
+        }
+      ]
     })
   ],
   servers: [
@@ -91,16 +99,30 @@ authenticate via sockets and logout from the application. Defaults to `false`.
     - `authorization_header` -extracts the token from http header
 - `ttl` - token validity in seconds. Defaults to `300`
 - `refresh_token_ttl` - the time in seconds token could be refreshed. Default to `(60 * 60 * 24)`
-- `secret` - used to encode/decode the token:
-    - String type - hard to guess string
-    - `Rsa` - object with the following properties:
-        - `public_key` - path to public key, used to decode the token
-        - `private_key` - path to private key, used to sign the token, needed if local authentication is enabled.
-        - `passphrase` - used alongside private key
-- `signature_algorithm` - algorithm used in jwt
 - `user_identity_field` - name of the property in the decoded payload which is used to look up the user.
+- `default_issuer` - default name of the issuer, used to load the secret key
+- `secret_configurations` - an array of secret configurations:
+    - `secret` - string token or `Rsa` object
+    - `signature_algorithm` - algorithm used in jwt
+    - `issuer` - issuer name
 
 For more information, please check [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+
+### <a name="secret-loader"></a> Secret Loader
+
+An array of configurations are passed to `secret_configurations` option. Each option creates a `SecretLoader` service instance
+which is responsible to load ssh keys or string secret.
+You need to configure at least one secret and set it as default issuer.
+
+`SecretLoader` options:
+
+- `secret` - value should be a string or `Rsa` object
+    - `Rsa`
+        - `public_key` - path to public key, used to decode the token
+        - `private_key` - path to private key, used to sign the token, needed if local authentication is enabled.
+        - `passphrase` - used alongside private key.
+- `signature_algorithm` - algorithm used in jwt. Defaults to `RS512`
+- `issuer` - name of the issuer, used to load the secret key
 
 ### <a name="token-extractors"></a> Token Extractors
 
@@ -211,7 +233,7 @@ const user = await injector.get(UserProviderManager).loadUserByUsername('admin')
 
 ```typescript
 import { UserInterface, User } from '@rxstack/core';
-import { USER_PROVIDER_REGISTRY, InMemoryUserProvider } from '@rxstack/security';
+import { USER_PROVIDER_REGISTRY } from '@rxstack/security';
 // ...
 
 providers: [
@@ -219,7 +241,7 @@ providers: [
     provide: USER_PROVIDER_REGISTRY,
     useFactory: () => {
       return new PayloadProvider<UserInterface>(
-        (data: UserInterface) => new User(data.username, null, data.roles)
+        (data: any) => new User(data.username, null, data.roles)
       );
     },
     deps: [],
@@ -275,6 +297,7 @@ And we're done.
 service is responsible to retrieve a registered password encoders by user or encoder name. 
 
 ```typescript
+    const user: UserInterface;
     // by user
     const encoder: PasswordEncoderInterface = injector.get(EncoderFactory).getEncoder(user);
     
@@ -492,7 +515,6 @@ export class MyCustomAuthenticationProvider implements AuthenticationProviderInt
   async authenticate(token: TokenInterface): Promise<TokenInterface> {
     const payload = await this.getPayload(token);
     const user = await this.getUserFromPayload(payload);
-    token.setPayload(payload);
     token.setUser(user);
     token.setAuthenticated(true);
     token.setFullyAuthenticated(true);
@@ -642,13 +664,7 @@ On success with status code 200:
 ```javascript
 { 
   token: 'generated-token',
-  refreshToken:
-   { 
-     identifier: 'c16fefba1911e414762bb66372bc4bbc',
-     username: 'admin',
-     payload: { username: 'admin', roles: [ 'ROLE_ADMIN' ] },
-     expiresAt: 1553505705047 
-   } 
+  refreshToken: 'c16fefba1911e414762bb66372bc4bbc'
 }
 
 ```
@@ -670,7 +686,7 @@ curl -X POST \
   -H 'accept: application/json' \
   -H 'content-type: application/json' \
   -d '{
-  "refreshToken": "f93fd3853e21712d849cd23631c861a3"
+  "refreshToken": "c16fefba1911e414762bb66372bc4bbc"
 }'
 ```
 
@@ -691,7 +707,7 @@ curl -X POST \
   http://localhost:3000/security/logout \
     -H 'accept: application/json' \
   -d '{
-  "refreshToken": "f93fd3853e21712d849cd23631c861a3"
+  "refreshToken": "c16fefba1911e414762bb66372bc4bbc"
 }'
 ```
 
@@ -771,18 +787,114 @@ export class AuthListener {
 
 > Make sure you register the listener in the application providers.
 
-### <a name="token-manager"></a> Token Manager
+### <a name="token-encoder"></a> Token Encoder
 
 `TokenEncoder` service is responsible for encoding and decoding the JSON Web Token (JWT). 
 Under the hood it uses [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken).
 
 There are two async methods:
 
-- `encode(rawToken)`- encodes the raw token
+- `encode(payload)`- encodes provided payload
 - `decode(encodedToken)` - decodes the encoded token
 
-If you want to replace JWT with any other token based authentication then you should create your own token manager 
+If you want to replace JWT with any other token based authentication then you should create your own token encoder 
 and replace the current one.
+
+```typescript
+import {TokenEncoderInterface} from '@rxstack/security';
+import {Injectable} from 'injection-js';
+
+@Injectable()
+export class MyTokenEncoder implements TokenEncoderInterface {
+
+  async encode(payload: Object): Promise<string> {
+    return 'encoded-token';
+  }
+
+  async decode(token: string): Promise<Object> {
+    return 'decoded-token';
+  }
+}
+```
+
+then you need to register it in the application providers. The new one will replace the old one:
+
+```typescript
+import {TOKEN_ENCODER} from '@rxstack/security';
+
+providers: [
+  {
+      provide: TOKEN_ENCODER,
+      useClass: MyTokenEncoder
+  }
+]
+```
+
+### <a name="token-manager"></a> Token Manager
+`TokenManager` service is responsible to create a token from `UserInterface` object and decode a token.
+
+There are two async methods:
+
+- `create(user)`- creates a token from `User` object
+- `decode(encodedToken)` - decodes the encoded token
+
+`TokenManager` dispatches several events while creating and decoding.
+
+#### `security.token.created` 
+the event is used to modify the payload before encoded.
+
+```typescript
+import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
+import {TokenManagerEvents, TokenPayloadEvent} from '@rxstack/security';
+// get dispatcher
+const dispatcher: AsyncEventDispatcher;
+
+dispatcher.addListener(TokenManagerEvents.TOKEN_CREATED, async (event: TokenPayloadEvent): Promise<void> => {
+  const user = event.user;
+  // add a new property to the payload
+  event.payload['new_prop'] = 'value';
+});
+
+```
+
+#### `security.token.encoded` 
+the event is used to replace the generated token.
+
+```typescript
+import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
+import {TokenManagerEvents, TokenEncodedEvent} from '@rxstack/security';
+// get dispatcher
+const dispatcher: AsyncEventDispatcher;
+
+dispatcher.addListener(TokenManagerEvents.TOKEN_ENCODED, async (event: TokenEncodedEvent): Promise<void> => {
+  const user = event.user;
+  event.rawToken = 'new token';
+});
+
+```
+
+#### `security.token.decoded`
+the event is used to modify the payload or mark token as invalid.
+
+
+```typescript
+import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
+import {TokenManagerEvents, TokenDecodedEvent} from '@rxstack/security';
+// get dispatcher
+const dispatcher: AsyncEventDispatcher;
+
+dispatcher.addListener(TokenManagerEvents.TOKEN_DECODED, async (event: TokenDecodedEvent): Promise<void> => {
+  event.payload['new_prop'] = 'new value';
+  // this will mark token as invalid and stop propagation to other listeners
+  event.markAsInvalid(); 
+});
+
+```
+
+If you want to replace `TokenManager` then you should create a service which implements `TokenManagerInterface`
+and replace the current one.
+
+> Note: check implementation of `TokenManager` and how events are dispatched
 
 ```typescript
 import {TokenManagerInterface} from '@rxstack/security';
@@ -791,11 +903,14 @@ import {Injectable} from 'injection-js';
 @Injectable()
 export class MyTokenManager implements TokenManagerInterface {
 
-  async encode(payload: Object): Promise<string> {
+  async create(user: UserInterface): Promise<string> {
+    // dispatch the security.token.created event
+    // dispatch the security.token.encoded event
     return 'encoded-token';
   }
 
   async decode(token: string): Promise<Object> {
+    // dispatch the security.token.decoded event
     return 'decoded-token';
   }
 }
@@ -813,7 +928,6 @@ providers: [
   }
 ]
 ```
-
 ### <a name="refresh-token-manager"></a> Refresh Token Manager
 
 `RefreshTokenManager` is responsible for refreshing and validating the actual token by passing an unique identifier.

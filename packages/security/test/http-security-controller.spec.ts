@@ -13,12 +13,8 @@ describe('Security:HttpController', () => {
   let refreshToken: string;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
-  });
-
-  after(async() =>  {
-    await app.stop();
   });
 
   it('should login', async () => {

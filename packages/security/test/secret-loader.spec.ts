@@ -14,16 +14,14 @@ describe('SecretLoaderWithRsa', () => {
   let secretManager: ServiceRegistry<SecretLoader>;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
     secretManager = injector.get(SECRET_MANAGER);
   });
 
-  after(async() =>  {
-    await app.stop();
-  });
-
   it('should load public key', async () => {
+    await secretManager.get('default').loadKey(KeyType.PUBLIC_KEY);
+    // key should be loaded from cache
     const key = await secretManager.get('default').loadKey(KeyType.PUBLIC_KEY);
     (typeof key).should.be.equal('object');
   });
