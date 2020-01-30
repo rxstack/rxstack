@@ -18,11 +18,9 @@ export class TokenAuthenticationProvider implements AuthenticationProviderInterf
   async authenticate(token: TokenInterface): Promise<TokenInterface> {
     const payload = await this.getPayload(token);
     const user = await this.getUserFromPayload(payload);
-    token.setPayload(payload);
     token.setUser(user);
     token.setAuthenticated(true);
-    const isFullyAuthenticated = payload['refreshedAt'] ? false : true;
-    token.setFullyAuthenticated(isFullyAuthenticated);
+    token.setFullyAuthenticated((!(payload['refreshed'] === true)));
     return token;
   }
 
@@ -37,7 +35,7 @@ export class TokenAuthenticationProvider implements AuthenticationProviderInterf
   private async getPayload(token: TokenInterface): Promise<Object> {
     let payload: Object;
     try {
-      payload = await this.tokenManager.decode(token.getCredentials());
+      payload = await this.tokenManager.decode(token);
     } catch (e) {
       throw new BadCredentialsException('Invalid token.');
     }

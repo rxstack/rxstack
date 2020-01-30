@@ -1,9 +1,6 @@
 import 'reflect-metadata';
 import {Injector} from 'injection-js';
-import {REFRESH_TOKEN_MANAGER} from '../src/security.module';
-import {RefreshTokenInterface} from '../src/interfaces';
-import {Token} from '../src/models/token';
-import {User} from '../src/models/user';
+import {REFRESH_TOKEN_MANAGER, RefreshTokenInterface} from '../src/interfaces';
 import {UnauthorizedException} from '@rxstack/exceptions';
 import {Application} from '@rxstack/core';
 import {SECURITY_APP_OPTIONS} from './mocks/security-app-options';
@@ -15,30 +12,22 @@ describe('Security:RefreshToken', () => {
   // Setup application
   const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector = null;
-  let authToken: Token;
   let refreshToken: RefreshTokenInterface;
   let manager: AbstractRefreshTokenManager;
 
   before(async() =>  {
-    await app.start();
-    injector = app.getInjector();
+    injector = await app.run();
     manager = injector.get(REFRESH_TOKEN_MANAGER);
-    authToken = new Token('token');
-    authToken.setUser(new User('admin', 'admin', ['ADMIN']));
-  });
-
-  after(async() =>  {
-    await app.stop();
   });
 
   it('should create a token', async () => {
-    refreshToken = await manager.createFromAuthToken(authToken);
+    refreshToken = await manager.create({});
     (typeof refreshToken).should.be.equal('object');
-    _.has(refreshToken, 'identifier').should.be.equal(true);
+    _.has(refreshToken, '_id').should.be.equal(true);
   });
 
   it('should retrieve a token', async () => {
-    const token = await manager.get(refreshToken.identifier);
+    const token = await manager.get(refreshToken._id);
     (typeof token).should.be.equal('object');
   });
 
@@ -49,7 +38,7 @@ describe('Security:RefreshToken', () => {
 
   it('should disable a token', async () => {
     await manager.disable(refreshToken);
-    const token = await manager.get(refreshToken.identifier);
+    const token = await manager.get(refreshToken._id);
     token.expiresAt.should.be.equal(0);
   });
 
@@ -64,9 +53,9 @@ describe('Security:RefreshToken', () => {
   });
 
   it('should remove all tokens', async () => {
-    await manager.createFromAuthToken(authToken);
+    await manager.create({});
     await manager.clear();
-    const token = await manager.get(refreshToken.identifier);
+    const token = await manager.get(refreshToken._id);
     (!!token).should.be.equal(false);
   });
 });

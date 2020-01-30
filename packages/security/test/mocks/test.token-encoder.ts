@@ -1,8 +1,8 @@
-import {TokenManagerInterface} from '../../src/interfaces';
+import {TokenEncoderInterface} from '../../src/interfaces';
 import {Injectable} from 'injection-js';
 
 @Injectable()
-export class TestTokenManager implements TokenManagerInterface {
+export class TestTokenEncoder implements TokenEncoderInterface {
 
   async encode(payload: Object): Promise<string> {
     return 'generated-token';

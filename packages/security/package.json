@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/security",
-  "version": "0.5.0",
+  "version": "0.6.2",
   "description": "RxStack Security Module",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
@@ -28,23 +28,24 @@
     "test": "npm run lint && npm run coverage"
   },
   "peerDependencies": {
-    "@rxstack/core": "^0.5",
+    "@rxstack/core": "^0.6",
     "@rxstack/service-registry": "^0.5"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "crypto-js": "^3.1.9-1",
-    "injection-js": "^2.2.2",
+    "injection-js": "^2.3.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.14",
     "reflect-metadata": "^0.1.13",
-    "uuid": "^3.3.3"
+    "uuid": "^3.4.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.6",
+    "@types/chai": "^4.2.7",
     "@types/lodash": "^4.14.149",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^12.12.14",
+    "@types/node": "^12.12.25",
     "@types/sinon": "^5.0.7",
     "chai": "3.5.0",
     "mocha": "^5.2.0",
@@ -53,9 +54,9 @@
     "sinon": "^6.3.5",
     "source-map-support": "^0.4.15",
     "std-mocks": "^1.0.1",
-    "ts-node": "^8.5.4",
+    "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.5"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"

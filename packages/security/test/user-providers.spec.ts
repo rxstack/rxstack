@@ -13,13 +13,12 @@ describe('Security:UserProvider', () => {
   let injector: Injector = null;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
   });
 
   after(async() =>  {
     injector.get(UserProviderManager).reset();
-    await app.stop();
   });
 
   it('should get provider by name', async () => {

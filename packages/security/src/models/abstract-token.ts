@@ -10,8 +10,6 @@ export abstract class AbstractToken implements TokenInterface {
 
   protected fullyAuthenticated = false;
 
-  protected payload = { };
-
   getUser(): UserInterface {
     return this.user;
   }
@@ -42,14 +40,6 @@ export abstract class AbstractToken implements TokenInterface {
 
   hasRole(role: string): boolean {
     return this.getRoles().includes(role);
-  }
-
-  setPayload(payload: Object): void {
-    this.payload = payload;
-  }
-
-  getPayload(): Object {
-    return this.payload;
   }
 
   abstract getUsername(): string;

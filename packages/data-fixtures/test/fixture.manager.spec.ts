@@ -13,7 +13,7 @@ describe('FixtureManager', () => {
   let manager: FixtureManager;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
     manager = injector.get(FixtureManager);
   });
@@ -48,7 +48,7 @@ describe('FixtureManager', () => {
   });
 
   it('should #addReference and #getReference in fixture service', async () => {
-    manager.get('fixture-1').addReference('new-ref-1', 'val1');
+    manager.get('fixture-1').setReference('new-ref-1', 'val1');
     manager.get('fixture-2').getReference('new-ref-1').should.be.equal('val1');
   });
 });

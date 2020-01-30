@@ -1,5 +1,17 @@
 import {Request, TokenInterface, UserInterface} from '@rxstack/core';
-import {NamedServiceInterface} from '@rxstack/service-registry';
+import {NamedServiceInterface, ServiceRegistry} from '@rxstack/service-registry';
+import {InjectionToken} from 'injection-js';
+import {AbstractRefreshTokenManager, SecretLoader} from './services';
+import {User} from './models';
+
+export const AUTH_PROVIDER_REGISTRY = new InjectionToken<AuthenticationProviderInterface[]>('AUTH_PROVIDER_REGISTRY');
+export const USER_PROVIDER_REGISTRY = new InjectionToken<UserProviderInterface[]>('USER_PROVIDER_REGISTRY');
+export const PASSWORD_ENCODER_REGISTRY = new InjectionToken<PasswordEncoderInterface[]>('PASSWORD_ENCODER_REGISTRY');
+export const TOKEN_EXTRACTOR_REGISTRY = new InjectionToken<TokenExtractorInterface[]>('TOKEN_EXTRACTOR_REGISTRY');
+export const TOKEN_ENCODER = new InjectionToken<TokenEncoderInterface>('TOKEN_ENCODER');
+export const TOKEN_MANAGER = new InjectionToken<TokenManagerInterface>('TOKEN_MANAGER');
+export const REFRESH_TOKEN_MANAGER = new InjectionToken<AbstractRefreshTokenManager>('REFRESH_TOKEN_MANAGER');
+export const SECRET_MANAGER = new InjectionToken<ServiceRegistry<SecretLoader>>('SECRET_MANAGER');
 
 export type UserFactoryFunc<T extends UserInterface> = (data: any) => T;
 
@@ -21,14 +33,18 @@ export interface EncoderAwareInterface {
   getEncoderName(): string;
 }
 
-export interface TokenManagerInterface {
+export interface TokenEncoderInterface {
   encode(payload: Object): Promise<string>;
   decode(token: string): Promise<Object>;
 }
 
+export interface TokenManagerInterface {
+  create(user: User): Promise<string>;
+  decode(token: TokenInterface): Promise<Object>;
+}
+
 export interface RefreshTokenInterface {
-  identifier: string;
-  username: string;
+  _id: string;
   payload: Object;
   expiresAt: number;
 }

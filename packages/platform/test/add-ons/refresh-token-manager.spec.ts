@@ -12,13 +12,9 @@ describe('Platform:Add-Ons:RefreshTokenManager', () => {
   let kernel: Kernel;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
     kernel = injector.get(Kernel);
-  });
-
-  after(async() =>  {
-    await app.stop();
   });
 
   it('should get refresh token', async () => {
@@ -32,8 +28,7 @@ describe('Platform:Add-Ons:RefreshTokenManager', () => {
 
   it('should persist new refresh token', async () => {
     const token = await injector.get(RefreshTokenManager).persist({
-      identifier: 'id-2',
-      username: 'admin-2',
+      _id: 'id-2',
       payload: {},
       expiresAt: 123
     });
@@ -42,8 +37,7 @@ describe('Platform:Add-Ons:RefreshTokenManager', () => {
 
   it('should persist with existing refresh token', async () => {
     const token = await injector.get(RefreshTokenManager).persist({
-      identifier: 'id-1',
-      username: 'admin-1',
+      _id: 'id-1',
       payload: {},
       expiresAt: 123
     });

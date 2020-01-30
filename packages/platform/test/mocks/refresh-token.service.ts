@@ -7,7 +7,7 @@ import {RefreshTokenInterface} from '@rxstack/security';
 export class RefreshTokenService implements ServiceInterface<RefreshTokenInterface> {
 
   static data: RefreshTokenInterface[] = [
-    { 'identifier': 'id-1', 'username': 'admin', 'payload': {}, expiresAt: new Date().getTime() + 1000000}
+    { '_id': 'id-1', 'payload': {}, expiresAt: new Date().getTime() + 1000000}
   ];
 
   options: ServiceOptions = { idField: 'identifier', defaultLimit: 25 };

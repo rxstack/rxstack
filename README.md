@@ -329,8 +329,14 @@ Add the following configurations to the environment file:
       }
     },
     ttl: 300,
-    secret: 'my_secret',
-    signature_algorithm: 'HS512'
+    default_issuer: 'default',
+    secret_configurations: [
+      {
+        issuer: 'default',
+        secret: 'my_secret',
+        signature_algorithm: 'HS512',
+      }
+    ]
   }
 ```
 
@@ -358,7 +364,7 @@ export const APP_OPTIONS: ApplicationOptions = {
 
 ### <a name="security-user-provider"></a> Registering a user provider
 The easiest (but most limited) way, is to configure `RxStack` to load hardcoded users directly from configurations. 
-This is called an "in memory" provider, but it's better to think of it as an "in configuration" provider:
+This is called an "in memory" provider, but it's better to think of it as an `in configuration` provider:
 
 - Let's create the `User` model:
 
@@ -445,7 +451,7 @@ export const APP_OPTIONS: ApplicationOptions = {
 
 [Learn more about user providers](https://github.com/rxstack/rxstack/tree/master/packages/security#user-providers)
 
-###<a name="security-controller"></a> Securing a controller
+### <a name="security-controller"></a> Securing a controller
 As we successfully set up and configured security module, let's create our first secured controller:
 
 ```typescript
@@ -538,7 +544,6 @@ Let's add another action to the `SecuredController`:
 // my-project/src/app/controllers/secured.controller.ts
 import {Injectable} from 'injection-js';
 import {Http, Request, Response, WebSocket} from '@rxstack/core';
-import {ForbiddenException} from '@rxstack/exceptions';
 
 @Injectable()
 export class SecuredController {

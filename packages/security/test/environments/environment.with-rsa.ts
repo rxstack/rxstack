@@ -26,10 +26,16 @@ export const environmentWitRsa: any = {
       }
     },
     local_authentication: true,
-    secret: {
-      public_key: __dirname +  '/../jwt-keys/public.pem',
-      private_key: __dirname + '/../jwt-keys/id_rsa',
-      passphrase: 'secret'
-    }
+    default_issuer: 'default',
+    secret_configurations: [
+      {
+        issuer: 'default',
+        secret: {
+          public_key: __dirname +  '/../jwt-keys/public.pem',
+          private_key: __dirname + '/../jwt-keys/id_rsa',
+          passphrase: 'secret'
+        }
+      }
+    ]
   }
 };

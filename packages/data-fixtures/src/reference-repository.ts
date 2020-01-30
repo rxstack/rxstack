@@ -10,13 +10,6 @@ export class ReferenceRepository {
     this.references.set(name, value);
   }
 
-  addReference(name: string, value: any): void {
-    if (this.hasReference(name)) {
-      throw new Exception(`Reference with name ${name} already exists.`);
-    }
-    this.setReference(name, value);
-  }
-
   getReference(name: string): any {
     if (!this.hasReference(name)) {
       throw new Exception(`Reference with name ${name} does not exist.`);

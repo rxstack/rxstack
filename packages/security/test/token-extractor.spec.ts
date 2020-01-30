@@ -11,12 +11,8 @@ describe('Security:TokenExtractors', () => {
   let injector: Injector;
 
   before(async() =>  {
-    await app.start();
+    await app.run();
     injector = app.getInjector();
-  });
-
-  after(async() =>  {
-    await app.stop();
   });
 
   it('should get extractor by name', async () => {

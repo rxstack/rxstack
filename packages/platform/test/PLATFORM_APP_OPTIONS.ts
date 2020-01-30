@@ -16,7 +16,7 @@ import {UserService} from './mocks/user.service';
 import {RefreshTokenInterface, User} from '@rxstack/security';
 import {RefreshTokenManager} from '../src/add-ons';
 import {RefreshTokenService} from './mocks/refresh-token.service';
-import {MockTokenManager} from './mocks/mock.token-manager';
+import {MockTokenEncoder} from './mocks/mock.token-encoder';
 
 export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   imports: [
@@ -25,7 +25,7 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
   providers: [
     { provide: TaskService, useClass: TaskService },
     { provide: UserService, useClass: UserService },
-    { provide: MockTokenManager, useClass: MockTokenManager },
+    { provide: MockTokenEncoder, useClass: MockTokenEncoder },
     { provide: RefreshTokenService, useClass: RefreshTokenService },
     { provide: CreateTaskOperation, useClass: CreateTaskOperation },
     { provide: BulkCreateTaskOperation, useClass: BulkCreateTaskOperation },
@@ -40,13 +40,13 @@ export const PLATFORM_APP_OPTIONS: ApplicationOptions = {
     {
       provide: UserProvider,
       useFactory: (userService: UserService) => {
-        return new UserProvider<User>(userService);
+        return new UserProvider<User>(userService, 'username');
       },
       deps: [UserService]
     },
     {
       provide: RefreshTokenManager,
-      useFactory: (refreshTokenService: RefreshTokenService, tokenManager: MockTokenManager) => {
+      useFactory: (refreshTokenService: RefreshTokenService, tokenManager: MockTokenEncoder) => {
         return new RefreshTokenManager<RefreshTokenInterface>(refreshTokenService, tokenManager, 100);
       },
       deps: [RefreshTokenService, RefreshTokenService]

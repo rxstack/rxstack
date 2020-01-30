@@ -41,29 +41,41 @@ export class Rsa {
   constructor(obj: any) {
     obj = obj || {};
     this.public_key = obj.public_key;
-    this.private_key = obj.private_key || null;
-    this.passphrase = obj.passphrase || null;
+    this.private_key = obj.private_key || undefined;
+    this.passphrase = obj.passphrase || undefined;
+  }
+}
+
+export class SecretConfiguration {
+  issuer: string;
+  signature_algorithm: string;
+  secret: Rsa | string;
+
+  constructor(obj?: any) {
+    obj = obj || {};
+    this.signature_algorithm = obj.signature_algorithm || 'RS512';
+    this.issuer = obj.issuer;
+    this.secret = (typeof obj.secret === 'string') ? obj.secret : new Rsa(obj.secret);
   }
 }
 
 export class SecurityConfiguration {
   token_extractors: TokenExtractorsOptions;
+  default_issuer: string;
+  secret_configurations: SecretConfiguration[];
   local_authentication?: boolean;
   user_identity_field?: string;
-  secret: Rsa | string;
-  signature_algorithm?: string;
-  issuer?: string;
   ttl?: number;
   refresh_token_ttl?: number;
   constructor(obj?: any) {
     obj = obj || {};
     this.token_extractors = new TokenExtractorsOptions(obj.token_extractors);
+    this.default_issuer = obj.default_issuer;
+    this.secret_configurations =
+      obj.secret_configurations.map((configuration: SecretConfiguration) => new SecretConfiguration(configuration));
     this.local_authentication = obj.local_authentication || false;
     this.user_identity_field = obj.user_identity_field || 'username';
     this.ttl = obj.ttl ? obj.ttl : 300;
     this.refresh_token_ttl = obj.refresh_token_ttl ? obj.refresh_token_ttl : (60 * 60 * 24);
-    this.secret = (typeof obj.secret === 'string') ? obj.secret : new Rsa(obj.secret);
-    this.signature_algorithm = obj.signature_algorithm || 'RS512';
-    this.issuer = obj.issuer ? obj.issuer : 'rxstack';
   }
 }

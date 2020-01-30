@@ -25,6 +25,9 @@ export class Application {
   }
 
   async run(): Promise<Injector> {
+    if (this.injector) {
+      return this.injector;
+    }
     this.providers = [];
     this.options.imports.forEach((module) => this.resolveModule(module));
     this.providers.push(...this.options.providers);
@@ -46,7 +49,7 @@ export class Application {
   }
 
   async stop(): Promise<this> {
-    this.injector.get(Kernel).reset();
+    // this.injector.get(Kernel).reset(); todo - should be removed???
     const manager = this.injector.get(ServerManager);
     try {
       await manager.stop();

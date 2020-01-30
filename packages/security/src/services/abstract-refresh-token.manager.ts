@@ -1,23 +1,20 @@
-import {RefreshTokenInterface, TokenManagerInterface} from '../interfaces';
+import {RefreshTokenInterface, TokenEncoderInterface} from '../interfaces';
 import {UnauthorizedException} from '@rxstack/exceptions';
-import {TokenInterface} from '@rxstack/core';
 
 const md5 = require('crypto-js/md5');
 const uuid = require('uuid/v4');
 
 export abstract class AbstractRefreshTokenManager {
 
-  protected constructor(protected tokenManager: TokenManagerInterface, protected ttl: number) {}
+  protected constructor(protected tokenEncoder: TokenEncoderInterface, protected ttl: number) {}
 
-  async createFromAuthToken(authToken: TokenInterface): Promise<RefreshTokenInterface> {
+  async create(payload: Object): Promise<RefreshTokenInterface> {
     const data: RefreshTokenInterface = {
-      identifier: this.generate(),
-      username: authToken.getUsername(),
-      payload: authToken.getPayload(),
+      _id: md5(uuid()).toString(),
+      payload: Object.assign({}, payload, {refreshed: true}),
       expiresAt: new Date().getTime() + (this.ttl * 1000),
     };
-    await this.persist(data);
-    return data;
+    return await this.persist(data);
   }
 
   async disable(refreshToken: RefreshTokenInterface): Promise<void> {
@@ -29,9 +26,7 @@ export abstract class AbstractRefreshTokenManager {
     if (refreshToken.expiresAt < new Date().getTime()) {
       throw new UnauthorizedException();
     }
-    refreshToken.payload['refreshedAt'] = new Date().getTime();
-    await this.persist(refreshToken);
-    return this.tokenManager.encode(refreshToken.payload);
+    return await this.tokenEncoder.encode(refreshToken.payload);
   }
 
   abstract persist(data: RefreshTokenInterface): Promise<RefreshTokenInterface>;
@@ -39,8 +34,4 @@ export abstract class AbstractRefreshTokenManager {
   abstract get(identifier: string): Promise<RefreshTokenInterface>;
 
   abstract clear(): Promise<void>;
-
-  private generate(): string {
-    return md5(uuid()).toString();
-  }
 }

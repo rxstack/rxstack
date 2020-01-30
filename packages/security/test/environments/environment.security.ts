@@ -27,7 +27,26 @@ export const environmentSecurity: any = {
     },
     local_authentication: true,
     ttl: 1,
-    secret: 'my_secret',
-    signature_algorithm: 'HS512'
+    default_issuer: 'default',
+    secret_configurations: [
+      {
+        issuer: 'default',
+        secret: 'my_secret',
+        signature_algorithm: 'HS512',
+      },
+      {
+        issuer: 'invalid',
+        secret: 'my_secret',
+        signature_algorithm: 'invalid',
+      },
+      {
+        issuer: 'secret_with_rsa',
+        secret: {
+          public_key: __dirname +  '/../jwt-keys/public.pem',
+          private_key: __dirname + '/../jwt-keys/id_rsa',
+          passphrase: 'secret'
+        }
+      }
+    ]
   }
 };

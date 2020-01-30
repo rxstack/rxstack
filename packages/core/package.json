@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/core",
-  "version": "0.5.2",
+  "version": "0.6.1",
   "description": "RxStackCore",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
@@ -33,7 +33,7 @@
     "winston": "^3.2.1"
   },
   "dependencies": {
-    "injection-js": "^2.2.2",
+    "injection-js": "^2.3.0",
     "lodash": "^4.17.15",
     "reflect-metadata": "^0.1.13",
     "table": "^4.0.3",
@@ -41,10 +41,10 @@
     "yargs": "^11.1.1"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.6",
+    "@types/chai": "^4.2.7",
     "@types/lodash": "^4.14.149",
     "@types/mocha": "^2.2.48",
-    "@types/node": "^12.12.14",
+    "@types/node": "^12.12.25",
     "@types/sinon": "^5.0.7",
     "chai": "3.5.0",
     "mocha": "^5.2.0",
@@ -53,9 +53,9 @@
     "sinon": "^6.3.5",
     "source-map-support": "^0.4.15",
     "std-mocks": "^1.0.1",
-    "ts-node": "^8.5.4",
+    "ts-node": "^8.6.2",
     "tslint": "^5.20.1",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.5"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
