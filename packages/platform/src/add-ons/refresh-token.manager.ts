@@ -27,7 +27,7 @@ export class RefreshTokenManager<T extends RefreshTokenInterface> extends Abstra
   }
 
   async get(identifier: string): Promise<T> {
-    return await this.service.find({'_id': {'$eq': identifier}});
+    return await this.service.find(identifier);
   }
 
   async clear(): Promise<void> {
