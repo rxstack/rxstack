@@ -24,4 +24,4 @@ parseRange('bytes=0-1023', 10000);
 
 ## License
 
-Licensed under the [MIT license](../../LICENSE).
+Licensed under the [MIT license](LICENSE).

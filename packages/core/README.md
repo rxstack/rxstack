@@ -8,7 +8,7 @@
 npm install @rxstack/core --save
 
 // peerDependencies
-npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/exceptions@^0.5 winston@^3.2.1
+npm install @rxstack/async-event-dispatcher@^0.6 @rxstack/exceptions@^0.6 winston@^3.3.3
 ```
 
 ## Documentation
@@ -20,7 +20,7 @@ npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/exceptions@^0.5 winsto
 
 ## License
 
-Licensed under the [MIT license](../../LICENSE).
+Licensed under the [MIT license](LICENSE).
 
 
 

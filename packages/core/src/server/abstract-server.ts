@@ -130,5 +130,5 @@ export abstract class AbstractServer {
    * @param {RouteDefinition[]} routeDefinitions
    * @returns {Promise<void>}
    */
-  protected abstract async configure(routeDefinitions: TransportDefinition[]): Promise<void>;
+  protected abstract configure(routeDefinitions: TransportDefinition[]): Promise<void>;
 }

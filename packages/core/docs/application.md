@@ -21,7 +21,7 @@ import {ApplicationOptions} from '@rxstack/core'
 import {ExpressModule} from '@rxstack/express-server';
 
 export const APP_OPTIONS: ApplicationOptions = {
-  imports: [ ExpressModule.configure({'port': 3200})],
+  imports: [ExpressModule.configure({'port': 3200})],
   providers: [
     { provide: MyService, useClass: MyService }
   ],
@@ -53,6 +53,8 @@ app.stop().then((app: Application) => {
   // do something
 });
 ```
+
+> Use `process.env.rxstack_mode` to determine in which mode (server or cli) `Application` is run.
 
 > Note: if you call again `Application.run()` it will not instantiate another instance of `Injector`!
 
