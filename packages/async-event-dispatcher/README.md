@@ -163,4 +163,4 @@ This approach is useful if your application is using a dependency injector.
 
 ## License
 
-Licensed under the [MIT license](../../LICENSE).
+Licensed under the [MIT license](LICENSE).
