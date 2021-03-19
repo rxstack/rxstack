@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/core",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "RxStackCore",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
@@ -33,13 +33,10 @@
     "winston": "^3.3.3"
   },
   "dependencies": {
-    "@rxstack/async-event-dispatcher": "^0.6.0",
-    "@rxstack/exceptions": "^0.6.0",
     "injection-js": "^2.4.0",
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.1.13",
     "table": "^6.0.7",
-    "winston": "^3.3.3",
     "yargonaut": "^1.1.4",
     "yargs": "^16.2.0"
   },
