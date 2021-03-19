@@ -8,7 +8,7 @@
 npm install @rxstack/socketio-server --save
 
 // peerDependencies
-npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/core@^0.6 @rxstack/exceptions@^0.5 winston@^3.2.1
+npm install --no-save @rxstack/async-event-dispatcher@^0.6 @rxstack/core@^0.7 @rxstack/exceptions@^0.6 winston@^3.3.3
 ```
 
 ## Documentation
@@ -133,4 +133,4 @@ export class ConfigurationListener {
 
 ## License
 
-Licensed under the [MIT license](../../LICENSE).
+Licensed under the [MIT license](LICENSE).

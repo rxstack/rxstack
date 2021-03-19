@@ -2,7 +2,7 @@ import {RefreshTokenInterface, TokenEncoderInterface} from '../interfaces';
 import {UnauthorizedException} from '@rxstack/exceptions';
 
 const md5 = require('crypto-js/md5');
-const uuid = require('uuid/v4');
+const { v4: uuidv4 } = require('uuid');
 
 export abstract class AbstractRefreshTokenManager {
 
@@ -10,7 +10,7 @@ export abstract class AbstractRefreshTokenManager {
 
   async create(payload: Object): Promise<RefreshTokenInterface> {
     const data: RefreshTokenInterface = {
-      _id: md5(uuid()).toString(),
+      _id: md5(uuidv4()).toString(),
       payload: Object.assign({}, payload, {refreshed: true}),
       expiresAt: new Date().getTime() + (this.ttl * 1000),
     };

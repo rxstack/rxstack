@@ -4,7 +4,6 @@ import {
   AbstractServer, ServerConfigurationEvent, ServerEvents, ConnectionEvent, Transport
 } from '@rxstack/core';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
-import * as socketIO from 'socket.io';
 import {Exception, exceptionToObject} from '@rxstack/exceptions';
 import {Injectable} from 'injection-js';
 import {SocketioServerConfiguration} from './socketio-server-configuration';
@@ -12,6 +11,7 @@ import {EventEmitter} from 'events';
 import {Stream} from 'stream';
 
 const winston = require('winston');
+const io = require('socket.io');
 
 @Injectable()
 export class SocketioServer extends AbstractServer {
@@ -32,7 +32,7 @@ export class SocketioServer extends AbstractServer {
     this.host = configuration.host;
     this.port = configuration.port;
     this.httpServer = http.createServer();
-    this.engine = socketIO(this.httpServer);
+    this.engine = io(this.httpServer);
     this.engine.sockets.setMaxListeners(configuration.maxListeners);
 
     await dispatcher.dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this));

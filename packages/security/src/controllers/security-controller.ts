@@ -89,7 +89,7 @@ export class SecurityController {
 
   private setConnectionTimeout(connection: EventEmitter): void {
     this.clearConnectionTimeout(connection);
-    const token = connection['token'];
+    const token = connection['token'] as Token;
     if (token) {
       connection['tokenTimeout'] = setTimeout(() => {
         token.setFullyAuthenticated(false);
