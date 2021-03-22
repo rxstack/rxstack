@@ -952,9 +952,8 @@ and [socket.io-client](https://github.com/socketio/socket.io-client) :
 ```typescript
 import {Injector} from 'injection-js';
 import {ServerManager} from '@rxstack/core';
-import {IncomingMessage} from 'http';
 
-const rp = require('request-promise');
+const fetch = require('node-fetch');
 const io = require('socket.io-client');
 
 describe('Functional:Controllers:HelloController', () => {
@@ -985,11 +984,12 @@ describe('Functional:Controllers:HelloController', () => {
       json: false
     };
     
-    const response: IncomingMessage = await rp(options);
+    const response: any = await fetch( httpHost + '/hello');
     const headers = response.headers;
-    headers['x-powered-by'].should.be.equal('Express');
-    response['statusCode'].should.be.equal(200);
-    response['content'].should.be.equal('hello');
+    const content = await response.text();
+    headers.get('x-powered-by').should.be.equal('Express');
+    response.status.should.be.equal(200);
+    content.should.be.equal('hello');
     
   });
 

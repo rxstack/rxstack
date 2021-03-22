@@ -36,12 +36,14 @@ export class Application {
   }
 
   async cli(): Promise<this> {
+    process.env.rxstack_mode = 'cli';
     const injector = await this.run();
     injector.get(CommandManager).execute();
     return this;
   }
 
   async start(): Promise<this> {
+    process.env.rxstack_mode = 'server';
     const injector = await this.run();
     const manager = injector.get(ServerManager);
     await manager.start();

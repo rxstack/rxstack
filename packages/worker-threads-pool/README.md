@@ -8,7 +8,7 @@
 npm install @rxstack/worker-threads-pool --save
 
 // peerDependencies
-npm install @rxstack/core@^0.6 @rxstack/exceptions@^0.5 winston@^3.2.1
+npm install --no-save @rxstack/core@^0.7 @rxstack/exceptions@^0.6 winston@^3.3.3
 ```
 
 ## Documentation
@@ -136,4 +136,4 @@ clears the queue and terminates all running workers
 
 ## License
 
-Licensed under the [MIT license](../../LICENSE).
+Licensed under the [MIT license](LICENSE).

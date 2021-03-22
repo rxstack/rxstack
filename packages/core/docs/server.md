@@ -123,7 +123,7 @@ import {SERVER_REGISTRY} from '@rxstack/core';
 
 // ...
 providers: [
-  { provide: SERVER_REGISTRY, useClass: NyServer, multi: true },
+  { provide: SERVER_REGISTRY, useClass: MyServer, multi: true },
 ],
 servers: ['my-server']
 ```

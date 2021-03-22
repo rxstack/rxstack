@@ -8,7 +8,7 @@
 npm install @rxstack/service-registry --save
 
 // peerDependencies
-npm install @rxstack/exceptions@^0.5
+npm install @rxstack/exceptions@^0.6
 ```
 
 ## Documentation
@@ -64,4 +64,4 @@ registry.has('service-1'); //should return false
 
 ## License
 
-Licensed under the [MIT license](../../LICENSE).
+Licensed under the [MIT license](LICENSE).

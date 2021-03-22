@@ -9,7 +9,7 @@ but also allows you to implement your own authentication strategies.
 npm install @rxstack/security --save
 
 // peerDependencies
-npm install @rxstack/async-event-dispatcher@^0.5 @rxstack/core@^0.6 @rxstack/exceptions@^0.5 @rxstack/service-registry@^0.5 winston@^3.2.1
+npm install --no-save @rxstack/async-event-dispatcher@^0.6 @rxstack/core@^0.7 @rxstack/exceptions@^0.6 @rxstack/service-registry@^0.6 winston@^3.3.3
 ```
 
 ## Documentation
@@ -970,4 +970,4 @@ providers: [
 
 ## License
 
-Licensed under the [MIT license](../../LICENSE).
+Licensed under the [MIT license](LICENSE).

@@ -193,4 +193,4 @@ export const customQueryFilter: QueryFilterSchema = {
 
 ## License
 
-Licensed under the [MIT license](../../LICENSE).
+Licensed under the [MIT license](LICENSE).

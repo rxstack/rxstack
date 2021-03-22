@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/worker-threads-pool",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "RxStack Worker Threads Pool Module",
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -24,30 +24,32 @@
     "compile": "npm run clean && tsc -p .",
     "clean": "rm -rf dist",
     "lint": "tslint --project tsconfig.json --format stylish",
-    "mocha": "mocha --opts mocha.opts",
+    "mocha": "mocha --full-trace --bail --exit --timeout 10000 test/**/*.spec.ts",
     "coverage": "nyc npm run mocha",
     "test": "npm run lint && npm run coverage"
   },
   "peerDependencies": {
-    "@rxstack/core": "^0.6",
-    "@rxstack/service-registry": "^0.5"
+    "@rxstack/core": "^0.7",
+    "@rxstack/service-registry": "^0.6"
   },
   "dependencies": {
-    "injection-js": "^2.3.0",
+    "injection-js": "^2.4.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.7",
-    "@types/mocha": "^2.2.48",
-    "@types/node": "^12.12.25",
-    "chai": "3.5.0",
-    "mocha": "^5.2.0",
-    "nyc": "^14.1.1",
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "^8.2.1",
+    "@types/node": "^14.14.35",
+    "@types/sinon": "^9.0.11",
+    "chai": "^4.3.4",
+    "mocha": "^8.3.2",
+    "nyc": "^15.1.0",
     "should": "^13.2.3",
-    "source-map-support": "^0.4.15",
-    "ts-node": "^8.6.2",
-    "tslint": "^5.20.1",
-    "typescript": "^3.7.5"
+    "sinon": "^9.2.4",
+    "source-map-support": "^0.5.19",
+    "ts-node": "^9.1.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.2.3"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"
@@ -56,7 +58,7 @@
   "files": [
     "dist",
     "README.md",
-    "./../../LICENSE"
+    "LICENSE"
   ],
   "nyc": {
     "extension": [
@@ -69,5 +71,12 @@
     ],
     "sourceMap": true,
     "instrument": true
+  },
+  "mocha": {
+    "require": [
+      "ts-node/register",
+      "source-map-support/register",
+      "should"
+    ]
   }
 }
