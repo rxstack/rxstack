@@ -16,37 +16,39 @@
     "install": "lerna bootstrap",
     "clean": "lerna clean",
     "lint": "tslint --project tsconfig.json --format stylish",
-    "mocha": "mocha --opts mocha.opts",
+    "mocha": "mocha --full-trace --bail --exit --timeout 100000 --exclude **/node_modules/** packages/**/test/**/**/*.spec.ts",
     "coverage": "nyc npm run mocha",
     "test": "npm run lint && npm run coverage"
   },
   "devDependencies": {
-    "@rxstack/async-event-dispatcher": "^0.5",
-    "@rxstack/configuration": "^0.5",
-    "@rxstack/core": "^0.6",
-    "@rxstack/data-fixtures": "^0.6",
-    "@rxstack/exceptions": "^0.5",
-    "@rxstack/express-server": "^0.6",
-    "@rxstack/platform": "^0.6",
-    "@rxstack/query-filter": "^0.5",
-    "@rxstack/security": "^0.6",
-    "@rxstack/service-registry": "^0.5",
-    "@rxstack/socketio-server": "^0.6",
-    "@rxstack/utils": "^0.5",
-    "@rxstack/worker-threads-pool": "^0.6",
-    "@types/chai": "^4.2.7",
-    "@types/mocha": "^2.2.48",
-    "@types/node": "^12.12.25",
-    "chai": "3.5.0",
-    "lerna": "^3.20.2",
-    "mocha": "^5.2.0",
-    "nyc": "^14.1.1",
+    "@rxstack/async-event-dispatcher": "^0.6",
+    "@rxstack/configuration": "^0.6",
+    "@rxstack/core": "^0.7",
+    "@rxstack/data-fixtures": "^0.7",
+    "@rxstack/exceptions": "^0.6",
+    "@rxstack/express-server": "^0.7",
+    "@rxstack/platform": "^0.7",
+    "@rxstack/query-filter": "^0.6",
+    "@rxstack/security": "^0.7",
+    "@rxstack/service-registry": "^0.6",
+    "@rxstack/socketio-server": "^0.7",
+    "@rxstack/utils": "^0.6",
+    "@rxstack/worker-threads-pool": "^0.7",
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "^8.2.1",
+    "@types/node": "^14.14.35",
+    "@types/sinon": "^9.0.11",
+    "chai": "^4.3.4",
+    "lerna": "^4.0.0",
+    "mocha": "^8.3.2",
+    "nyc": "^15.1.0",
     "should": "^13.2.3",
-    "source-map-support": "^0.4.15",
-    "ts-node": "^8.6.2",
-    "tslint": "^5.20.1",
-    "typescript": "^3.7.5",
-    "winston": "^3.2"
+    "sinon": "^9.2.4",
+    "source-map-support": "^0.5.19",
+    "ts-node": "^9.1.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.2.3",
+    "winston": "^3.3.3"
   },
   "nyc": {
     "extension": [
@@ -59,5 +61,12 @@
     ],
     "sourceMap": true,
     "instrument": true
+  },
+  "mocha": {
+    "require": [
+      "ts-node/register",
+      "source-map-support/register",
+      "should"
+    ]
   }
 }
