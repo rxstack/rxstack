@@ -8,7 +8,7 @@ export abstract class AbstractRefreshTokenManager {
 
   protected constructor(protected tokenEncoder: TokenEncoderInterface, protected ttl: number) {}
 
-  async create(payload: Object): Promise<RefreshTokenInterface> {
+  async create(payload: Record<string, any>): Promise<RefreshTokenInterface> {
     const data: RefreshTokenInterface = {
       _id: md5(uuidv4()).toString(),
       payload: Object.assign({}, payload, {refreshed: true}),

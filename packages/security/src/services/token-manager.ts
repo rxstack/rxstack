@@ -27,7 +27,7 @@ export class TokenManager implements TokenManagerInterface {
     return tokenEncodedEvent.rawToken;
   }
 
-  async decode(token: TokenInterface): Promise<Object> {
+  async decode(token: TokenInterface): Promise<Record<string, any>> {
     const payload = await this.tokenEncoder.decode(token.getCredentials());
     const decodedEvent = new TokenDecodedEvent(payload);
     await this.eventDispatcher.dispatch(TokenManagerEvents.TOKEN_DECODED, decodedEvent);

@@ -10,5 +10,7 @@ export class AnonymousToken extends AbstractToken {
     return null;
   }
 
-  eraseCredentials(): void { }
+  eraseCredentials(): void {
+    // do nothing
+  }
 }

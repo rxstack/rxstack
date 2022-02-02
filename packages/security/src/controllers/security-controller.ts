@@ -28,7 +28,7 @@ export class SecurityController {
     const token = new UsernameAndPasswordToken(body.username, body.password);
     request.token = await this.authManager.authenticate(token);
     await this.dispatcher.dispatch(AuthenticationEvents.LOGIN_SUCCESS, new AuthenticationRequestEvent(request));
-    let payload: Object;
+    let payload: Record<string, any>;
     this.dispatcher
       .addListener(TokenManagerEvents.TOKEN_CREATED, async (event: TokenPayloadEvent): Promise<void> => {
         payload = event.payload;
