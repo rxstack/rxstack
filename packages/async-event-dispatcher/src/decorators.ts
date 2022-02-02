@@ -10,8 +10,8 @@ export const EVENT_LISTENER_KEY = '__RXSTACK_EVENT_LISTENER__';
  * @returns {MethodDecorator}
  * @constructor
  */
-export function Observe<T>(eventName: string, priority = 0): MethodDecorator {
-  return function (target: Object, propertyKey: string): void {
+export function Observe(eventName: string, priority = 0): MethodDecorator {
+  return function (target: Record<string, unknown>, propertyKey: string): void {
 
     if (!Reflect.hasMetadata(EVENT_LISTENER_KEY, target.constructor)) {
       Reflect.defineMetadata(EVENT_LISTENER_KEY, {
@@ -26,7 +26,6 @@ export function Observe<T>(eventName: string, priority = 0): MethodDecorator {
       propertyKey: propertyKey,
       priority: priority
     };
-
     metadata.observers.push(observerMetadata);
   };
 }

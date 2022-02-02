@@ -5,6 +5,6 @@ export interface ObserverMetadata {
 }
 
 export interface EventListenerMetadata {
-  target: Function;
+  target: () => void;
   observers: ObserverMetadata[];
 }

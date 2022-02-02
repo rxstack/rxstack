@@ -5,7 +5,7 @@ export interface SortInterface {
 }
 
 export interface QueryInterface {
-  where: Object;
+  where: Record<string, any>;
   limit: number;
   skip: number;
   sort?: SortInterface;

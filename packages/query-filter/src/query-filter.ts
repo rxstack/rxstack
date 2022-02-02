@@ -2,13 +2,13 @@ import {FilterType, QueryFilterSchema, QueryInterface, SortInterface, TransformC
 import * as _ from 'lodash';
 
 class QueryFilter {
-  createQuery(schema: QueryFilterSchema, rawParams: Object): QueryInterface {
+  createQuery(schema: QueryFilterSchema, rawParams: Record<string, any>): QueryInterface {
     const normalizedParams = this.convertToEquality(rawParams);
-    let where = this.create(schema, normalizedParams);
+    const where = this.create(schema, normalizedParams);
 
     if (schema.allowOrOperator && rawParams['$or']) {
-      const orQuery: Object[] = [];
-      rawParams['$or'].forEach((orParams: Object) => {
+      const orQuery: Record<string, any>[] = [];
+      rawParams['$or'].forEach((orParams: Record<string, unknown>) => {
         const orResult = this.create(schema, orParams);
         if (Object.keys(orResult).length > 0) {
           orQuery.push(orResult);
@@ -26,13 +26,13 @@ class QueryFilter {
     };
   }
 
-  getLimit(rawParams: Object, defaultValue: number): number {
+  getLimit(rawParams: Record<string, any>, defaultValue: number): number {
     const limit = parseInt(rawParams['$limit'], 10);
     const lower = !Number.isNaN(limit) && limit > 0 ? limit : defaultValue;
     return Math.min(lower, defaultValue);
   }
 
-  getSkip(rawParams: Object): number {
+  getSkip(rawParams: Record<string, any>): number {
     const skip = rawParams['$skip'];
     if (typeof skip !== 'undefined') {
       const result = Math.abs(parseInt(skip, 10));
@@ -41,7 +41,7 @@ class QueryFilter {
     return 0;
   }
 
-  getSort(schema: QueryFilterSchema, rawParams: Object): SortInterface {
+  getSort(schema: QueryFilterSchema, rawParams: Record<string, any>): SortInterface {
     let sort = rawParams['$sort'];
     const result = { };
     if (typeof sort !== 'object') {
@@ -49,7 +49,7 @@ class QueryFilter {
     }
     sort = _.pick(sort, _.keys(schema.properties));
     _.forEach(sort, (value: any, key: any) => {
-      let filterSchema = schema.properties[key];
+      const filterSchema = schema.properties[key];
       if (filterSchema.sort) {
         const parsed = parseInt(value, 10);
         if (parsed === 1 || parsed === -1) {
@@ -62,7 +62,7 @@ class QueryFilter {
     return Object.keys(result).length > 0 ? result : null;
   }
 
-  protected create(schema: QueryFilterSchema, rawParams: Object): Object {
+  protected create(schema: QueryFilterSchema, rawParams: Record<string, any>): Record<string, any> {
     const query = { };
     const params = _.pick(rawParams, _.keys(schema.properties));
     _.forEach(params, (value: any, key: any) => {
@@ -95,7 +95,7 @@ class QueryFilter {
     return operator;
   }
 
-  protected convertToEquality(rawQuery: Object): Object {
+  protected convertToEquality(rawQuery: Record<string, any>): Record<string, any> {
     const normalized = { };
     _.forEach(rawQuery, (value: any, key: any): void => {
       if (typeof value !== 'object') {
