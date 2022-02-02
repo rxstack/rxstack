@@ -88,11 +88,11 @@ export class ExpressServer extends AbstractServer {
   }
 
   private errorHandler(): ErrorRequestHandler {
-    return (err: any, req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
+    return (err: any, req: ExpressRequest, res: ExpressResponse): void => {
       const status = err.statusCode ? err.statusCode : 500;
       const transformedException = exceptionToObject(err, {status: status});
       if (status >= 500) {
-        res.getHeaderNames().forEach((name) => res.removeHeader(name));
+        res.getHeaderNames().forEach((name: string) => res.removeHeader(name));
         winston.error(err.message, transformedException);
       } else {
         winston.debug(err.message, transformedException);
