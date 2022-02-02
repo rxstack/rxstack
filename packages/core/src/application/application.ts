@@ -12,7 +12,7 @@ import {
   ProviderDefinition
 } from './interfaces';
 import {ServerManager} from '../server';
-import {CORE_PROVIDERS} from './CORE_PROVDERS';
+import {CORE_PROVIDERS} from './CORE_PROVIDERS';
 import {ApplicationOptions} from './application-options';
 import {CommandManager} from '../console';
 
@@ -94,15 +94,15 @@ export class Application {
     return moduleMetadata;
   }
 
-  private resolveInjectorAwareService(service: Object, injector: Injector): void {
+  private resolveInjectorAwareService(service: Record<string, any>, injector: Injector): void {
     if (Array.isArray(service)) {
-      service.forEach((s: Object) => this.resolveInjectorAwareService(s, injector));
+      service.forEach((s: Record<string, any>) => this.resolveInjectorAwareService(s, injector));
     } else if (typeof service['setInjector'] === 'function') {
       service['setInjector'](injector);
     }
   }
 
-  private resolveEventListeners(service: Object, dispatcher: AsyncEventDispatcher): void {
+  private resolveEventListeners(service: Record<string, any>, dispatcher: AsyncEventDispatcher): void {
     if (Reflect.hasMetadata(EVENT_LISTENER_KEY, service.constructor)) {
       const metadata: EventListenerMetadata = Reflect.getMetadata(EVENT_LISTENER_KEY, service.constructor);
       metadata.observers.forEach((observer: ObserverMetadata) => {

@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {AbstractServer} from './abstract-server';
-import {HttpDefinition, Transport} from '../kernel';
+import {Transport} from '../kernel';
 import {ServerEvents} from './server-events';
 import {ServerConfigurationEvent} from './server-configuration.event';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
@@ -17,7 +17,7 @@ export class NoopHttpServer extends AbstractServer {
     return 'HTTP';
   }
 
-  protected async configure(routeDefinitions: HttpDefinition[]): Promise<void> {
+  protected async configure(): Promise<void> {
     this.httpServer = http.createServer();
     this.engine = 'http engine';
     this.host = 'localhost';

@@ -10,7 +10,7 @@ export class DebugHttpMetadataCommand extends AbstractCommand {
   command = 'debug:http-metadata';
   describe = 'Prints http metadata for an application.';
 
-  async handler(argv: any): Promise<void> {
+  async handler(): Promise<void> {
     const data = [
       ['name', 'method', 'path', 'controller', 'action']
     ];

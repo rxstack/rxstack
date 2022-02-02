@@ -33,7 +33,7 @@ export class Kernel implements InjectorAwareInterface {
 
   private registerDefinition(metadata: HttpMetadata|WebSocketMetadata): void {
     // controller instance
-    const controller: Object = this.injector.get(metadata.target, false);
+    const controller: Record<string, any> = this.injector.get(metadata.target, false);
     if (!controller) {
       return;
     }
@@ -44,7 +44,7 @@ export class Kernel implements InjectorAwareInterface {
     }
   }
 
-  private pushHttpDefinition(metadata: HttpMetadata, controller: Object): void {
+  private pushHttpDefinition(metadata: HttpMetadata, controller: Record<string, any>): void {
     const path = `${metadata.path}`.replace(new RegExp('/*$'), '');
     this.httpDefinitions.push({
       path: path,
@@ -60,7 +60,7 @@ export class Kernel implements InjectorAwareInterface {
     });
   }
 
-  private pushWebSocketDefinition(metadata: WebSocketMetadata, controller: Object): void {
+  private pushWebSocketDefinition(metadata: WebSocketMetadata, controller: Record<string, any>): void {
     this.webSocketDefinitions.push({
       name: metadata.name,
       handler: async (request: Request): Promise<Response> => {
@@ -71,7 +71,7 @@ export class Kernel implements InjectorAwareInterface {
     });
   }
 
-  private async process(request: Request, controller: Object, propertyKey: string): Promise<Response> {
+  private async process(request: Request, controller: Record<string, any>, propertyKey: string): Promise<Response> {
     let response: Response;
     try {
       const requestEvent = new RequestEvent(request);
