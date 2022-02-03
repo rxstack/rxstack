@@ -10,7 +10,7 @@ import * as http from 'http';
 export class NoopHttpServer extends AbstractServer {
 
   getName(): string {
-    return 'noop-http';
+    return 'http';
   }
 
   getTransport(): Transport {

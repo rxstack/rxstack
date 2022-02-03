@@ -10,7 +10,7 @@ import * as http from 'http';
 export class NoopWebsocketServer extends AbstractServer {
 
   getName(): string {
-    return 'noop-websocket';
+    return 'websocket';
   }
 
   getTransport(): Transport {
