@@ -6,9 +6,6 @@
 
 ```
 npm install @rxstack/worker-threads-pool --save
-
-// peerDependencies
-npm install --no-save @rxstack/core@^0.7 @rxstack/exceptions@^0.6 winston@^3.3.3
 ```
 
 ## Documentation

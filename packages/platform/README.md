@@ -63,12 +63,6 @@ After you cloned `skeleton application` you need to install the platform:
 npm install @rxstack/platform --save
 ```
 
-> you need also to install peer dependencies (of not installed already):
-
-```
-npm install --no-save @rxstack/async-event-dispatcher@^0.6 @rxstack/core@^0.7 @rxstack/exceptions@^0.6 @rxstack/query-filter@^0.6 @rxstack/security@^0.7 winston@^3.3.3
-```
-
 Now register the module in the `APP_OPTIONS`
 
 ```typescript
