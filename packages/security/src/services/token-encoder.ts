@@ -11,7 +11,7 @@ export class TokenEncoder implements TokenEncoderInterface {
 
   constructor(private secretManager: ServiceRegistry<SecretLoader>, private config: SecurityConfiguration) { }
 
-  async encode(payload: Object): Promise<string> {
+  async encode(payload: Record<string, any>): Promise<string> {
     const iss = (typeof payload === 'object' && payload['iss']) ? payload['iss'] : this.config.default_issuer;
     payload['iss'] = iss;
     const secretLoader = this.secretManager.get(iss);
@@ -37,7 +37,7 @@ export class TokenEncoder implements TokenEncoderInterface {
     }
   }
 
-  async decode(token: string): Promise<Object> {
+  async decode(token: string): Promise<Record<string, any>> {
     let iss: string;
     try {
       const decoded = jwt.decode(token, {json: true, complete: true});
@@ -48,7 +48,7 @@ export class TokenEncoder implements TokenEncoderInterface {
 
     const secretLoader = this.secretManager.get(iss);
     const loadedPublicKey = await secretLoader.loadKey(KeyType.PUBLIC_KEY);
-    let options: Object = {
+    const options: Record<string, any> = {
       algorithms: [secretLoader.config.signature_algorithm],
       issuer: iss
     };

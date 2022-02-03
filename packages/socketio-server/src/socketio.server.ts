@@ -43,7 +43,7 @@ export class SocketioServer extends AbstractServer {
         ServerEvents.CONNECTED,
         new ConnectionEvent(socket, this)
       );
-      socket.on('disconnect', async (reason: any) => {
+      socket.on('disconnect', async () => {
         await dispatcher.dispatch(
           ServerEvents.DISCONNECTED,
           new ConnectionEvent(socket, this)
@@ -59,7 +59,7 @@ export class SocketioServer extends AbstractServer {
   }
 
   private registerRoute(definition: WebSocketDefinition, socket: EventEmitter): void {
-    socket.on(definition.name, async (args: any, callback: Function) => {
+    socket.on(definition.name, async (args: any, callback: () => void) => {
       try {
         const response = await definition.handler(this.createRequest(definition, socket, args));
         this.responseHandler(response, callback);
@@ -79,7 +79,7 @@ export class SocketioServer extends AbstractServer {
     return request;
   }
 
-  private responseHandler(response: Response, callback: Function): void {
+  private responseHandler(response: Response, callback: () => void): void {
     // todo - implement streams
     if (response.content instanceof Stream.Readable) {
       throw new Exception('Streaming is not supported.');
@@ -91,7 +91,7 @@ export class SocketioServer extends AbstractServer {
     });
   }
 
-  private errorHandler(err: Exception, callback: Function) {
+  private errorHandler(err: Exception, callback: () => void) {
     err['statusCode'] = err['statusCode'] || 500;
     const transformedException = exceptionToObject(err, {status: err['statusCode']});
     if (err['statusCode'] >= 500) {

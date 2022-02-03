@@ -53,7 +53,7 @@ export class WorkerThreadsPool extends ServiceRegistry<AbstractWorkerThread> {
 
   terminate(): void {
     this.queue = [];
-    for (let worker of this.workers) {
+    for (const worker of this.workers) {
       worker.terminate();
     }
   }

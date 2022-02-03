@@ -23,7 +23,7 @@ const SERVER_PROVIDERS = function (options: ApplicationOptions): Provider[] {
   ];
 };
 
-const COMMAND_PROVIDERS = function (options: ApplicationOptions): Provider[] {
+const COMMAND_PROVIDERS = function (): Provider[] {
   return [
     { provide: COMMAND_REGISTRY, useClass: DebugHttpMetadataCommand, multi: true },
     { provide: COMMAND_REGISTRY, useClass: DebugWebSocketMetadataCommand, multi: true },
@@ -42,6 +42,6 @@ export const CORE_PROVIDERS = function (options: ApplicationOptions): Provider[]
     { provide: AsyncEventDispatcher, useClass: AsyncEventDispatcher},
     { provide: Kernel, useClass: Kernel },
     ...SERVER_PROVIDERS(options),
-    ...COMMAND_PROVIDERS(options),
+    ...COMMAND_PROVIDERS(),
   ];
 };

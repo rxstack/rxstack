@@ -32,8 +32,8 @@ export class TokenAuthenticationProvider implements AuthenticationProviderInterf
     return (token instanceof Token);
   }
 
-  private async getPayload(token: TokenInterface): Promise<Object> {
-    let payload: Object;
+  private async getPayload(token: TokenInterface): Promise<Record<string, any>> {
+    let payload: Record<string, any>;
     try {
       payload = await this.tokenManager.decode(token);
     } catch (e) {
@@ -42,7 +42,7 @@ export class TokenAuthenticationProvider implements AuthenticationProviderInterf
     return payload;
   }
 
-  private async getUserFromPayload(payload: Object): Promise<UserInterface> {
+  private async getUserFromPayload(payload: Record<string, any>): Promise<UserInterface> {
     if (!payload || !payload[this.config.user_identity_field]) {
       throw new BadCredentialsException('Identity field is not in the payload.');
     }

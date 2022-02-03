@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {AbstractServer} from './abstract-server';
-import {Transport, WebSocketDefinition} from '../kernel';
+import {Transport} from '../kernel';
 import {ServerConfigurationEvent} from './server-configuration.event';
 import {ServerEvents} from './server-events';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
@@ -17,7 +17,7 @@ export class NoopWebsocketServer extends AbstractServer {
     return 'SOCKET';
   }
 
-  protected async configure(routeDefinitions: WebSocketDefinition[]): Promise<void> {
+  protected async configure(): Promise<void> {
     this.httpServer = http.createServer();
     this.engine = 'socket engine';
     this.host = 'localhost';

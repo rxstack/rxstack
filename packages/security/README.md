@@ -7,9 +7,6 @@ but also allows you to implement your own authentication strategies.
 
 ```
 npm install @rxstack/security --save
-
-// peerDependencies
-npm install --no-save @rxstack/async-event-dispatcher@^0.6 @rxstack/core@^0.7 @rxstack/exceptions@^0.6 @rxstack/service-registry@^0.6 winston@^3.3.3
 ```
 
 ## Documentation

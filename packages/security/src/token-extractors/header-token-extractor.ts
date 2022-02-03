@@ -24,7 +24,7 @@ export class HeaderTokenExtractor implements TokenExtractorInterface {
   }
 
   private _extract(header: string, prefix: string): string {
-    let headerParts = header.split(' ');
+    const headerParts = header.split(' ');
     if (!(headerParts.length === 2 && headerParts[0] === prefix)) {
       return null;
     }

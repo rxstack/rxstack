@@ -5,11 +5,11 @@ const cli = require('yargs');
 @Injectable()
 export class CommandManager {
 
-  commands: Object[] = [];
+  commands: Record<string, any>[] = [];
 
   constructor(private registry: AbstractCommand[]) {
     registry.forEach((command) => {
-      let obj = {
+      const obj = {
         'command': command.command,
         'describe': command.describe,
         'handler': command.handler.bind(command)

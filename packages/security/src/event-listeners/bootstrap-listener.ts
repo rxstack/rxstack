@@ -1,7 +1,7 @@
 import {Injectable} from 'injection-js';
 import {Observe} from '@rxstack/async-event-dispatcher';
 import {
-  ApplicationEvents, BootstrapEvent, HttpMetadata,
+  ApplicationEvents, HttpMetadata,
   httpMetadataStorage, WebSocketMetadata, webSocketMetadataStorage
 } from '@rxstack/core';
 import { SecurityController } from '../controllers/security-controller';
@@ -42,7 +42,7 @@ export class BootstrapListener {
   constructor(private configuration: SecurityConfiguration) { }
 
   @Observe(ApplicationEvents.BOOTSTRAP)
-  async onBootstrap(event: BootstrapEvent): Promise<void> {
+  async onBootstrap(): Promise<void> {
     if (this.configuration.local_authentication) {
       BootstrapListener.httpMetadata
         .forEach(meta => httpMetadataStorage.add(this.createHttpMetadata(meta)));
@@ -52,7 +52,7 @@ export class BootstrapListener {
       .forEach(meta => webSocketMetadataStorage.add(this.createWebSocketMetadata(meta)));
   }
 
-  private createHttpMetadata(meta: Object): HttpMetadata {
+  private createHttpMetadata(meta: Record<string, any>): HttpMetadata {
     const basePath = '/security';
     const routeMetadata = new HttpMetadata();
     routeMetadata.transport = 'HTTP';
@@ -64,7 +64,7 @@ export class BootstrapListener {
     return routeMetadata;
   }
 
-  private createWebSocketMetadata(meta: Object): WebSocketMetadata {
+  private createWebSocketMetadata(meta: Record<string, any>): WebSocketMetadata {
     const metadata = new WebSocketMetadata();
     metadata.transport = 'SOCKET';
     metadata.target = SecurityController;

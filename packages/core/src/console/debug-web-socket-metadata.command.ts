@@ -10,7 +10,7 @@ export class DebugWebSocketMetadataCommand extends AbstractCommand {
   command = 'debug:web-socket-metadata';
   describe = 'Prints web socket metadata for an application.';
 
-  async handler(argv: any): Promise<void> {
+  async handler(): Promise<void> {
     const data = [
       ['name', 'controller', 'action']
     ];

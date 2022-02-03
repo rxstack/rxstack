@@ -1,13 +1,13 @@
 const path = require('path');
-const _ = require('lodash');
+import * as _ from 'lodash';
 
 class Configuration {
 
   initialize(dir: string, filename = 'environment'): void {
-    const baseFile: Object = require(dir + path.sep + filename);
+    const baseFile: Record<string, unknown> = require(dir + path.sep + filename);
     try {
-      const envFile: Object = require(dir + path.sep + filename + '.' + this.getEnvironment());
-      _.mergeWith(baseFile, envFile, (a: any, b: any) =>  {
+      const envFile: Record<string, unknown> = require(dir + path.sep + filename + '.' + this.getEnvironment());
+      _.mergeWith(baseFile, envFile, (a: unknown, b: unknown) =>  {
         if (_.isArray(a) && _.isArray(b) && b.length === 0) return b;
       });
     } catch (e) {
@@ -26,12 +26,12 @@ class Configuration {
     return env.toLowerCase();
   }
 
-  private normalize(data: Object): Object {
+  private normalize(data: unknown): unknown {
     Object.keys(data).forEach(name => {
       let value = data[name];
 
       if (Array.isArray(value)) {
-        value.map((sub: any) => this.normalize(value));
+        this.normalize(value);
       }
 
       if (typeof value === 'object') {

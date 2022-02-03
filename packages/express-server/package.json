@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-server",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "RxStack ExpressServer Module",
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
@@ -22,41 +22,44 @@
     "compile": "npm run clean && tsc -p .",
     "clean": "rm -rf dist",
     "lint": "tslint --project tsconfig.json --format stylish",
+    "eslint": "eslint src/**/*.ts",
     "mocha": "mocha --full-trace --bail test/**/*.spec.ts",
     "coverage": "nyc npm run mocha",
-    "test": "npm run lint && npm run coverage"
+    "test": "npm run lint && npm run eslint && npm run coverage"
   },
   "peerDependencies": {
     "@rxstack/core": "^0.7"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.19.1",
     "compression": "^1.7.4",
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "injection-js": "^2.4.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
-    "@rxstack/utils": "^0.6.0",
-    "@types/body-parser": "^1.19.0",
-    "@types/chai": "^4.2.15",
-    "@types/compression": "1.7.0",
-    "@types/express": "^4.17.11",
-    "@types/lodash": "^4.14.168",
-    "@types/mocha": "^8.2.1",
+    "@rxstack/utils": "^0.6",
+    "@types/body-parser": "^1.19.2",
+    "@types/chai": "^4.3",
+    "@types/compression": "^1.7.2",
+    "@types/express": "^4.17.13",
+    "@types/lodash": "^4.14.178",
+    "@types/mocha": "^9.1",
     "@types/node": "^14.14.35",
-    "@types/sinon": "^9.0.11",
-    "chai": "^4.3.4",
-    "fs-extra": "^9.1.0",
-    "mocha": "^8.3.2",
+    "@types/sinon": "^10.0.9",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
+    "chai": "^4.3",
+    "eslint": "^8.8.0",
+    "mocha": "^9.2.0",
     "node-fetch": "^2.6.1",
     "nyc": "^15.1.0",
     "should": "^13.2.3",
-    "sinon": "^9.2.4",
+    "sinon": "^13.0.1",
     "source-map-support": "^0.5.19",
-    "ts-node": "^9.1.1",
+    "ts-node": "^10.4.0",
     "tslint": "^6.1.3",
-    "typescript": "^4.2.3"
+    "typescript": "^4.5"
   },
   "bugs": {
     "url": "https://github.com/rxstack/rxstack/issues"

@@ -13,12 +13,14 @@ export class UserProviderManager extends ServiceRegistry<UserProviderInterface> 
     return user;
   }
 
-  private async findUser(username: string, payload?: Object): Promise<UserInterface> {
+  private async findUser(username: string, payload?: Record<string, any>): Promise<UserInterface> {
     for (let i = 0; i < this.all().length; i++) {
       const provider = this.all()[i];
       try {
         return await provider.loadUserByUsername(username, payload);
-      } catch (e) { }
+      } catch (e) {
+        // do nothing
+      }
     }
   }
 }
