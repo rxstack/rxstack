@@ -1,5 +1,6 @@
 # RxStack Framework
 
+[![Node.js CI](https://github.com/rxstack/rxstack/actions/workflows/node.js.yml/badge.svg)](https://github.com/rxstack/rxstack/actions/workflows/node.js.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/9bb1b2d02b93df616908/maintainability)](https://codeclimate.com/github/rxstack/rxstack/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/9bb1b2d02b93df616908/test_coverage)](https://codeclimate.com/github/rxstack/rxstack/test_coverage)
 
