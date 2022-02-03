@@ -4,8 +4,8 @@ import {Injector} from 'injection-js';
 import {Application, ServerManager} from '@rxstack/core';
 import {EXPRESS_APP_OPTIONS} from './mocks/express-app-options';
 import * as _ from 'lodash';
+const fetch = require('node-fetch');
 
-const rp = require('node-fetch');
 
 describe('ExpressServer', () => {
 
@@ -31,7 +31,7 @@ describe('ExpressServer', () => {
   });
 
   it('should call mock_text', async () => {
-    const response: any = await rp(host + '/mock/text');
+    const response: any = await fetch(host + '/mock/text');
     const headers: any = response.headers;
     const content = await response.text();
     headers.get('x-powered-by').should.be.equal('Express');
@@ -41,7 +41,7 @@ describe('ExpressServer', () => {
   });
 
   it('should call mock_json', async () => {
-    const response: any = await rp(host + '/mock/json');
+    const response: any = await fetch(host + '/mock/json');
     const headers = response.headers;
     const content = await response.json();
     headers.get('content-type').should.be.equal('application/json; charset=utf-8');
@@ -50,7 +50,7 @@ describe('ExpressServer', () => {
   });
 
   it('should call express middleware', async () => {
-    const response: any = await rp(host + '/express-middleware');
+    const response: any = await fetch(host + '/express-middleware');
     const headers = response.headers;
     const content = await response.json();
     headers.get('x-powered-by').should.be.equal('Express');
@@ -60,7 +60,7 @@ describe('ExpressServer', () => {
   });
 
   it('should download file', async () => {
-    const response: any = await rp(host + '/mock/download');
+    const response: any = await fetch(host + '/mock/download');
     const headers = response.headers;
     response.status.should.be.equal(200);
     headers.get('content-disposition').should.be.equal('attachment; filename="video.mp4"');
@@ -75,7 +75,7 @@ describe('ExpressServer', () => {
       method: 'GET',
     };
 
-    const response: any = await rp(host + '/mock/stream', options);
+    const response: any = await fetch(host + '/mock/stream', options);
     const headers = response.headers;
     response.status.should.be.equal(206);
     headers.get('content-range').should.be.equal('bytes 1-200/424925');
@@ -83,7 +83,7 @@ describe('ExpressServer', () => {
   });
 
   it('should throw an 404 exception', async () => {
-    const response = await rp(host + '/mock/exception?code=404');
+    const response = await fetch(host + '/mock/exception?code=404');
     const content = await response.json();
     response.status.should.be.equal(404);
     content['message'].should.be.equal('Not Found');
@@ -91,7 +91,7 @@ describe('ExpressServer', () => {
 
   it('should throw an exception', async () => {
 
-    const response = await rp(host + '/mock/exception');
+    const response = await fetch(host + '/mock/exception');
     const content = await response.json();
 
     response.status.should.be.equal(500);
@@ -100,7 +100,7 @@ describe('ExpressServer', () => {
 
   it('should throw an exception in production', async () => {
     process.env.NODE_ENV = 'production';
-    const response = await rp(host + '/mock/exception');
+    const response = await fetch(host + '/mock/exception');
     const content = await response.json();
 
     response.status.should.be.equal(500);
@@ -110,7 +110,7 @@ describe('ExpressServer', () => {
   });
 
   it('should handle middleware exception', async () => {
-    const response = await rp(host + '/express-middleware-error');
+    const response = await fetch(host + '/express-middleware-error');
     response.status.should.be.equal(500);
   });
 });

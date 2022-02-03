@@ -88,7 +88,7 @@ export class ExpressServer extends AbstractServer {
   }
 
   private errorHandler(): ErrorRequestHandler {
-    return (err: any, req: ExpressRequest, res: ExpressResponse): void => {
+    return (err: any, req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
       const status = err.statusCode ? err.statusCode : 500;
       const transformedException = exceptionToObject(err, {status: status});
       if (status >= 500) {
@@ -98,6 +98,10 @@ export class ExpressServer extends AbstractServer {
         winston.debug(err.message, transformedException);
       }
 
+      if (res.headersSent) {
+        return next(err);
+      }
+      
       if (process.env.NODE_ENV === 'production' && status >= 500) {
         res.status(status).send({
           'statusCode': status,
