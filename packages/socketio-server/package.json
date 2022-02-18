@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/socketio-server",
-  "version": "0.7.1",
+  "version": "0.7.3",
   "description": "RxStack SocketIO Server Module",
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",

@@ -90,6 +90,7 @@ describe('SocketIOServer', () => {
     defaultNs.emit('mock_exception', args, function (response: any) {
       response['statusCode'].should.be.equal(500);
       response['message'].should.be.equal('Internal Server Error');
+      console.log(response);
       process.env.NODE_ENV = 'testing';
       done();
     });

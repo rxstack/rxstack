@@ -59,7 +59,7 @@ export class SocketioServer extends AbstractServer {
   }
 
   private registerRoute(definition: WebSocketDefinition, socket: EventEmitter): void {
-    socket.on(definition.name, async (args: any, callback: () => void) => {
+    socket.on(definition.name, async (args: any, callback?: () => void) => {
       try {
         const response = await definition.handler(this.createRequest(definition, socket, args));
         this.responseHandler(response, callback);
@@ -79,19 +79,21 @@ export class SocketioServer extends AbstractServer {
     return request;
   }
 
-  private responseHandler(response: Response, callback: () => void): void {
+  private responseHandler(response: Response, callback?: () => void): void {
     // todo - implement streams
     if (response.content instanceof Stream.Readable) {
       throw new Exception('Streaming is not supported.');
     }
-    callback.call(null, {
-      'statusCode': response.statusCode,
-      'headers': response.headers.toObject(),
-      'content': response.content === undefined ? null : response.content,
-    });
+    if (typeof callback === 'function') {
+      callback.call(null, {
+        'statusCode': response.statusCode,
+        'headers': response.headers.toObject(),
+        'content': response.content === undefined ? null : response.content,
+      });
+    }
   }
 
-  private errorHandler(err: Exception, callback: () => void) {
+  private errorHandler(err: Exception, callback?: () => void) {
     err['statusCode'] = err['statusCode'] || 500;
     const transformedException = exceptionToObject(err, {status: err['statusCode']});
     if (err['statusCode'] >= 500) {
@@ -99,7 +101,9 @@ export class SocketioServer extends AbstractServer {
     } else {
       winston.debug(err.message, transformedException);
     }
-
+    if (typeof callback !== 'function') {
+      return;
+    }
     if (process.env.NODE_ENV === 'production' && err['statusCode'] >= 500) {
       callback.call(null, {message: 'Internal Server Error', statusCode: err['statusCode']});
     } else {
