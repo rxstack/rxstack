@@ -96,11 +96,8 @@ export class SocketioServer extends AbstractServer {
   private errorHandler(err: Exception, callback?: () => void) {
     err['statusCode'] = err['statusCode'] || 500;
     const transformedException = exceptionToObject(err, {status: err['statusCode']});
-    if (err['statusCode'] >= 500) {
-      winston.error(err.message, transformedException);
-    } else {
-      winston.debug(err.message, transformedException);
-    }
+    const winstonMethod = err['statusCode'] >= 500 ? 'error' : 'debug';
+    winston[winstonMethod](err.message, transformedException);
     if (typeof callback !== 'function') {
       return;
     }
