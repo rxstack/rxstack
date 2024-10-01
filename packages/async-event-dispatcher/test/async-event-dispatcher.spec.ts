@@ -1,6 +1,6 @@
+import {describe, expect, it} from '@jest/globals';
 import {AsyncEventDispatcher, asyncEventDispatcher} from '../src/async-event-dispatcher';
 import {GenericEvent} from '../src/generic-event';
-import { expect } from 'chai';
 
 class CustomEvent extends GenericEvent {
   modified = 0;
@@ -13,8 +13,8 @@ describe('AsyncEventDispatcher', () => {
   });
 
   it('initial state', () => {
-    expect(asyncEventDispatcher.getListeners('pre.foo').length).be.equal(0);
-    expect(asyncEventDispatcher.hasListeners('pre.foo')).be.false;
+    expect(asyncEventDispatcher.getListeners('pre.foo').length).toBe(0);
+    expect(asyncEventDispatcher.hasListeners('pre.foo')).toBe(false);
   });
 
   it('should add listeners', () => {
@@ -24,8 +24,8 @@ describe('AsyncEventDispatcher', () => {
     asyncEventDispatcher
       .addListener('pre.foo', async (event: GenericEvent): Promise<void> => { });
 
-    expect(asyncEventDispatcher.getListeners('pre.foo').length).be.equal(2);
-    expect(asyncEventDispatcher.hasListeners('pre.foo')).be.true;
+    expect(asyncEventDispatcher.getListeners('pre.foo').length).toBe(2);
+    expect(asyncEventDispatcher.hasListeners('pre.foo')).toBe(true);
   });
 
   it('should dispatch', async () => {
@@ -42,7 +42,7 @@ describe('AsyncEventDispatcher', () => {
       }, -10);
 
     await asyncEventDispatcher.dispatch('pre.foo', event);
-    expect(event.modified).be.equal(2);
+    expect(event.modified).toBe(2);
   });
 
   it('should dispatch without event', async () => {
@@ -50,14 +50,14 @@ describe('AsyncEventDispatcher', () => {
       .addListener('pre.bar', async (event: GenericEvent): Promise<void> => {});
 
     const event = await asyncEventDispatcher.dispatch('pre.bar');
-    expect(event).be.an.instanceof(GenericEvent);
+    expect(event).toBeInstanceOf(GenericEvent);
   });
 
   it('should remove listeners', async () => {
     asyncEventDispatcher
       .addListener('pre.foo', async (event: GenericEvent): Promise<void> => { });
     asyncEventDispatcher.removeListeners('pre.foo');
-    expect(asyncEventDispatcher.getListeners('pre.foo').length).be.equal(0);
+    expect(asyncEventDispatcher.getListeners('pre.foo').length).toBe(0);
     // should do nothing
     await asyncEventDispatcher.dispatch('pre.foo');
   });
@@ -79,8 +79,8 @@ describe('AsyncEventDispatcher', () => {
 
 
     await asyncEventDispatcher.dispatch('pre.foo', event);
-    expect(event.isPropagationStopped()).be.true;
-    expect(event.modified).be.equal(1);
+    expect(event.isPropagationStopped()).toBe(true);
+    expect(event.modified).toBe(1);
   });
 
   it('should throw error', async () => {
@@ -90,7 +90,7 @@ describe('AsyncEventDispatcher', () => {
       });
 
     await asyncEventDispatcher.dispatch('pre.bar').catch((err) => {
-      expect(err.message).be.equal('error');
+      expect(err.message).toBe('error');
     });
   });
 });
