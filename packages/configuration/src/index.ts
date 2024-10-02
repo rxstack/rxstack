@@ -26,7 +26,7 @@ class Configuration {
     return env.toLowerCase();
   }
 
-  private normalize(data: unknown): unknown {
+  private normalize(data: any): any {
     Object.keys(data).forEach(name => {
       let value = data[name];
 

@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/exceptions",
-  "version": "0.6.1",
+  "version": "0.8.0",
   "description": "RxStack Exceptions Component",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",

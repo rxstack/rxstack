@@ -1,3 +1,4 @@
+import {describe, expect, it} from '@jest/globals';
 import {environment} from './environments/environment';
 import {configuration} from '../src';
 const path = require('path');
@@ -12,26 +13,26 @@ describe('Configuration', () => {
     const fn = () => {
       configuration.initialize('/unknown');
     };
-    fn.should.throw(new RegExp('Cannot find module'));
+    expect(fn).toThrow(new RegExp('Cannot find module'));
   });
 
   it('should get app dir', () => {
-    configuration.getRootPath().should.equal(path.resolve(appRootPath));
+    expect(configuration.getRootPath()).toBe(path.resolve(appRootPath));
   });
 
   it('should override default configuration', () => {
-    environment.app.name.should.equal('MyTestApp');
+    expect(environment.app.name).toBe('MyTestApp');
   });
 
   it('should normalize env variable', () => {
-    environment.app.env_value.should.equal('my env value');
+    expect(environment.app.env_value).toBe('my env value');
   });
 
   it('should normalize path variable', () => {
-    environment.app.dir.should.equal(configuration.getRootPath() + '/my-dir');
+    expect(environment.app.dir).toBe(configuration.getRootPath() + '/my-dir');
   });
 
   it('should set empty array options', () => {
-    environment.app.opts2.length.should.equal(0);
+    expect(environment.app.opts2.length).toBe(0);
   });
 });
