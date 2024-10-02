@@ -22,10 +22,9 @@
     "prepublishOnly": "npm run compile",
     "compile": "npm run clean && tsc -p .",
     "clean": "rm -rf dist",
-    "lint": "tslint --project tsconfig.json --format stylish",
     "eslint": "eslint src/**/*.ts",
     "jest": "jest --collect-coverage",
-    "test": "npm run lint && npm run eslint && npm run jest"
+    "test": "npm run eslint && npm run jest"
   },
   "dependencies": {
     "lodash": "^4.17.21"
