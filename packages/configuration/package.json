@@ -25,7 +25,6 @@
     "lint": "tslint --project tsconfig.json --format stylish",
     "eslint": "eslint src/**/*.ts",
     "jest": "jest --collect-coverage",
-    "coverage": "nyc npm run mocha",
     "test": "npm run lint && npm run eslint && npm run jest"
   },
   "dependencies": {
