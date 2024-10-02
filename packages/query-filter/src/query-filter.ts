@@ -43,7 +43,7 @@ class QueryFilter {
 
   getSort(schema: QueryFilterSchema, rawParams: Record<string, any>): SortInterface {
     let sort = rawParams['$sort'];
-    const result = { };
+    const result: any = { };
     if (typeof sort !== 'object') {
       return null;
     }
@@ -63,7 +63,7 @@ class QueryFilter {
   }
 
   protected create(schema: QueryFilterSchema, rawParams: Record<string, any>): Record<string, any> {
-    const query = { };
+    const query: any = { };
     const params = _.pick(rawParams, _.keys(schema.properties));
     _.forEach(params, (value: any, key: any) => {
       const filterSchema = schema.properties[key];
@@ -96,7 +96,7 @@ class QueryFilter {
   }
 
   protected convertToEquality(rawQuery: Record<string, any>): Record<string, any> {
-    const normalized = { };
+    const normalized: any = { };
     _.forEach(rawQuery, (value: any, key: any): void => {
       if (typeof value !== 'object') {
         normalized[key] = {'$eq': value};
