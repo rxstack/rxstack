@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Application} from '@rxstack/core';
 import {DATA_FIXTURES_OPTIONS} from './DATA_FIXTURES_OPTIONS';
 import {Injector} from 'injection-js';
@@ -10,24 +11,24 @@ describe('ReferenceRepository', () => {
   let injector: Injector;
   let repository: ReferenceRepository;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.start();
     injector = app.getInjector();
     repository = injector.get(ReferenceRepository);
   });
 
-  after(async() =>  {
+  afterAll(async() =>  {
     await app.stop();
   });
 
   it('should #setReference', async () => {
     repository.setReference('ref1', 'val1');
-    repository.hasReference('ref1').should.be.true;
+    expect(repository.hasReference('ref1')).toBeTruthy();
   });
 
   it('should #getReference', async () => {
     repository.setReference('ref3', 'val3');
-    repository.getReference('ref3').should.be.equal('val3');
+    expect(repository.getReference('ref3')).toBe('val3');
   });
 
   it('should throw an exception on #getReference', async () => {
@@ -35,6 +36,6 @@ describe('ReferenceRepository', () => {
     const func = () => {
       repository.getReference('none');
     };
-    func.should.throw();
+    expect(func).toThrow();
   });
 });

@@ -8,7 +8,11 @@ const winston = require('winston');
 export class LoadFixturesCommand extends AbstractCommand {
   command = 'data-fixtures:load';
   description = 'Load data fixtures';
-  builder = (yargs: any) => yargs.default('purge', 'false');
+  builder = {
+    'purge': {
+      'default': false
+    }
+  };
 
   async handler(yargs: any): Promise<void> {
     winston.debug('Fixtures loading is started.');

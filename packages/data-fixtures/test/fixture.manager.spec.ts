@@ -1,10 +1,9 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll, jest} from '@jest/globals';
 import {Application} from '@rxstack/core';
 import {DATA_FIXTURES_OPTIONS} from './DATA_FIXTURES_OPTIONS';
 import {Injector} from 'injection-js';
 import {FixtureManager, PURGER_SERVICE} from '../src';
-
-const sinon = require('sinon');
 
 describe('FixtureManager', () => {
   // Setup application
@@ -12,43 +11,43 @@ describe('FixtureManager', () => {
   let injector: Injector;
   let manager: FixtureManager;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
     manager = injector.get(FixtureManager);
   });
 
-  after(async() =>  {
+  afterAll(async() =>  {
     await app.stop();
   });
 
   it('should get ordered fixtures', async () => {
     const fixtures = manager.getOrderedFixtures();
-    fixtures[0].getName().should.be.equal('noop-fixture');
-    fixtures[1].getName().should.be.equal('fixture-1');
-    fixtures[2].getName().should.be.equal('fixture-2');
+    expect(fixtures[0].getName()).toBe('noop-fixture');
+    expect(fixtures[1].getName()).toBe('fixture-1');
+    expect(fixtures[2].getName()).toBe('fixture-2');
   });
 
   it('should register the fixtures', async () => {
-    manager.all().length.should.be.equal(3);
+    expect(manager.all().length).toBe(3);
   });
 
   it('should execute without purging', async () => {
-    const spy = sinon.spy(injector.get(PURGER_SERVICE), 'purge');
+    const spy = jest.spyOn(injector.get(PURGER_SERVICE), 'purge');
     await manager.execute();
-    spy.calledOnce.should.be.false;
-    spy.restore();
+    expect(spy).toHaveBeenCalledTimes(0);
+    jest.restoreAllMocks();
   });
 
   it('should execute with purging', async () => {
-    const spy = sinon.spy(injector.get(PURGER_SERVICE), 'purge');
+    const spy = jest.spyOn(injector.get(PURGER_SERVICE), 'purge');
     await manager.execute(true);
-    spy.calledOnce.should.be.true;
-    spy.restore();
+    expect(spy).toHaveBeenCalledTimes(1);
+    jest.restoreAllMocks();
   });
 
   it('should #addReference and #getReference in fixture service', async () => {
     manager.get('fixture-1').setReference('new-ref-1', 'val1');
-    manager.get('fixture-2').getReference('new-ref-1').should.be.equal('val1');
+    expect(manager.get('fixture-2').getReference('new-ref-1')).toBe('val1');
   });
 });

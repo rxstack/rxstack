@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll, jest} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Exception, InternalServerErrorException} from '@rxstack/exceptions';
 import {Kernel, Request, Response} from '../../src/kernel';
@@ -12,17 +13,21 @@ describe('Kernel', () => {
   let injector: Injector;
   let kernel: Kernel;
 
-  before(async () => {
+  beforeAll(async () => {
     injector = await app.run();
     kernel = injector.get(Kernel);
   });
+
+  afterAll(async () => {
+    await app.stop();
+  }, 1000);
 
   it('should call controller index action', async () => {
     const def = kernel.httpDefinitions.find((item) => item.name === 'annotated_index');
     const request = new Request('HTTP');
     const response: Response = await def.handler(request);
-    response.statusCode.should.be.equal(200);
-    response.content.should.be.equal('AnnotatedController::indexAction');
+    expect(response.statusCode).toBe(200);
+    expect(response.content).toBe('AnnotatedController::indexAction');
   });
 
   it('should throw an exception', async () => {
@@ -36,8 +41,8 @@ describe('Kernel', () => {
       exception = e;
     }
 
-    exception.should.be.instanceof(Exception);
-    exception.message.should.be.equal('Exception');
+    expect(exception).toBeInstanceOf(Exception);
+    expect(exception.message).toBe('Exception');
   });
 
   it('should stop after request event is dispatched', async () => {
@@ -45,7 +50,7 @@ describe('Kernel', () => {
     const request = new Request('HTTP');
     request.params.set('type', 'test_request_event');
     const response: Response = await def.handler(request);
-    response.content.should.be.equal('modified_by_request_event');
+    expect(response.content).toBe('modified_by_request_event');
   });
 
   it('should modify response after response event is dispatched', async () => {
@@ -53,7 +58,7 @@ describe('Kernel', () => {
     const request = new Request('HTTP');
     request.params.set('type', 'test_response_event');
     let response: Response = await def.handler(request);
-    response.content.should.be.equal('modified_by_response_event');
+    expect(response.content).toBe('modified_by_response_event');
   });
 
   it('should catch exception and return response', async () => {
@@ -61,7 +66,7 @@ describe('Kernel', () => {
     const request = new Request('HTTP');
     request.params.set('type', 'test_exception_event');
     const response: Response = await def.handler(request);
-    response.content.should.be.equal('modified_by_exception_event');
+    expect(response.content).toBe('modified_by_exception_event');
   });
 
   it('should throw different exception than original one after exception event is dispatched', async () => {
@@ -74,7 +79,7 @@ describe('Kernel', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceof(InternalServerErrorException);
+    expect(exception).toBeInstanceOf(InternalServerErrorException);
   });
 
   it('should throw an exception after response event is dispatched', async () => {
@@ -87,13 +92,13 @@ describe('Kernel', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceof(Exception);
-    exception.message.should.be.equal('ExceptionInResponseEvent');
+    expect(exception).toBeInstanceOf(Exception);
+    expect(exception.message).toBe('ExceptionInResponseEvent');
   });
 
   it('should reset', async () => {
     kernel.reset();
-    kernel.httpDefinitions.length.should.be.equal(0);
-    kernel.webSocketDefinitions.length.should.be.equal(0);
+    expect(kernel.httpDefinitions.length).toBe(0);
+    expect(kernel.webSocketDefinitions.length).toBe(0);
   });
 });

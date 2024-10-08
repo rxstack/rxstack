@@ -6,10 +6,4 @@ module.exports = {
   transform: {
     "^.+.tsx?$": ["ts-jest",{}],
   },
-  "collectCoverageFrom": [
-    "src/**/*.ts"
-  ],
-  "coveragePathIgnorePatterns": [
-    "index.ts",
-  ],
 };

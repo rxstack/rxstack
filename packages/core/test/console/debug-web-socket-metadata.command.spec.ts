@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll, jest} from '@jest/globals';
 import {Application} from '../../src/application';
 import {CONSOLE_APP_OPTIONS} from './fixtures/console-app-options';
 import {CommandManager} from '../../src/console';
@@ -10,19 +11,19 @@ describe('Console:DebugWebSocketMetaDataCommand', () => {
   const app = new Application(CONSOLE_APP_OPTIONS);
   let consoleSpy: any;
 
-  before(async () => {
+  beforeAll(async () => {
     await app.cli();
-    consoleSpy = sinon.spy(console, 'log');
+    consoleSpy = jest.spyOn(console, 'log');
   });
 
-  after(async () => {
-    consoleSpy.restore();
-    app.stop();
-  });
+  afterAll(async () => {
+    jest.restoreAllMocks();
+    await app.stop();
+  }, 1000);
 
   it('should execute debug command', async () => {
     const command = app.getInjector().get(CommandManager).getCommand('debug:web-socket-metadata');
     await command.handler({});
-    consoleSpy.called.should.be.true;
+    expect(consoleSpy).toHaveBeenCalled();
   });
 });

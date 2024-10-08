@@ -89,8 +89,14 @@ export class Application {
 
   private getModuleMetadata(target: ModuleType): ModuleMetadata {
     const moduleMetadata: ModuleMetadata =
+      // @ts-ignore
       Reflect.getMetadata(MODULE_KEY, target['module'] ? target['module'] : target);
-    Array.isArray(target['providers']) ? moduleMetadata.providers.push(...target['providers']) : null;
+
+    // @ts-ignore
+    if (Array.isArray(target['providers'])) {
+      // @ts-ignore
+      moduleMetadata.providers.push(...target['providers']);
+    }
     return moduleMetadata;
   }
 

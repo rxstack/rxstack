@@ -49,7 +49,8 @@ export class ExpressServer extends AbstractServer {
     routeDefinitions.forEach(routeDefinition => this.registerRoute(routeDefinition, configuration));
     // important!!!
     this.engine.use(this.errorHandler());
-    this.httpServer = http.createServer(<any>(this.engine));
+    // @ts-ignore
+    this.httpServer = http.createServer(this.engine);
   }
 
   private createRequest(req: ExpressRequest, routeDefinition: HttpDefinition): Request {
