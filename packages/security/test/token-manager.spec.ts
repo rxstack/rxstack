@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {
@@ -20,7 +21,7 @@ describe('TokenManager', () => {
   let manager: TokenManagerInterface;
   let dispatcher: AsyncEventDispatcher;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     injector = await app.run();
     manager = injector.get(TOKEN_MANAGER);
     dispatcher = injector.get(AsyncEventDispatcher);
@@ -29,8 +30,8 @@ describe('TokenManager', () => {
   it('should create and decode token', async () => {
     const encoded = await manager.create({username: 'admin', roles: ['ROLE_ADMIN']});
     const decoded = await manager.decode(new Token(encoded));
-    decoded.hasOwnProperty('username').should.be.equal(true);
-    decoded.hasOwnProperty('roles').should.be.equal(true);
+    expect(decoded.hasOwnProperty('username')).toBeTruthy();
+    expect(decoded.hasOwnProperty('roles')).toBeTruthy();
   });
 
   it('should dispatch security.token.created and security.token.encoded', async () => {
@@ -44,8 +45,8 @@ describe('TokenManager', () => {
       dispatchedEncoded = true;
     });
     await manager.create({username: 'admin', roles: ['ROLE_ADMIN']});
-    dispatchedCreated.should.equal(true);
-    dispatchedEncoded.should.equal(true);
+    expect(dispatchedCreated).toBeTruthy();
+    expect(dispatchedEncoded).toBeTruthy();
     dispatcher.removeListeners(TokenManagerEvents.TOKEN_CREATED);
     dispatcher.removeListeners(TokenManagerEvents.TOKEN_ENCODED);
   });
@@ -63,7 +64,7 @@ describe('TokenManager', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(JWTDecodeFailureException);
+    expect(exception).toBeInstanceOf(JWTDecodeFailureException);
     dispatcher.removeListeners(TokenManagerEvents.TOKEN_DECODED);
   });
 });

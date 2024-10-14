@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {environmentWithInvalidAlgorithm} from './environments/environment.with-invalid-algorithm';
@@ -11,7 +12,7 @@ describe('TokenEncoderWithInvalidAlgorithm', () => {
   const app = new Application(jwt_app_options(environmentWithInvalidAlgorithm));
   let injector: Injector;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
   });
@@ -24,6 +25,6 @@ describe('TokenEncoderWithInvalidAlgorithm', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(JWTEncodeFailureException);
+    expect(exception).toBeInstanceOf(JWTEncodeFailureException);
   });
 });

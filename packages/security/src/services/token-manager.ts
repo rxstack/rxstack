@@ -16,6 +16,7 @@ export class TokenManager implements TokenManagerInterface {
 
   async create(user: User): Promise<string> {
     const payload = {
+      // @ts-ignore
      [this.config.user_identity_field]: user[this.config.user_identity_field],
       roles: user.roles
     };

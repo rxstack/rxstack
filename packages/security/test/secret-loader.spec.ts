@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Application} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {environmentWitRsa} from './environments/environment.with-rsa';
@@ -13,7 +14,7 @@ describe('SecretLoaderWithRsa', () => {
   let injector: Injector = null;
   let secretManager: ServiceRegistry<SecretLoader>;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
     secretManager = injector.get(SECRET_MANAGER);
@@ -23,11 +24,11 @@ describe('SecretLoaderWithRsa', () => {
     await secretManager.get('default').loadKey(KeyType.PUBLIC_KEY);
     // key should be loaded from cache
     const key = await secretManager.get('default').loadKey(KeyType.PUBLIC_KEY);
-    (typeof key).should.be.equal('object');
+    expect(typeof key).toBe('object');
   });
 
   it('should load private key', async () => {
     const key = await secretManager.get('default').loadKey(KeyType.PRIVATE_KEY);
-    (typeof key).should.be.equal('object');
+    expect(typeof key).toBe('object');
   });
 });

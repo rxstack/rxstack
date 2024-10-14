@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Token} from '../src/models';
 import {User} from '../src/models/user';
@@ -12,7 +13,7 @@ describe('Security:TokenAuthenticationProvider', () => {
   const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
   });
@@ -21,9 +22,9 @@ describe('Security:TokenAuthenticationProvider', () => {
     const token = new Token('generated-token');
     const provider = injector.get(AuthenticationProviderManager).get('token');
     const authToken = await provider.authenticate(token);
-    authToken.isAuthenticated().should.be.equal(true);
-    authToken.getUser().should.be.instanceOf(User);
-    authToken.hasRole('ROLE_ADMIN').should.be.equal(true);
+    expect(authToken.isAuthenticated()).toBeTruthy();
+    expect(authToken.getUser()).toBeInstanceOf(User);
+    expect(authToken.hasRole('ROLE_ADMIN')).toBeTruthy();
   });
 
   it('should throw an exception if user identity field is not found', async () => {
@@ -35,7 +36,7 @@ describe('Security:TokenAuthenticationProvider', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(BadCredentialsException);
+    expect(exception).toBeInstanceOf(BadCredentialsException);
   });
 
   it('should throw an exception if token is invalid', async () => {
@@ -47,6 +48,6 @@ describe('Security:TokenAuthenticationProvider', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(BadCredentialsException);
+    expect(exception).toBeInstanceOf(BadCredentialsException);
   });
 });

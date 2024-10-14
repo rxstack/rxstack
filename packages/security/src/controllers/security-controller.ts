@@ -9,7 +9,6 @@ import {AnonymousToken} from '../models';
 import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {AuthenticationEvents} from '../authentication-events';
 import {AuthenticationRequestEvent} from '../events/authentication-request-event';
-import {EventEmitter} from 'events';
 import {SecurityConfiguration} from '../security-configuration';
 import {AbstractRefreshTokenManager} from '../services';
 import {TokenManagerEvents} from '../token-manager-events';
@@ -58,9 +57,10 @@ export class SecurityController {
   async authenticateAction(request: Request): Promise<Response> {
     try {
       const token = new Token(request.params.get('bearer'));
-      request.connection['token'] = await this.authManager.authenticate(token);
-      request.token = request.connection['token'];
-      this.setConnectionTimeout(request.connection);
+      const connection: any = request.connection;
+      connection['token'] = await this.authManager.authenticate(token);
+      request.token = connection['token'];
+      this.setConnectionTimeout(connection);
       await this.dispatcher
         .dispatch(AuthenticationEvents.SOCKET_AUTHENTICATION_SUCCESS, new AuthenticationRequestEvent(request));
       return new Response(null, 204);
@@ -74,8 +74,9 @@ export class SecurityController {
       throw new ForbiddenException();
     }
     await this.dispatcher.dispatch(AuthenticationEvents.SOCKET_UNAUTHENTICATION_SUCCESS, new AuthenticationRequestEvent(request));
-    this.clearConnectionTimeout(request.connection);
-    request.connection['token'] = new AnonymousToken();
+    const connection: any = request.connection;
+    this.clearConnectionTimeout(connection);
+    connection['token'] = new AnonymousToken();
     return new Response(null, 204);
   }
 
@@ -87,7 +88,7 @@ export class SecurityController {
     return refreshToken;
   }
 
-  private setConnectionTimeout(connection: EventEmitter): void {
+  private setConnectionTimeout(connection: any): void {
     this.clearConnectionTimeout(connection);
     const token = connection['token'] as Token;
     if (token) {
@@ -97,7 +98,7 @@ export class SecurityController {
     }
   }
 
-  private clearConnectionTimeout(connection: EventEmitter): void {
+  private clearConnectionTimeout(connection: any): void {
     if (connection['tokenTimeout']) {
       clearTimeout(connection['tokenTimeout']);
       connection['tokenTimeout'] = null;

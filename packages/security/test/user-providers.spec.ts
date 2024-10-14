@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {UserProviderManager} from '../src/user-providers/user-provider-manager';
 import {UserNotFoundException} from '../src/exceptions/index';
@@ -12,23 +13,23 @@ describe('Security:UserProvider', () => {
   const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector = null;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
   });
 
-  after(async() =>  {
+  afterAll(async() =>  {
     injector.get(UserProviderManager).reset();
   });
 
   it('should get provider by name', async () => {
     const provider = injector.get(UserProviderManager).get('in-memory');
-    provider.getName().should.be.equal('in-memory');
+    expect(provider.getName()).toBe(('in-memory'));
   });
 
   it('should load the admin', async () => {
     const user = await injector.get(UserProviderManager).loadUserByUsername('admin');
-    user.username.should.be.equal('admin');
+    expect(user.username).toBe('admin');
   });
 
   it('should not load the admin', async () => {
@@ -38,19 +39,19 @@ describe('Security:UserProvider', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(UserNotFoundException);
+    expect(exception).toBeInstanceOf(UserNotFoundException);
   });
 
   it('should load user from payload', async () => {
     const provider = new PayloadUserProvider(
       (data: UserInterface) => new User(data.username, null, data.roles)
     );
-    provider.getName().should.be.equal('payload');
+    expect(provider.getName()).toBe('payload');
     const user = await provider.loadUserByUsername('joe', {
       'username': 'joe',
       'roles': ['USER']
     });
-    user.should.be.instanceOf(User);
+    expect(user).toBeInstanceOf(User);
   });
 
 
@@ -67,7 +68,7 @@ describe('Security:UserProvider', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(UserNotFoundException);
+    expect(exception).toBeInstanceOf(UserNotFoundException);
   });
 
 });

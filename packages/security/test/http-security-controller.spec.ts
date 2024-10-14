@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import { NotFoundException} from '@rxstack/exceptions';
@@ -12,7 +13,7 @@ describe('Security:HttpController', () => {
   let injector: Injector = null;
   let refreshToken: string;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
   });
@@ -26,10 +27,10 @@ describe('Security:HttpController', () => {
       password: 'admin'
     };
     let response: Response = await def.handler(request);
-    response.content.token.should.be.equal('generated-token');
-    (typeof response.content.refreshToken).should.be.equal('string');
+    expect(response.content.token).toBe('generated-token');
+    expect(typeof response.content.refreshToken).toBe('string');
     refreshToken = response.content.refreshToken;
-    request.token.isFullyAuthenticated().should.be.equal(true);
+    expect(request.token.isFullyAuthenticated()).toBeTruthy();
   });
 
   it('should not login', async () => {
@@ -42,8 +43,8 @@ describe('Security:HttpController', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(UserNotFoundException);
-    exception.statusCode.should.be.equal(401);
+    expect(exception).toBeInstanceOf(UserNotFoundException);
+    expect(exception.statusCode).toBe(401);
   });
 
   it('should refresh token', async () => {
@@ -54,7 +55,7 @@ describe('Security:HttpController', () => {
       'refreshToken': refreshToken
     };
     let response: Response = await def.handler(request);
-    response.content.token.should.be.equal('generated-token');
+    expect(response.content.token).toBe('generated-token');
   });
 
   it('should throw exception calling refresh token with invalid token', async () => {
@@ -67,7 +68,7 @@ describe('Security:HttpController', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(NotFoundException);
+    expect(exception).toBeInstanceOf(NotFoundException);
   });
 
   it('should logout', async () => {
@@ -78,9 +79,9 @@ describe('Security:HttpController', () => {
       'refreshToken': refreshToken
     };
     const response: Response = await def.handler(request);
-    response.statusCode.should.be.equal(204);
+    expect(response.statusCode).toBe(204);
     const refreshTokenObj = await injector.get(REFRESH_TOKEN_MANAGER).get(refreshToken);
-    refreshTokenObj.expiresAt.should.equal(0);
+    expect(refreshTokenObj.expiresAt).toBe(0);
   });
 
   it('should throw exception when logout without token', async () => {
@@ -93,6 +94,6 @@ describe('Security:HttpController', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(NotFoundException);
+    expect(exception).toBeInstanceOf(NotFoundException);
   });
 });

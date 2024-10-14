@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application, ConnectionEvent, Kernel, Request, Response, ServerManager} from '@rxstack/core';
 import {UnauthorizedException} from '@rxstack/exceptions';
@@ -12,7 +13,7 @@ describe('Security:Listeners', () => {
   const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector = null;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
   });
@@ -23,7 +24,7 @@ describe('Security:Listeners', () => {
     const request = new Request('HTTP');
     request.params.set('bearer', 'generated-token');
     let response: Response = await def.handler(request);
-    response.content.should.be.equal('admin');
+    expect(response.content).toBe('admin');
   });
 
   it('should throw UnauthorizedException if user role does not match', async () => {
@@ -38,7 +39,7 @@ describe('Security:Listeners', () => {
         exception = e;
       }
     }
-    (exception !== null).should.be.equal(true);
+    expect((exception !== null)).toBeTruthy();
   });
 
   it('should throw UnauthorizedException if token is not valid', async () => {
@@ -54,7 +55,7 @@ describe('Security:Listeners', () => {
         exception = e;
       }
     }
-    (exception !== null).should.be.equal(true);
+    expect((exception !== null)).toBeTruthy();
   });
 
   it('should get anonymous token', async () => {
@@ -62,16 +63,16 @@ describe('Security:Listeners', () => {
     const def = findHttpDefinition(kernel.httpDefinitions, 'test_anon');
     const request = new Request('HTTP');
     const response: Response = await def.handler(request);
-    response.content.username.should.be.equal('anon');
+    expect(response.content.username).toBe('anon');
   });
 
   it('should remove token timeout on disconnect', async () => {
     const server = injector.get(ServerManager).getByName('noop-websocket');
-    const connection = new EventEmitter();
+    const connection: any = new EventEmitter();
     connection['tokenTimeout'] = setTimeout(() => {}, 5000);
     const listener = injector.get(ConnectionListener);
     const event = new ConnectionEvent(connection, server);
     await listener.onDisconnect(event);
-    (null === connection['tokenTimeout']).should.be.equal(true);
+    expect(null === connection['tokenTimeout']).toBeTruthy();
   });
 });
