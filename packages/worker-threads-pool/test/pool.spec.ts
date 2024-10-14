@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application} from '@rxstack/core';
 import {WorkerThreadsPool} from '../src/index';
@@ -11,12 +12,12 @@ describe('WorkerThreadPool:Pool', () => {
   let injector: Injector;
   let pool: WorkerThreadsPool;
 
-  before(async () => {
+  beforeAll(async () => {
     injector = await app.run();
     pool = injector.get(WorkerThreadsPool);
   });
 
-  after(async () => {
+  afterAll(async () => {
     pool.terminate();
   });
 
@@ -27,110 +28,110 @@ describe('WorkerThreadPool:Pool', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(Exception);
+    expect(exception).toBeInstanceOf(Exception);
   });
 
   it('#pool size',   (done) => {
-    pool.stats().workerSize.should.be.equal(0);
+    expect(pool.stats().workerSize).toBe(0);
     let cnt = 0;
     const onExit = () => {
-      pool.stats().workerSize.should.be.equal(--cnt);
+      expect(pool.stats().workerSize).toBe(--cnt);
       if (cnt === 0) done();
     };
     cnt++;
     pool.acquire('hang', {delay: 1000}).then((worker) => {
-      pool.stats().workerSize.should.be.equal(1);
+      expect(pool.stats().workerSize).toBe(1);
       worker.on('exit', onExit);
       cnt++;
       pool.acquire('hang', {delay: 1000}).then((worker) => {
-        pool.stats().workerSize.should.be.equal(2);
+        expect(pool.stats().workerSize).toBe(2);
         worker.on('exit', onExit);
         cnt++;
         pool.acquire('hang', {delay: 1000}).then((worker) => {
-          pool.stats().workerSize.should.be.equal(3);
+          expect(pool.stats().workerSize).toBe(3);
           worker.on('exit', onExit);
         });
-        pool.stats().workerSize.should.be.equal(3);
+        expect(pool.stats().workerSize).toBe(3);
       });
-      pool.stats().workerSize.should.be.equal(2);
+      expect(pool.stats().workerSize).toBe(2);
     });
-    pool.stats().workerSize.should.be.equal(1);
+    expect(pool.stats().workerSize).toBe(1);
   });
 
-  it('#pool max size - serial',   (done) => {
-    pool.stats().workerSize.should.be.equal(0);
+  it('#pool max size - serial', (done) => {
+    expect(pool.stats().workerSize).toBe(0);
     let cnt = 0;
     let exits = 0;
     const onExit = () => {
       exits++;
-      pool.stats().workerSize.should.be.equal(--cnt);
+      expect(pool.stats().workerSize).toBe(--cnt);
       if (cnt === 0) done();
     };
     cnt++;
     pool.acquire('hang', {delay: 1000}).then((worker) => {
-      pool.stats().workerSize.should.be.equal(1);
+      expect(pool.stats().workerSize).toBe(1);
       worker.on('exit', onExit);
       cnt++;
       pool.acquire('hang', {delay: 1000}).then((worker) => {
-        exits.should.be.equal(0);
-        pool.stats().workerSize.should.be.equal(2);
+        expect(exits).toBe(0);
+        expect(pool.stats().workerSize).toBe(2);
         worker.on('exit', onExit);
         cnt++;
         pool.acquire('hang', {delay: 1000}).then((worker) => {
-          exits.should.be.equal(0);
-          pool.stats().workerSize.should.be.equal(3);
+          expect(exits).toBe(0);
+          expect(pool.stats().workerSize).toBe(3);
           worker.on('exit', onExit);
           cnt++;
           pool.acquire('hang', {delay: 1000}).then((worker) => {
-            exits.should.be.equal(1); // queued
-            pool.stats().workerSize.should.be.equal(3);
+            expect(exits).toBe(1); // queued
+            expect(pool.stats().workerSize).toBe(3);
             worker.on('exit', onExit);
           });
-          pool.stats().queueSize.should.be.equal(1);
+          expect(pool.stats().queueSize).toBe(1);
         });
-        pool.stats().workerSize.should.be.equal(3);
+        expect(pool.stats().workerSize).toBe(3);
       });
-      pool.stats().workerSize.should.be.equal(2);
+      expect(pool.stats().workerSize).toBe(2);
     });
-    pool.stats().workerSize.should.be.equal(1);
+    expect(pool.stats().workerSize).toBe(1);
   });
 
   it('#pool max size - parallel', (done) => {
-    pool.stats().workerSize.should.be.equal(0);
+    expect(pool.stats().workerSize).toBe(0);
     let cnt = 0;
     let exits = 0;
     const onExit = () => {
       exits++;
-      pool.stats().workerSize.should.be.equal(--cnt);
+      expect(pool.stats().workerSize).toBe(--cnt);
       if (cnt === 0) done();
     };
     cnt++;
     pool.acquire('hang', {delay: 1000}).then((worker) => {
-      exits.should.be.equal(0);
+      expect(exits).toBe(0);
       worker.on('exit', onExit);
     });
-    pool.stats().workerSize.should.be.equal(1);
+    expect(pool.stats().workerSize).toBe(1);
 
     cnt++;
     pool.acquire('hang', {delay: 1000}).then((worker) => {
-      exits.should.be.equal(0);
+      expect(exits).toBe(0);
       worker.on('exit', onExit);
     });
-    pool.stats().workerSize.should.be.equal(2);
+    expect(pool.stats().workerSize).toBe(2);
 
     cnt++;
     pool.acquire('hang', {delay: 1000}).then((worker) => {
-      exits.should.be.equal(0);
+      expect(exits).toBe(0);
       worker.on('exit', onExit);
     });
-    pool.stats().workerSize.should.be.equal(3);
+    expect(pool.stats().workerSize).toBe(3);
 
     cnt++;
     pool.acquire('hang', {delay: 1000}).then((worker) => {
-      exits.should.be.equal(1);
+      expect(exits).toBe(1);
       worker.on('exit', onExit);
     });
-    pool.stats().workerSize.should.be.equal(3);
-    pool.stats().queueSize.should.be.equal(1);
+    expect(pool.stats().workerSize).toBe(3);
+    expect(pool.stats().queueSize).toBe(1);
   });
 });
