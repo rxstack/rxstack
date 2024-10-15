@@ -4,8 +4,6 @@ import {Application} from '../../src/application';
 import {CONSOLE_APP_OPTIONS} from './fixtures/console-app-options';
 import {CommandManager} from '../../src/console';
 
-const sinon = require('sinon');
-
 describe('Console:DebugWebSocketMetaDataCommand', () => {
   // Setup application
   const app = new Application(CONSOLE_APP_OPTIONS);
