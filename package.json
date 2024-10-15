@@ -33,9 +33,22 @@
     "@rxstack/socketio-server": "^0.8",
     "@rxstack/utils": "^0.8",
     "@rxstack/worker-threads-pool": "^0.8",
+
     "@types/jest": "^29.5.13",
     "lerna": "^8.1.8",
     "typescript": "5.5.4",
-    "winston": "^3.15.0"
+    "winston": "^3.15.0",
+
+
+    "@eslint/js": "^9.11.1",
+    "@jest/globals": "^29.7.0",
+    "@types/node": "^22.7.4",
+    "@typescript-eslint/eslint-plugin": "^8.8.0",
+    "@typescript-eslint/parser": "^8.8.0",
+    "eslint": "^9.11.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "typescript-eslint": "^8.8.0"
   }
 }
