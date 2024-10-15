@@ -8,8 +8,5 @@ module.exports = {
   },
   "collectCoverageFrom": [
     "src/**/*.ts"
-  ],
-  "coveragePathIgnorePatterns": [
-    "index.ts",
-  ],
+  ]
 };
