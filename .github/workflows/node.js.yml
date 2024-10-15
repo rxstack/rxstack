@@ -29,8 +29,10 @@ jobs:
     - run: npm ci
     - run: npm install
     - run: npm run bootstrap
-    - run: npm test
     - name: Test & publish code coverage
       uses: paambaati/codeclimate-action@v9.0.0
       env:
         CC_TEST_REPORTER_ID: 6b737647c19540b99ebe2e3158b09f1e5d799ae6c2d5a49a236d922050a49e11
+      with:
+        coverageCommand: npm run test
+        debug: true
