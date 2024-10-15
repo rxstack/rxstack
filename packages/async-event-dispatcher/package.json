@@ -23,7 +23,7 @@
     "compile": "npm run clean && tsc -p .",
     "clean": "rm -rf dist",
     "eslint": "eslint src/**/*.ts",
-    "jest": "jest --collect-coverage",
+    "jest": "jest --collect-coverage --reporter=lcov",
     "test": "npm run eslint && npm run jest"
   },
   "dependencies": {

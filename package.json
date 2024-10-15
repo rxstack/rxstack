@@ -16,7 +16,7 @@
     "bootstrap": "lerna exec npm install",
     "clean": "lerna clean",
     "eslint": "eslint packages/**/src/**/*.ts",
-    "jest": "jest --collect-coverage",
+    "jest": "jest --collect-coverage --reporter=lcov",
     "test": "npm run eslint && npm run jest "
   },
   "devDependencies": {
