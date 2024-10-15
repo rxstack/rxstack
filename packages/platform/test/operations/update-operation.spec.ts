@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
@@ -10,7 +11,7 @@ describe('Platform:Operation:Update', () => {
   let injector: Injector;
   let kernel: Kernel;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
     kernel = injector.get(Kernel);
@@ -22,6 +23,6 @@ describe('Platform:Operation:Update', () => {
     request.params.set('id', 1);
     request.body = { id: 1, 'name': 'my task', completed: false };
     const response: Response = await def.handler(request);
-    response.statusCode.should.equal(204);
+    expect(response.statusCode).toBe(204);
   });
 });

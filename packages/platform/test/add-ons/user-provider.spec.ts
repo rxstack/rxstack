@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application, Kernel} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
@@ -12,19 +13,19 @@ describe('Platform:Add-Ons:UserProvider', () => {
   let injector: Injector;
   let kernel: Kernel;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
     kernel = injector.get(Kernel);
   });
 
   it('should match provider name', async () => {
-    injector.get(UserProvider).getName().should.be.equal(UserProvider.PROVIDE_NAME);
+    expect(injector.get(UserProvider).getName()).toBe(UserProvider.PROVIDE_NAME);
   });
 
   it('should load user by username', async () => {
     const user = await injector.get(UserProvider).loadUserByUsername('admin');
-    user.should.be.instanceOf(User);
+    expect(user).toBeInstanceOf(User);
   });
 
   it('should throw an exception if user is not found', async () => {
@@ -34,6 +35,6 @@ describe('Platform:Add-Ons:UserProvider', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(UserNotFoundException);
+    expect(exception).toBeInstanceOf(UserNotFoundException);
   });
 });

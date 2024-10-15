@@ -42,6 +42,7 @@ export class UserService implements ServiceInterface<User> {
   }
 
   async findOne(criteria: Object): Promise<User> {
+    // @ts-ignore
     const id = criteria['username']['$eq'];
     switch (id) {
       case 'not_found':

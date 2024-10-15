@@ -41,6 +41,7 @@ export class RefreshTokenService implements ServiceInterface<RefreshTokenInterfa
   }
 
   async findOne(criteria: Object): Promise<RefreshTokenInterface> {
+    // @ts-ignore
     const id = criteria['identifier']['$eq'];
     switch (id) {
       case 'id-1':

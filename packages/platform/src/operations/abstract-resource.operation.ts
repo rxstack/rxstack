@@ -52,6 +52,7 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   }
 
   private async update(event: OperationEvent): Promise<void> {
+    // @ts-ignore
     await this.getService().updateOne(event.getData()[this.getService().options.idField], event.request.body);
     event.statusCode = 204;
   }
@@ -62,6 +63,7 @@ export abstract class AbstractResourceOperation<T> extends AbstractOperation {
   }
 
   private async remove(event: OperationEvent): Promise<void> {
+    // @ts-ignore
     await this.getService().removeOne(event.getData()[this.getService().options.idField]);
     event.statusCode = 204;
   }
