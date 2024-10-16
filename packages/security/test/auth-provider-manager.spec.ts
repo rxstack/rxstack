@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {AuthenticationProviderManager} from '../src/authentication/authentication-provider-manager';
 import {UsernameAndPasswordToken} from '../src/models/username-and-password.token';
@@ -17,24 +18,24 @@ describe('Security:AuthenticationProviderManager', () => {
   const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
   });
 
   it('should get provider by name', async () => {
     const provider = injector.get(AuthenticationProviderManager).get('user-password');
-    provider.getName().should.be.equal('user-password');
+    expect(provider.getName()).toBe('user-password');
   });
 
   it('should authenticate token', async () => {
     const token = new UsernameAndPasswordToken('admin', 'admin');
     const manager = injector.get(AuthenticationProviderManager);
     const authToken = await manager.authenticate(token);
-    authToken.isAuthenticated().should.be.equal(true);
-    authToken.getUser().should.be.instanceOf(User);
-    authToken.hasRole('ROLE_ADMIN').should.be.equal(true);
-    injector.get(AuthListener).successCalled.should.be.equal(true);
+    expect(authToken.isAuthenticated()).toBeTruthy();
+    expect(authToken.getUser()).toBeInstanceOf(User);
+    expect(authToken.hasRole('ROLE_ADMIN')).toBeTruthy();
+    expect(injector.get(AuthListener).successCalled).toBeTruthy();
   });
 
   it('should throw an exception if user password is invalid', async () => {
@@ -46,8 +47,8 @@ describe('Security:AuthenticationProviderManager', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(BadCredentialsException);
-    injector.get(AuthListener).failureCalled.should.be.equal(true);
+    expect(exception).toBeInstanceOf(BadCredentialsException);
+    expect(injector.get(AuthListener).failureCalled).toBeTruthy();
   });
 
   it('should throw an exception if provider is not found', async () => {
@@ -59,7 +60,7 @@ describe('Security:AuthenticationProviderManager', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(ProviderNotFoundException);
+    expect(exception).toBeInstanceOf(ProviderNotFoundException);
   });
 
   it('should throw an exception if provider exception is not caught', async () => {
@@ -71,6 +72,6 @@ describe('Security:AuthenticationProviderManager', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(TestAuthenticationProviderException);
+    expect(exception).toBeInstanceOf(TestAuthenticationProviderException);
   });
 });

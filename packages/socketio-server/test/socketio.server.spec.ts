@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Application, ServerManager} from '@rxstack/core';
 import {Injector} from 'injection-js';
 import {SocketioServer} from '../src/socketio.server';
@@ -16,7 +17,7 @@ describe('SocketIOServer', () => {
   let server: SocketioServer;
   let defaultNs: any;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.start();
     injector = app.getInjector();
     server = <SocketioServer>injector.get(ServerManager).getByName('socketio');
@@ -24,28 +25,28 @@ describe('SocketIOServer', () => {
     defaultNs = io(host, {transports: ['websocket']});
   });
 
-  after(async() =>  {
+  afterAll(async() =>  {
     defaultNs.close();
     await app.stop();
   });
 
   it('should get the engine', () => {
-    (typeof server.getEngine()).should.not.be.undefined;
+    expect(typeof server.getEngine()).toBeDefined();
   });
 
 
   it('should call mock_json', (done: Function) => {
     defaultNs.emit('mock_json', null, function (response: any) {
-      response['statusCode'].should.be.equal(200);
-      _.isEqual(response['content'], { id: 'json' }).should.be.equal(true);
+      expect(response['statusCode']).toBe(200);
+      expect(_.isEqual(response['content'], { id: 'json' })).toBeTruthy();
       done();
     });
   });
 
   it('should call mock_null', (done: Function) => {
     defaultNs.emit('mock_null', null, function (response: any) {
-      response['statusCode'].should.be.equal(200);
-      (null === response['content']).should.be.true;
+      expect(response['statusCode']).toBe(200);
+      expect(null === response['content']).toBeTruthy();
       done();
     });
   });
@@ -58,8 +59,8 @@ describe('SocketIOServer', () => {
     };
 
     defaultNs.emit('mock_exception', args, function (response: any) {
-      response['statusCode'].should.be.equal(404);
-      response['message'].should.be.equal('Not Found');
+      expect(response['statusCode']).toBe(404);
+      expect(response['message']).toBe('Not Found');
       done();
     });
   });
@@ -72,8 +73,8 @@ describe('SocketIOServer', () => {
     };
 
     defaultNs.emit('mock_exception', args, function (response: any) {
-      response['statusCode'].should.be.equal(500);
-      response['message'].should.be.equal('something');
+      expect(response['statusCode']).toBe(500);
+      expect(response['message']).toBe('something');
       done();
     });
   });
@@ -88,9 +89,8 @@ describe('SocketIOServer', () => {
     process.env.NODE_ENV = 'production';
 
     defaultNs.emit('mock_exception', args, function (response: any) {
-      response['statusCode'].should.be.equal(500);
-      response['message'].should.be.equal('Internal Server Error');
-      console.log(response);
+      expect(response['statusCode']).toBe(500);
+      expect(response['message']).toBe('Internal Server Error');
       process.env.NODE_ENV = 'testing';
       done();
     });
@@ -98,9 +98,8 @@ describe('SocketIOServer', () => {
 
   it('should throw exception if streamable', (done: Function) => {
     defaultNs.emit('mock_stream', null, function (response: any) {
-      response['statusCode'].should.be.equal(500);
-      response['message'].should.be.equal('Streaming is not supported.');
-
+      expect(response['statusCode']).toBe(500);
+      expect(response['message']).toBe('Streaming is not supported.');
       done();
     });
   });
@@ -109,9 +108,9 @@ describe('SocketIOServer', () => {
   it('should add another user and receive a message', (done: Function) => {
     const client2 = io(host, {transports: ['websocket']});
     client2.on('connect', () => {
-      injector.get(MockEventListener).connectedUsers.length.should.be.equal(2);
+      expect(injector.get(MockEventListener).connectedUsers.length).toBe(2);
       client2.on('hi', (event: any) => {
-        event.should.be.equal('all');
+        expect(event).toBe('all');
         client2.close();
         done();
       });

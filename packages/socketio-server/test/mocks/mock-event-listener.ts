@@ -4,6 +4,9 @@ import {Injectable, Injector} from 'injection-js';
 import {socketMiddleware} from './socketio.middleware';
 import {SocketioServer} from '../../src/socketio.server';
 import {EventEmitter} from 'events';
+import {CustomTransport} from '../../../express-server/test/mocks/custom-transport.logger';
+
+const winston = require('winston');
 
 @Injectable()
 export class MockEventListener {
@@ -21,6 +24,7 @@ export class MockEventListener {
     if (event.server.getName() !== SocketioServer.serverName) {
       return;
     }
+    winston.add(new CustomTransport());
     event.server.getEngine()
       .use(socketMiddleware(this.injector))
     ;

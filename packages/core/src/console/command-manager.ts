@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {AbstractCommand} from './abstract-command';
-const cli = require('yargs');
+const yargs = require('yargs/yargs');
 
 @Injectable()
 export class CommandManager {
@@ -8,15 +8,16 @@ export class CommandManager {
   commands: Record<string, any>[] = [];
 
   constructor(private registry: AbstractCommand[]) {
-    registry.forEach((command) => {
-      const obj = {
+    registry.forEach((command: any) => {
+      const obj: any = {
         'command': command.command,
         'describe': command.describe,
+        'builder': {},
         'handler': command.handler.bind(command)
       };
 
-      if (typeof command['builder'] === 'function') {
-        obj['builder'] = command['builder'].bind(command);
+      if (typeof command['builder'] === 'object') {
+        obj['builder'] = command['builder'];
       }
       this.commands.push(obj);
     });
@@ -30,17 +31,14 @@ export class CommandManager {
       .errorsStyle('red')
     ;
 
-    cli.usage(`Usage: $0 <command> [options]`);
+    yargs.usage(`Usage: $0 <command> [options]`);
+    const cli = yargs(process.argv);
     this.commands.forEach((command) => {
-      cli.command(command);
+      cli.command(command.command, command.describe, command.builder, command.handler);
     });
-
     cli.demandCommand(1)
-      .strict()
-      .alias('v', 'version')
-      .help('h')
-      .alias('h', 'help')
-      .argv
+      .help()
+      .parse()
     ;
   }
 

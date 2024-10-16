@@ -9,7 +9,6 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "declaration": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "lib": ["es2016"]
+    "lib": ["esnext"]
   }
 }

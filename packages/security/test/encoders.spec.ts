@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {EncoderFactory} from '../src/password-encoders/encoder-factory';
 import {TestUserWithEncoder} from './mocks/test-user-with-encoder';
@@ -13,26 +14,26 @@ describe('Security:Encoder', () => {
   const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
   });
 
   it('should get encoder by name', async () => {
     let encoder = injector.get(EncoderFactory).get('plain-text');
-    encoder.getName().should.be.equal('plain-text');
+    expect(encoder.getName()).toBe('plain-text');
   });
 
   it('should get encoder from user with defined encoder', async () => {
     let user = new TestUserWithEncoder('admin', 'pass', ['ADMIN']);
     let encoder = injector.get(EncoderFactory).getEncoder(user);
-    encoder.getName().should.be.equal('plain-text');
+    expect(encoder.getName()).toBe('plain-text');
   });
 
   it('should get encoder from user without defined one', async () => {
     let user = new User('admin', 'pass', ['ADMIN']);
     let encoder = injector.get(EncoderFactory).getEncoder(user);
-    encoder.getName().should.be.equal('bcrypt');
+    expect(encoder.getName()).toBe('bcrypt');
   });
 
   it('should throw exception with non-existing encoder', async () => {
@@ -42,7 +43,7 @@ describe('Security:Encoder', () => {
     const fn = () => {
       injector.get(EncoderFactory).getEncoder(user);
     };
-    fn.should.throw(new RegExp('does not exist'));
+    expect(fn).toThrow(new RegExp('does not exist'));
   });
 
   describe('PlainTextEncoder', () => {
@@ -50,9 +51,9 @@ describe('Security:Encoder', () => {
       const encoder = new PlainTextPasswordEncoder();
       const encoded = await encoder.encodePassword('pass');
       const result1 = await encoder.isPasswordValid(encoded, 'pass');
-      result1.should.be.equal(true);
+      expect(result1).toBeTruthy();
       const result2 = await encoder.isPasswordValid(encoded, 'pass1');
-      result2.should.be.equal(false);
+      expect(result2).toBeFalsy();
     });
   });
 
@@ -61,9 +62,9 @@ describe('Security:Encoder', () => {
       const encoder = new BcryptPasswordEncoder();
       const encoded = await encoder.encodePassword('pass');
       const result1 = await encoder.isPasswordValid(encoded, 'pass');
-      result1.should.be.equal(true);
+      expect(result1).toBeTruthy();
       const result2 = await encoder.isPasswordValid(encoded, 'pass1');
-      result2.should.be.equal(false);
+      expect(result2).toBeFalsy();
     });
   });
 });

@@ -1,8 +1,8 @@
 import 'reflect-metadata';
+import {describe, expect, it} from '@jest/globals';
 import {GenericEvent} from '../src/generic-event';
 import {EVENT_LISTENER_KEY, Observe} from '../src/decorators';
 import {EventListenerMetadata} from '../src/metadata';
-import { expect } from 'chai';
 
 export class ObserverClass {
 
@@ -19,7 +19,7 @@ export class ObserverClass {
 describe('@Observe decorator', function() {
   it('should add observers to metadata', function() {
     const metadata: EventListenerMetadata = Reflect.getMetadata(EVENT_LISTENER_KEY, ObserverClass);
-    expect(metadata.target).be.equal(ObserverClass);
-    expect(metadata.observers.length).be.equal(3);
+    expect(metadata.target).toBe(ObserverClass);
+    expect(metadata.observers.length).toBe(3);
   });
 });

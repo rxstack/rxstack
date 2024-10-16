@@ -1,3 +1,4 @@
+import {describe, expect, it} from '@jest/globals';
 import {
   BadRequestException,
   ConflictException,
@@ -67,22 +68,22 @@ describe('Exceptions', () => {
       try {
         throw exceptionInstance;
       } catch (e) {
-        e.should.be.an.instanceof(HttpException);
-        e.statusCode.should.be.equal(check.code);
-        e.name.should.be.equal(exceptionInstance.constructor.name);
+        expect(e).toBeInstanceOf(HttpException);
+        expect(e.statusCode).toBe(check.code);
+        expect(e.name).toBe(exceptionInstance.constructor.name);
       }
     });
   });
 
   it('converts error to exception', () => {
     let exception = transformToException(new Error('generic'));
-    exception.name.should.be.equal('Error');
+    expect(exception.name).toBe('Error');
     let sameException = transformToException(exception);
-    sameException.should.be.equal(exception);
+    expect(sameException).toBe(exception);
   });
 
   it('converts exception to object', () => {
     const transformed = exceptionToObject(new Exception('Custom Error'));
-    transformed['message'].should.be.equal('Custom Error');
+    expect(transformed['message']).toBe('Custom Error');
   });
 });

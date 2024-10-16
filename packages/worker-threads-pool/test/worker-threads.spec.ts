@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application} from '@rxstack/core';
 import {WorkerThreadsPool} from '../src/index';
@@ -10,12 +11,12 @@ describe('WorkerThreadPool:worker-threads', () => {
   let injector: Injector;
   let pool: WorkerThreadsPool;
 
-  before(async () => {
+  beforeAll(async () => {
     injector = await app.run();
     pool = injector.get(WorkerThreadsPool);
   });
 
-  after(async () => {
+  afterAll(async () => {
     pool.terminate();
   });
 

@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
@@ -10,7 +11,7 @@ describe('Platform:Operation:Create', () => {
   let injector: Injector;
   let kernel: Kernel;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
     kernel = injector.get(Kernel);
@@ -21,25 +22,25 @@ describe('Platform:Operation:Create', () => {
     const request = new Request('HTTP');
     request.body = { 'name': 'my task' };
     const response: Response = await def.handler(request);
-    response.statusCode.should.equal(201);
-    response.content['name'].should.equal('my task');
+    expect(response.statusCode).toBe(201);
+    expect(response.content['name']).toBe('my task');
   });
 
   it('@app_task_create_with_response_on_pre_execute', async () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create');
     const request = new Request('SOCKET');
-    request.params.set('with_response', 'pre_execute')
+    request.params.set('with_response', 'pre_execute');
     request.body = { 'name': 'my task'};
     const response: Response = await def.handler(request);
-    response.content.should.equal('pre_execute');
+    expect(response.content).toBe('pre_execute');
   });
 
   it('@app_task_create_with_response_on_post_execute', async () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_create');
     const request = new Request('SOCKET');
-    request.params.set('with_response', 'post_execute')
+    request.params.set('with_response', 'post_execute');
     request.body = { 'name': 'my task'};
     const response: Response = await def.handler(request);
-    response.content.should.equal('post_execute');
+    expect(response.content).toBe('post_execute');
   });
 });

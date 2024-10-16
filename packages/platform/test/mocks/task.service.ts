@@ -45,6 +45,7 @@ export class TaskService implements ServiceInterface<TaskModel> {
     }
   }
   async findOne(criteria: Object): Promise<TaskModel> {
+    // @ts-ignore
     const id = criteria['id']['$eq'];
     switch (id) {
       case 'not_found':

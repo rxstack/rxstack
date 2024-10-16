@@ -18,6 +18,7 @@ export abstract class AbstractOperation implements InjectorAwareInterface {
 
   onInit(): void {
     const callbackKeys = Object.keys(this.metadata).filter((key: string) => key.match('^on'));
+    // @ts-ignore
     callbackKeys.forEach(key => this.registerOperationCallbacks(key.slice(2), this.metadata[key]));
   }
 

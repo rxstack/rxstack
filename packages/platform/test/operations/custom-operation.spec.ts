@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
@@ -10,7 +11,7 @@ describe('Platform:Operation:Custom', () => {
   let injector: Injector;
   let kernel: Kernel;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
     kernel = injector.get(Kernel);
@@ -20,7 +21,7 @@ describe('Platform:Operation:Custom', () => {
     const def = kernel.webSocketDefinitions.find((def) => def.name === 'app_task_custom');
     const request = new Request('SOCKET');
     const response: Response = await def.handler(request);
-    response.statusCode.should.equal(200);
-    response.content.should.equal('\n    Hello world\n  ');
+    expect(response.statusCode).toBe(200);
+    expect(response.content).toBe('\n    Hello world\n  ');
   });
 });

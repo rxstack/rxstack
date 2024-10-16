@@ -19,6 +19,7 @@ export class RefreshTokenManager<T extends RefreshTokenInterface> extends Abstra
   async persist(data: RefreshTokenInterface): Promise<T> {
     const result = await this.get(data._id);
     if (result) {
+      // @ts-ignore
       await this.service.updateOne(data[this.service.options.idField], data);
       return await this.get(data._id);
     } else {

@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {REFRESH_TOKEN_MANAGER, RefreshTokenInterface} from '../src/interfaces';
 import {UnauthorizedException} from '@rxstack/exceptions';
@@ -15,31 +16,31 @@ describe('Security:RefreshToken', () => {
   let refreshToken: RefreshTokenInterface;
   let manager: AbstractRefreshTokenManager;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     injector = await app.run();
     manager = injector.get(REFRESH_TOKEN_MANAGER);
   });
 
   it('should create a token', async () => {
     refreshToken = await manager.create({});
-    (typeof refreshToken).should.be.equal('object');
-    _.has(refreshToken, '_id').should.be.equal(true);
+    expect(typeof refreshToken).toBe('object');
+    expect(_.has(refreshToken, '_id')).toBeTruthy();
   });
 
   it('should retrieve a token', async () => {
     const token = await manager.get(refreshToken._id);
-    (typeof token).should.be.equal('object');
+    expect(typeof token).toBe('object');
   });
 
   it('should refresh a token', async () => {
     const refreshed = await manager.refresh(refreshToken);
-    refreshed.should.be.equal('generated-token');
+    expect(refreshed).toBe('generated-token');
   });
 
   it('should disable a token', async () => {
     await manager.disable(refreshToken);
     const token = await manager.get(refreshToken._id);
-    token.expiresAt.should.be.equal(0);
+    expect(token.expiresAt).toBe(0);
   });
 
   it('should throw an exception if token is not valid', async () => {
@@ -49,13 +50,13 @@ describe('Security:RefreshToken', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(UnauthorizedException);
+    expect(exception).toBeInstanceOf(UnauthorizedException);
   });
 
   it('should remove all tokens', async () => {
     await manager.create({});
     await manager.clear();
     const token = await manager.get(refreshToken._id);
-    (!!token).should.be.equal(false);
+    expect(!!token).toBeFalsy();
   });
 });

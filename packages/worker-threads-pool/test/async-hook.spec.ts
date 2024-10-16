@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Context} from './fixtures/context';
 import {Application} from '@rxstack/core';
@@ -25,13 +26,13 @@ describe('WorkerThreadPool:AsyncHooks', () => {
     }
   });
 
-  before(async () => {
+  beforeAll(async () => {
     injector = await app.run();
     pool = injector.get(WorkerThreadsPool);
     hook.enable();
   });
 
-  after(async () => {
+  afterAll(async () => {
     pool.terminate();
     hook.disable();
   });
@@ -45,13 +46,13 @@ describe('WorkerThreadPool:AsyncHooks', () => {
 
     context.current = 1;
     pool.acquire('hang', {delay: 1000}).then((worker) => {
-      context.current.should.be.equal(1);
+      expect(context.current).toBe(1);
       worker.on('exit', onExit);
     });
 
     context.current = 2;
     pool.acquire('hang', {delay: 1000}).then((worker) => {
-      context.current.should.be.equal(2);
+      expect(context.current).toBe(2);
       worker.on('exit', onExit);
     });
   });

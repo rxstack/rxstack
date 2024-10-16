@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
@@ -11,7 +12,7 @@ describe('Platform:Operation:Patch', () => {
   let injector: Injector;
   let kernel: Kernel;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
     kernel = injector.get(Kernel);
@@ -23,7 +24,7 @@ describe('Platform:Operation:Patch', () => {
     request.params.set('ids', [1]);
     request.body = { 'name': 'patched' };
     const response: Response = await def.handler(request);
-    response.statusCode.should.equal(204);
-    _.isEqual(request.attributes.get('criteria'), { id: { '$in': [1] } }).should.be.equal(true);
+    expect(response.statusCode).toBe(204);
+    expect(_.isEqual(request.attributes.get('criteria'), { id: { '$in': [1] } })).toBeTruthy();
   });
 });

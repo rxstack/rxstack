@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {TokenExtractorManager} from '../src/token-extractors/token-extractor-manager';
 import {QueryParameterTokenExtractor} from '../src/token-extractors/query-parameter-token-extractor';
@@ -10,15 +11,15 @@ describe('Security:TokenExtractors', () => {
   const app = new Application(SECURITY_APP_OPTIONS);
   let injector: Injector;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
   });
 
   it('should get extractor by name', async () => {
     const manager = injector.get(TokenExtractorManager);
-    manager.get(QueryParameterTokenExtractor.EXTRACTOR_NAME)
-      .should.be.instanceOf(QueryParameterTokenExtractor);
+    expect(manager.get(QueryParameterTokenExtractor.EXTRACTOR_NAME))
+      .toBeInstanceOf(QueryParameterTokenExtractor);
   });
 
   describe('QueryParameterTokenExtractor', () => {
@@ -27,7 +28,7 @@ describe('Security:TokenExtractors', () => {
 
       const request = new Request('HTTP');
       request.params.set('bearer', 'generated-token');
-      manager.extract(request).should.be.equal('generated-token');
+      expect(manager.extract(request)).toBe('generated-token');
     });
 
     it('should not extract the token', async () => {
@@ -35,7 +36,7 @@ describe('Security:TokenExtractors', () => {
 
       const request = new Request('HTTP');
       request.params.set('some', 'generated-token');
-      (manager.extract(request) === null).should.be.equal(true);
+      expect(manager.extract(request) === null).toBeTruthy();
     });
   });
 
@@ -45,7 +46,7 @@ describe('Security:TokenExtractors', () => {
 
       const request = new Request('HTTP');
       request.headers.set('authorization', 'Bearer generated-token');
-      manager.extract(request).should.be.equal('generated-token');
+      expect(manager.extract(request)).toBe('generated-token');
     });
 
     it('should not extract the token', async () => {
@@ -53,7 +54,7 @@ describe('Security:TokenExtractors', () => {
 
       const request = new Request('HTTP');
       request.headers.set('some', 'generated-token');
-      (manager.extract(request) === null).should.be.equal(true);
+      expect(manager.extract(request) === null).toBeTruthy();
     });
 
     it('should not extract the token if prefix is not found', async () => {
@@ -61,7 +62,7 @@ describe('Security:TokenExtractors', () => {
 
       const request = new Request('HTTP');
       request.headers.set('authorization', 'generated-token');
-      (manager.extract(request) === null).should.be.equal(true);
+      expect(manager.extract(request) === null).toBeTruthy();
     });
   });
 });

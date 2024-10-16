@@ -1,9 +1,9 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {PLATFORM_APP_OPTIONS} from '../PLATFORM_APP_OPTIONS';
 import {HttpException} from '@rxstack/exceptions';
-import * as _ from 'lodash';
 
 describe('Platform:Operation:Get', () => {
   // Setup application
@@ -12,7 +12,7 @@ describe('Platform:Operation:Get', () => {
   let injector: Injector;
   let kernel: Kernel;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
     kernel = injector.get(Kernel);
@@ -23,8 +23,8 @@ describe('Platform:Operation:Get', () => {
     const request = new Request('HTTP');
     request.params.set('id', 'app_task_get');
     const response: Response = await def.handler(request);
-    response.statusCode.should.equal(200);
-    response.content['name'].should.equal('my task');
+    expect(response.statusCode).toBe(200);
+    expect(response.content['name']).toBe('my task');
   });
 
   it('@app_task_get should throw 404', async () => {
@@ -37,6 +37,6 @@ describe('Platform:Operation:Get', () => {
     } catch (e) {
       exception = e;
     }
-    exception.statusCode.should.be.equal(404);
+    expect(exception.statusCode).toBe(404);
   });
 });

@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [20.x, 21.x, 22.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -28,8 +28,13 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm install
-    - run: npm test
+    - run: npm run bootstrap
     - name: Test & publish code coverage
-      uses: paambaati/codeclimate-action@v3.0.0
+      uses: paambaati/codeclimate-action@v9.0.0
       env:
         CC_TEST_REPORTER_ID: 6b737647c19540b99ebe2e3158b09f1e5d799ae6c2d5a49a236d922050a49e11
+      with:
+        coverageCommand: npm run test
+        coverageLocations: |
+          ${{github.workspace}}/coverage/lcov.info:lcov
+        debug: true

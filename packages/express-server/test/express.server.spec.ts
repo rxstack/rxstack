@@ -1,11 +1,12 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {ExpressServer} from '../src/express.server';
 import {Injector} from 'injection-js';
 import {Application, ServerManager} from '@rxstack/core';
 import {EXPRESS_APP_OPTIONS} from './mocks/express-app-options';
 import * as _ from 'lodash';
-const fetch = require('node-fetch');
 
+const fetch = require('node-fetch');
 
 describe('ExpressServer', () => {
 
@@ -15,56 +16,56 @@ describe('ExpressServer', () => {
   let host: string;
   let expressServer: ExpressServer;
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.start();
     injector = app.getInjector();
     expressServer = <ExpressServer>injector.get(ServerManager).getByName('express');
     host = 'http://localhost:3200/api';
   });
 
-  after(async() =>  {
+  afterAll(async() =>  {
     await app.stop();
   });
 
   it('should get the engine', async () => {
-    (typeof expressServer.getEngine()).should.not.be.undefined;
+    expect(typeof expressServer.getEngine()).toBeDefined();
   });
 
   it('should call mock_text', async () => {
     const response: any = await fetch(host + '/mock/text');
     const headers: any = response.headers;
     const content = await response.text();
-    headers.get('x-powered-by').should.be.equal('Express');
-    headers.get('content-type').should.be.equal('text/html; charset=utf-8');
-    response.status.should.be.equal(200);
-    content.should.be.equal('something');
+    expect(headers.get('x-powered-by')).toBe('Express');
+    expect(headers.get('content-type')).toBe('text/html; charset=utf-8');
+    expect(response.status).toBe(200);
+    expect(content).toBe('something');
   });
 
   it('should call mock_json', async () => {
     const response: any = await fetch(host + '/mock/json');
     const headers = response.headers;
     const content = await response.json();
-    headers.get('content-type').should.be.equal('application/json; charset=utf-8');
-    response.status.should.be.equal(200);
-    _.isEqual(content, { id: 'json' }).should.be.equal(true);
+    expect(headers.get('content-type')).toBe('application/json; charset=utf-8');
+    expect(response.status).toBe(200);
+    expect(_.isEqual(content, { id: 'json' })).toBeTruthy();
   });
 
   it('should call express middleware', async () => {
     const response: any = await fetch(host + '/express-middleware');
     const headers = response.headers;
     const content = await response.json();
-    headers.get('x-powered-by').should.be.equal('Express');
-    headers.get('content-type').should.be.equal('application/json; charset=utf-8');
-    response.status.should.be.equal(200);
-    _.isEqual(content, { id: 'express' }).should.be.equal(true);
+    expect(headers.get('x-powered-by')).toBe('Express');
+    expect(headers.get('content-type')).toBe('application/json; charset=utf-8');
+    expect(response.status).toBe(200);
+    expect(_.isEqual(content, { id: 'express' })).toBeTruthy();
   });
 
   it('should download file', async () => {
     const response: any = await fetch(host + '/mock/download');
     const headers = response.headers;
-    response.status.should.be.equal(200);
-    headers.get('content-disposition').should.be.equal('attachment; filename="video.mp4"');
-    headers.get('content-type').should.be.equal('video/mp4');
+    expect(response.status).toBe(200);
+    expect(headers.get('content-disposition')).toBe('attachment; filename="video.mp4"');
+    expect(headers.get('content-type')).toBe('video/mp4');
   });
 
   it('should stream video', async () => {
@@ -77,40 +78,40 @@ describe('ExpressServer', () => {
 
     const response: any = await fetch(host + '/mock/stream', options);
     const headers = response.headers;
-    response.status.should.be.equal(206);
-    headers.get('content-range').should.be.equal('bytes 1-200/424925');
-    headers.get('content-length').should.be.equal('200');
+    expect(response.status).toBe(206);
+    expect(headers.get('content-range')).toBe('bytes 1-200/424925');
+    expect(headers.get('content-length')).toBe('200');
   });
 
   it('should throw an 404 exception', async () => {
     const response = await fetch(host + '/mock/exception?code=404');
-    const content = await response.json();
-    response.status.should.be.equal(404);
-    content['message'].should.be.equal('Not Found');
+    const content: any = await response.json();
+    expect(response.status).toBe(404);
+    expect(content['message']).toBe('Not Found');
   });
 
   it('should throw an exception', async () => {
 
     const response = await fetch(host + '/mock/exception');
-    const content = await response.json();
+    const content: any = await response.json();
 
-    response.status.should.be.equal(500);
-    content['message'].should.be.equal('something');
+    expect(response.status).toBe(500);
+    expect(content['message']).toBe('something');
   });
 
   it('should throw an exception in production', async () => {
     process.env.NODE_ENV = 'production';
     const response = await fetch(host + '/mock/exception');
-    const content = await response.json();
+    const content: any = await response.json();
 
-    response.status.should.be.equal(500);
-    content['message'].should.be.equal('Internal Server Error');
+    expect(response.status).toBe(500);
+    expect(content['message']).toBe('Internal Server Error');
 
     process.env.NODE_ENV = 'testing';
   });
 
   it('should handle middleware exception', async () => {
     const response = await fetch(host + '/express-middleware-error');
-    response.status.should.be.equal(500);
+    expect(response.status).toBe(500);
   });
 });

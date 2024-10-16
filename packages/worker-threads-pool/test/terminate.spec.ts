@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application} from '@rxstack/core';
 import {WorkerThreadsPool} from '../src/index';
@@ -10,12 +11,12 @@ describe('WorkerThreadPool:terminate', () => {
   let injector: Injector;
   let pool: WorkerThreadsPool;
 
-  before(async () => {
+  beforeAll(async () => {
     injector = await app.run();
     pool = injector.get(WorkerThreadsPool);
   });
 
-  after(async () => {
+  afterAll(async () => {
     pool.terminate();
   });
 
@@ -29,8 +30,8 @@ describe('WorkerThreadPool:terminate', () => {
           worker.on('online', () => {
             pool.terminate();
             setTimeout(() => {
-              pool.stats().workerSize.should.be.equal(0);
-              exitCnt.should.be.equal(2);
+              expect(pool.stats().workerSize).toBe(0);
+              expect(exitCnt).toBe(2);
               done();
             }, 1000);
           });

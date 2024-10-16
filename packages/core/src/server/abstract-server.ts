@@ -29,9 +29,9 @@ export abstract class AbstractServer {
    */
   protected port: number;
 
-  /**
-   * Http Server
-   */
+
+  /** Http Server */
+  // @ts-ignore
   protected httpServer: HttpServer;
 
   /**
@@ -64,6 +64,7 @@ export abstract class AbstractServer {
    * Retrieve the base instance of Server
    * @returns {HttpServer}
    */
+  // @ts-ignore
   getHttpServer(): HttpServer {
     return this.httpServer;
   }

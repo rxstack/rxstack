@@ -4,6 +4,9 @@ import {Injectable, Injector} from 'injection-js';
 import {ExpressServer} from '../../src/express.server';
 import {ServerConfigurationEvent, ServerEvents} from '@rxstack/core';
 import {express_server_environment} from '../environments/express_server_environment';
+import {CustomTransport} from './custom-transport.logger';
+
+const winston = require('winston');
 
 @Injectable()
 export class ConfigurationListener {
@@ -19,6 +22,8 @@ export class ConfigurationListener {
     if (event.server.getName() !== ExpressServer.serverName) {
       return;
     }
+
+    winston.add(new CustomTransport());
 
     event.server.getEngine()
       .get(express_server_environment.express_server.prefix + '/express-middleware', expressMiddleware(this.injector))

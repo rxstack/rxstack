@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {Application, Kernel, Request, Response} from '@rxstack/core';
 import {ForbiddenException, UnauthorizedException} from '@rxstack/exceptions';
@@ -14,7 +15,7 @@ describe('Security:SocketController', () => {
   let token: string;
   let connection = new EventEmitter();
 
-  before(async() =>  {
+  beforeAll(async() =>  {
     await app.run();
     injector = app.getInjector();
   });
@@ -26,9 +27,10 @@ describe('Security:SocketController', () => {
     request.connection = connection;
     request.params.set('bearer', 'generated-token');
     let response: Response = await def.handler(request);
-    response.statusCode.should.be.equal(204);
-    request.connection['token'].should.be.instanceOf(Token);
-    request.token.should.be.instanceOf(Token);
+    expect(response.statusCode).toBe(204);
+    // @ts-ignore
+    expect(request.connection['token']).toBeInstanceOf(Token);
+    expect(request.token).toBeInstanceOf(Token);
   });
 
   it('should not authenticate with invalid token', async () => {
@@ -43,13 +45,15 @@ describe('Security:SocketController', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(UnauthorizedException);
+    expect(exception).toBeInstanceOf(UnauthorizedException);
   });
 
   it('should wait for the token timeout', (done) => {
-    (typeof connection['tokenTimeout'] === 'object').should.be.equal(true);
+    // @ts-ignore
+    expect(typeof connection['tokenTimeout'] === 'object').toBeTruthy();
     setTimeout(() => {
-      connection['token']['fullyAuthenticated'].should.be.equal(false);
+      // @ts-ignore
+      expect(connection['token']['fullyAuthenticated']).toBeFalsy();
       done();
     }, 1200);
   });
@@ -60,8 +64,9 @@ describe('Security:SocketController', () => {
     const request = new Request('SOCKET');
     request.connection = connection;
     let response: Response = await def.handler(request);
-    response.statusCode.should.be.equal(204);
-    request.connection['token'].should.be.instanceOf(AnonymousToken);
+    expect(response.statusCode).toBe(204);
+    // @ts-ignore
+    expect(request.connection['token']).toBeInstanceOf(AnonymousToken);
   });
 
 
@@ -76,6 +81,6 @@ describe('Security:SocketController', () => {
     } catch (e) {
       exception = e;
     }
-    exception.should.be.instanceOf(ForbiddenException);
+    expect(exception).toBeInstanceOf(ForbiddenException);
   });
 });

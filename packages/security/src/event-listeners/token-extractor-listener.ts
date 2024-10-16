@@ -32,8 +32,9 @@ export class TokenExtractorListener {
   }
 
   private createTokenFromSocketRequest(request: Request): void {
-    if (request.connection && request.connection['token']) {
-      request.token = request.connection['token'];
+    const connection: any = request.connection;
+    if (connection && connection['token']) {
+      request.token = connection['token'];
     }
   }
 }

@@ -20,7 +20,7 @@ export class GenericBag<T> extends Map<string, T> {
    * @returns {Object}
    */
   toObject(): Object {
-    const data: Object = {};
+    const data: Record<string, any> = {};
     this.forEach((value: T, key: string) => data[key] = value);
     return data;
   }
@@ -31,7 +31,7 @@ export class GenericBag<T> extends Map<string, T> {
    * @param {Object} data
    * @returns {this}
    */
-  fromObject(data?: Object): this {
+  fromObject(data?: Record<string, any>): this {
     for (let key in data) {
       this.set(key, data[key]);
     }

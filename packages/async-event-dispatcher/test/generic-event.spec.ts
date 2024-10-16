@@ -1,5 +1,5 @@
+import {describe, expect, it} from '@jest/globals';
 import {GenericEvent} from '../src/generic-event';
-import { expect } from 'chai';
 
 describe('GenericEvent', () => {
 
@@ -10,11 +10,11 @@ describe('GenericEvent', () => {
   });
 
   it('should not stop propagation', () => {
-    expect(genericEvent.isPropagationStopped()).be.false;
+    expect(genericEvent.isPropagationStopped()).toBe(false);
   });
 
   it('should stop propagation', () => {
     genericEvent.stopPropagation();
-    expect(genericEvent.isPropagationStopped()).be.true;
+    expect(genericEvent.isPropagationStopped()).toBe(true);
   });
 });

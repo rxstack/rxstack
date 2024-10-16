@@ -6,9 +6,10 @@ import {ConnectionEvent, ServerEvents} from '@rxstack/core';
 export class ConnectionListener {
   @Observe(ServerEvents.DISCONNECTED)
   async onDisconnect(event: ConnectionEvent): Promise<void> {
-    if (event.connection['tokenTimeout']) {
-      clearTimeout(event.connection['tokenTimeout']);
-      event.connection['tokenTimeout'] = null;
+    const connection: any = event.connection;
+    if (connection['tokenTimeout']) {
+      clearTimeout(connection['tokenTimeout']);
+      connection['tokenTimeout'] = null;
     }
   }
 }

@@ -21,6 +21,7 @@ export class TokenEncoder implements TokenEncoderInterface {
     if (typeof key === 'string') {
       secretOrPrivateKey = key;
     } else {
+      // @ts-ignore
       secretOrPrivateKey = { key: key, passphrase: secretLoader.config.secret['passphrase'] };
     }
 
@@ -31,7 +32,7 @@ export class TokenEncoder implements TokenEncoderInterface {
       });
     } catch (e) {
       throw new JWTEncodeFailureException(
-        'An error occured while trying to encode the JWT token. ' +
+        'An error occurred while trying to encode the JWT token. ' +
         'Please verify your configuration (private key/passphrase)',
         e.message);
     }

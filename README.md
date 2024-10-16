@@ -744,8 +744,7 @@ Automated tests are an essential part of the fully functional software product. 
 the most sensitive parts of your system. In order to achieve that goal, we produce a set of different tests 
 like integration tests, unit tests, functional tests, and so on.
 
-> `RxStack` uses  [mocha](https://mochajs.org/#getting-started), [chai](http://www.chaijs.com/) 
-and [sinon](https://sinonjs.org/) testing frameworks. 
+> `RxStack` uses [jest](https://jestjs.io/) testing frameworks. 
 
 
 ##### <a name="testing-unit"></a> Unit Tests
@@ -766,13 +765,13 @@ and test it:
 
 ```typescript
 // my-project/test/unit/services/value.service.spec.ts
-
+import {describe, expect, it} from '@jest/globals';
 import {ValueService} from '../../../src/app/services/value.service';
 
 describe('Unit:ValueService', () => {
   it('#getValue should return real value', async () => {
     const valueService = new ValueService();
-    valueService.getValue().should.equal('real value');
+    expect(valueService.getValue()).toBe('real value');
   });
 });
 ```
@@ -802,7 +801,7 @@ and test it:
 
 ```typescript
 // my-project/test/unit/services/master.service.spec.ts
-
+import {describe, expect, it} from '@jest/globals';
 import {MasterService} from '../../../src/app/services/master.service';
 import {ValueService} from '../../../src/app/services/value.service';
 
@@ -814,7 +813,7 @@ describe('Unit:MasterService', () => {
     const valueService = sinon.createStubInstance(ValueService);
     valueService.getValue.returns('fake value');
     const masterService = new MasterService(valueService);
-    masterService.getValue().should.equal('fake value');
+    expect(masterService.getValue()).toBe('fake value');
   });
 });
 ```
@@ -870,6 +869,7 @@ and now let's test it:
 //  my-project/test/integration/services/master.service.spec.ts
 
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {MasterService} from '../../../src/app/services/master.service';
 import {app} from '../../../src/app/app';
@@ -880,14 +880,14 @@ describe('Integration:MasterService', () => {
   let injector: Injector;
   let masterService: MasterService;
 
-  before(async () => {
+  beforeAll(async () => {
     await app.run();
     injector = app.getInjector();
     masterService = injector.get(MasterService);
   });
 
   it('#getValue should return real value', async () => {
-    masterService.getValue().should.equal('real value');
+    expect(masterService.getValue()).toBe('real value');
   });
 });
 ```
@@ -897,6 +897,7 @@ sometimes you need to replace the real service with the mock one:
 ```typescript
 //  my-project/test/integration/services/master.service.spec.ts
 import 'reflect-metadata';
+import {describe, expect, it, beforeAll} from '@jest/globals';
 import {configuration} from '@rxstack/configuration';
 configuration.initialize(configuration.getRootPath() + '/src/environments');
 import {MasterService} from '../../../src/app/services/master.service';
@@ -925,13 +926,13 @@ describe('Integration:MasterService', () => {
   let injector: Injector;
   let masterService: MasterService;
 
-  before(async () => {
+  beforeAll(async () => {
     injector = await app.run();
     masterService = injector.get(MasterService);
   });
 
   it('#getValue should return fake value', async () => {
-    masterService.getValue().should.equal('fake value');
+    expect(masterService.getValue()).toBe('fake value');
   });
 });
 ```
@@ -950,6 +951,7 @@ and [socket.io-client](https://github.com/socketio/socket.io-client) :
 > You can use you any other http or socket client
 
 ```typescript
+import {describe, expect, it, beforeAll, afterAll} from '@jest/globals';
 import {Injector} from 'injection-js';
 import {ServerManager} from '@rxstack/core';
 
@@ -964,7 +966,7 @@ describe('Functional:Controllers:HelloController', () => {
   let wsHost: string;
   let conn: any;
 
-  before(async () => {
+  beforeAll(async () => {
     await app.start();
     injector = app.getInjector();
     httpHost = injector.get(ServerManager).getByName('express').getHost();
@@ -972,7 +974,7 @@ describe('Functional:Controllers:HelloController', () => {
     conn = io(wsHost, {transports: ['websocket']});
   });
 
-  after(async () => {
+  afterAll(async () => {
     await conn.close();
     await app.stop();
   });
@@ -988,15 +990,15 @@ describe('Functional:Controllers:HelloController', () => {
     const headers = response.headers;
     const content = await response.text();
     headers.get('x-powered-by').should.be.equal('Express');
-    response.status.should.be.equal(200);
-    content.should.be.equal('hello');
+    expect(response.status).toBe(200);
+    expect(content).toBe('hello');
     
   });
 
   it('#sayHello over socket should return hello', (done: Function) => {
     conn.emit('app_hello', null, function (response: any) {
-      response['statusCode'].should.be.equal(200);
-      response['content'].should.be.equal('hello');
+      expect(response['statusCode']).toBe(200);
+      expect(response['content']).toBe('hello');
       done();
     });
   });

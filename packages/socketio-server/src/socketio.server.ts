@@ -69,7 +69,7 @@ export class SocketioServer extends AbstractServer {
     });
   }
 
-  private createRequest(definition: WebSocketDefinition, socket: EventEmitter, args: any): Request {
+  private createRequest(definition: WebSocketDefinition, socket: any, args: any): Request {
     args = args || {};
     const request = new Request('SOCKET');
     request.headers.fromObject(socket['request'].headers);
@@ -80,7 +80,6 @@ export class SocketioServer extends AbstractServer {
   }
 
   private responseHandler(response: Response, callback?: () => void): void {
-    // todo - implement streams
     if (response.content instanceof Stream.Readable) {
       throw new Exception('Streaming is not supported.');
     }
@@ -93,7 +92,7 @@ export class SocketioServer extends AbstractServer {
     }
   }
 
-  private errorHandler(err: Exception, callback?: () => void) {
+  private errorHandler(err: any, callback?: () => void) {
     err['statusCode'] = err['statusCode'] || 500;
     const transformedException = exceptionToObject(err, {status: err['statusCode']});
     const winstonMethod = err['statusCode'] >= 500 ? 'error' : 'debug';
