@@ -8,6 +8,10 @@ import {Service2} from './fixtures/service2';
 import {Test1ModuleConfiguration} from './fixtures/test1.module';
 import {APP_OPTIONS} from './fixtures/app-options';
 import {MockServer} from './fixtures/mock.server';
+import {CustomTransport} from '../custom-transport.logger';
+
+const winston = require('winston');
+winston.add(new CustomTransport());
 
 describe('Application', () => {
   // Setup application

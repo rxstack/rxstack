@@ -1,6 +1,6 @@
 import {Injectable} from 'injection-js';
 import {AbstractCommand} from './abstract-command';
-const yargs = require('yargs/yargs');
+const cli = require('yargs');
 
 @Injectable()
 export class CommandManager {
@@ -12,12 +12,11 @@ export class CommandManager {
       const obj: any = {
         'command': command.command,
         'describe': command.describe,
-        'builder': {},
         'handler': command.handler.bind(command)
       };
 
-      if (typeof command['builder'] === 'object') {
-        obj['builder'] = command['builder'];
+      if (typeof command['builder'] === 'function') {
+        obj['builder'] = command['builder'].bind(command);
       }
       this.commands.push(obj);
     });
@@ -31,14 +30,17 @@ export class CommandManager {
       .errorsStyle('red')
     ;
 
-    yargs.usage(`Usage: $0 <command> [options]`);
-    const cli = yargs(process.argv);
-    this.commands.forEach((command) => {
-      cli.command(command.command, command.describe, command.builder, command.handler);
+    cli.usage(`Usage: $0 <command> [options]`);
+    this.commands.forEach((command: any) => {
+      cli.command(command);
     });
+
     cli.demandCommand(1)
-      .help()
-      .parse()
+      .strict()
+      .alias('v', 'version')
+      .help('h')
+      .alias('h', 'help')
+      .argv
     ;
   }
 

@@ -2,6 +2,10 @@ import {ApplicationOptions} from '../../../src/application';
 import {AnnotatedController} from './annotated.controller';
 import {AnnotatedListener} from './annotated-listener';
 import {application_environment} from '../../environments/application_environment';
+import {CustomTransport} from '../../custom-transport.logger';
+
+const winston = require('winston');
+winston.add(new CustomTransport());
 
 export const KERNEL_APP_OPTIONS: ApplicationOptions = {
   providers: [

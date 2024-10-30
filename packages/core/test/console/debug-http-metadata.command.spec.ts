@@ -3,8 +3,12 @@ import {describe, expect, it, beforeAll, afterAll, jest} from '@jest/globals';
 import {Application} from '../../src/application';
 import {CONSOLE_APP_OPTIONS} from './fixtures/console-app-options';
 import {CommandManager} from '../../src/console';
+const yargs = require('yargs');
 
 describe('Console:DebugHttpMetaDataCommand', () => {
+
+  yargs(['debug:http-metadata']);
+
   // Setup application
   const app = new Application(CONSOLE_APP_OPTIONS);
   let consoleSpy: any;
