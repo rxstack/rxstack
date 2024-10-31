@@ -1,5 +1,6 @@
 import 'reflect-metadata';
-import {describe, expect, it, afterAll} from '@jest/globals';
+import {describe, expect, it} from '@jest/globals';
+const yargs = require('yargs');
 import {Application} from '../../src/application';
 import {CommandManager} from '../../src/console';
 import {CONSOLE_APP_OPTIONS} from './fixtures/console-app-options';
@@ -7,7 +8,10 @@ const stdMocks = require('std-mocks');
 
 describe('CommandManager', () => {
   // Setup application
-  process.argv = ['testing', '-s', 'hello'];
+  yargs(['testing']).option('s', {
+    type: 'string',
+    default: 'hello'
+  });
   const app = new Application(CONSOLE_APP_OPTIONS);
 
   it('should register and execute testing command', async () => {
@@ -18,9 +22,7 @@ describe('CommandManager', () => {
     const consoleOutput = output.stdout.pop();
     expect(consoleOutput.includes('hello')).toBeTruthy();
     expect(app.getInjector().get(CommandManager).commands.length).toBe(3);
+    await app.stop();
   });
 
-  afterAll(async () => {
-    await app.stop();
-  }, 1000);
 });

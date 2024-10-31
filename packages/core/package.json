@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/core",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "RxStackCore",
   "private": false,
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
@@ -36,6 +36,7 @@
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.2.2",
     "table": "^6.8.2",
+    "winston-transport": "^4.8.0",
     "yargonaut": "^1.1.4",
     "yargs": "^17.7.2"
   },
