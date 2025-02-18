@@ -7,11 +7,11 @@ import {AsyncEventDispatcher} from '@rxstack/async-event-dispatcher';
 import {Exception, exceptionToObject} from '@rxstack/exceptions';
 import {Injectable} from 'injection-js';
 import {SocketioServerConfiguration} from './socketio-server-configuration';
-import {EventEmitter} from 'events';
 import {Stream} from 'stream';
+import { Server } from 'socket.io';
 
+const stream = require('stream');
 const winston = require('winston');
-const io = require('socket.io');
 
 @Injectable()
 export class SocketioServer extends AbstractServer {
@@ -32,12 +32,12 @@ export class SocketioServer extends AbstractServer {
     this.host = configuration.host;
     this.port = configuration.port;
     this.httpServer = http.createServer();
-    this.engine = io(this.httpServer);
+    this.engine = new Server(this.httpServer);
     this.engine.sockets.setMaxListeners(configuration.maxListeners);
 
     await dispatcher.dispatch(ServerEvents.CONFIGURE, new ServerConfigurationEvent(this));
 
-    this.engine.on('connection', async (socket: EventEmitter) => {
+    this.engine.on('connection', async (socket: any) => {
       this.setupSocket(socket, definitions);
       await dispatcher.dispatch(
         ServerEvents.CONNECTED,
@@ -52,13 +52,13 @@ export class SocketioServer extends AbstractServer {
     });
   }
 
-  private setupSocket(socket: EventEmitter, definitions: WebSocketDefinition[]): void {
+  private setupSocket(socket: any, definitions: WebSocketDefinition[]): void {
     definitions.forEach(
       (definition) => this.registerRoute(definition, socket)
     );
   }
 
-  private registerRoute(definition: WebSocketDefinition, socket: EventEmitter): void {
+  private registerRoute(definition: WebSocketDefinition, socket: any): void {
     socket.on(definition.name, async (args: any, callback?: () => void) => {
       try {
         const response = await definition.handler(this.createRequest(definition, socket, args));
@@ -80,7 +80,7 @@ export class SocketioServer extends AbstractServer {
   }
 
   private responseHandler(response: Response, callback?: () => void): void {
-    if (response.content instanceof Stream.Readable) {
+    if (response.content instanceof stream.Readable) {
       throw new Exception('Streaming is not supported.');
     }
     if (typeof callback === 'function') {

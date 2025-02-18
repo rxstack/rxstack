@@ -57,7 +57,8 @@ export class ExpressServer extends AbstractServer {
     const request = new Request('HTTP');
     request.path = routeDefinition.path;
     request.headers.fromObject(req.headers);
-    request.params.fromObject(Object.assign(req.query, req.params));
+
+    request.params.fromObject(Object.assign(this.parseQueryString(req.query), req.params));
     request.body = req.body;
     return request;
   }
@@ -113,4 +114,32 @@ export class ExpressServer extends AbstractServer {
       }
     };
   }
+
+  private parseQueryString(query: Record<any, any>): Record<string, any> {
+
+    const result: Record<string, any> = {};
+
+    Object.entries(query).forEach(([key, value]) => {
+      if (key.includes('[') && key.includes(']')) {
+        const matches = key.match(/^([^[]+)\[([^\]]+)\]$/);
+        if (matches) {
+          const [, parentKey, childKey] = matches;
+          result[parentKey] = result[parentKey] || {};
+          result[parentKey][childKey] = parseValue(value);
+        }
+      } else {
+        result[key] = parseValue(value);
+      }
+    });
+
+    return result;
+  }
+}
+
+function parseValue(value: any): any {
+  if (Array.isArray(value)) return value.map(parseValue);
+  if (value === "true") return true;
+  if (value === "false") return false;
+  if (!isNaN(Number(value))) return Number(value);
+  return value;
 }

@@ -42,7 +42,7 @@ describe('ExpressServer', () => {
   });
 
   it('should call mock_json', async () => {
-    const response: any = await fetch(host + '/mock/json');
+    const response: any = await fetch(host + '/mock/json?$sort[createdAt]=-1');
     const headers = response.headers;
     const content = await response.json();
     expect(headers.get('content-type')).toBe('application/json; charset=utf-8');

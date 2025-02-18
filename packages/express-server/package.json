@@ -1,6 +1,6 @@
 {
   "name": "@rxstack/express-server",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "RxStack ExpressServer Module",
   "author": "Nikolay Georgiev <symfonist@gmail.com>",
   "license": "MIT",
